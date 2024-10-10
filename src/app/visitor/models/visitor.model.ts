@@ -1,18 +1,18 @@
 export interface Visitor {
-  visitorId: number;
-  ownerId: number;
+  visitor_id: number;
+  owner_id: number;
   name: string;
-  lastName: string;
-  docNumber: string;
-  birthDate: any;
-  active: boolean;
+  last_name: string;
+  doc_number: string;
+  birth_date: any;
+  is_active: boolean;
 }
 
 export interface SendVisitor {
   name: string;
-  ownerId: number;
-  lastName: string;
-  docNumber: string;
-  birthDate: any;
-  active: boolean;
+  owner_id: number;
+  last_name: string;
+  doc_number: string;
+  birth_date: any;
+  is_active: boolean;
 }

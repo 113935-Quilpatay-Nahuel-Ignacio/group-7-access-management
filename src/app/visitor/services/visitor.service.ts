@@ -16,18 +16,18 @@ export class VisitorService {
       .set('page', page.toString())
       .set('size', size.toString());
 
-    return this.http.get<Visitor[]>(this.apiUrl + '/getAll', { params });
+    return this.http.get<Visitor[]>(this.apiUrl , { params });
   }
 
-  getVisitor(id: number): Observable<Visitor> {
-    return this.http.get<Visitor>(`${this.apiUrl}/${id}`);
+  getVisitor(visitorId: number): Observable<Visitor> {
+    return this.http.get<Visitor>(`${this.apiUrl}/${visitorId}`);
   }
 
   upsertVisitor(visitor: SendVisitor): Observable<Visitor> {
-    return this.http.post<Visitor>(this.apiUrl + '/upsert', visitor);
+    return this.http.put<Visitor>(this.apiUrl , visitor);
   }
 
-  deleteVisitor(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  deleteVisitor(visitorId: number): Observable<Visitor> {
+    return this.http.delete<Visitor>(`${this.apiUrl}/deactivate/${visitorId}`);
   }
 }

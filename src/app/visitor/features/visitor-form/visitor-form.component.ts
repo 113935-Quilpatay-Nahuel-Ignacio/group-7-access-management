@@ -1,39 +1,43 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { VisitorService } from '../../services/visitor.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { SendVisitor, Visitor } from '../../models/visitor.model';
 import moment from 'moment';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-visitor-form',
   standalone: true,
-  imports: [FormsModule],
+  imports: [CommonModule,FormsModule],
   templateUrl: './visitor-form.component.html',
 })
 export class VisitorFormComponent {
   visitor: SendVisitor = {
     name: '',
-    ownerId: 0,
-    lastName: '',
-    docNumber: '',
-    birthDate: new Date(),
-    active: true,
+    owner_id: 0,
+    last_name: '',
+    doc_number: '',
+    birth_date: new Date(),
+    is_active: true,
   };
 
-  constructor(
-    private visitorService: VisitorService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+  private readonly route = inject(ActivatedRoute)
+  private readonly router = inject(Router)
+  private readonly visitorService = inject(VisitorService)
+
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.visitorService.getVisitor(+id).subscribe((data) => {
         this.visitor = {
-          ...data,
-          birthDate: moment(data.birthDate, 'DD-MM-YYYY').toDate(),
+          name: data.name,
+          owner_id:data.owner_id,
+          last_name : data.last_name,
+          doc_number:data.doc_number,
+          is_active: data.is_active,
+          birth_date: moment(data.birth_date, 'DD-MM-YYYY').toDate(),
         };
       });
     }
@@ -42,11 +46,13 @@ export class VisitorFormComponent {
   saveVisitor(): void {
     const formattedVisitor = {
       ...this.visitor,
-      birthDate: moment(this.visitor.birthDate).format('DD-MM-YYYY'),
+      birth_date: moment(this.visitor.birth_date).format('DD-MM-YYYY'),
     };
-
+  
+    console.log(formattedVisitor); 
     this.visitorService.upsertVisitor(formattedVisitor).subscribe(() => {
       this.router.navigate(['/visitors']);
     });
   }
+  
 }

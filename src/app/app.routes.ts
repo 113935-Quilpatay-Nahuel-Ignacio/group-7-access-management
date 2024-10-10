@@ -25,7 +25,8 @@ export const routes: Routes = [
     path: 'register-range',
     component: AuthorizedRangeFormComponent,
   },
-  { path: '', 
+  { 
+    path: '', 
     redirectTo: '/register-range', 
     pathMatch: 'full' 
   },

@@ -26,7 +26,7 @@ export class VisitorListComponent {
   deleteVisitor(id: number): void {
     if (confirm('¿Está seguro que quiere eliminar este visitante?')) {
       this.visitorService.deleteVisitor(id).subscribe(() => {
-        this.visitors = this.visitors.filter((v) => v.visitorId !== id);
+        this.visitors = this.visitors.filter((v) => v.visitor_id !== id);
       });
     }
   }

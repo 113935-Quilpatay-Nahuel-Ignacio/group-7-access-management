@@ -13,11 +13,11 @@
             @for (visitor of visitors; track $index) {
                 <tr>
                     <td>{{ visitor.name }}</td>
-                    <td>{{ visitor.lastName }}</td>
-                    <td>{{ visitor.docNumber }}</td>
+                    <td>{{ visitor.last_name }}</td>
+                    <td>{{ visitor.doc_number }}</td>
                     <td>
-                        <a class="btn btn-warning btn-sm" routerLink="/visitor/edit/{{visitor.visitorId}}">Editar</a>
-                        <button class="btn btn-danger btn-sm" (click)="deleteVisitor(visitor.visitorId)">Eliminar</button>
+                        <a class="btn btn-warning btn-sm" routerLink="/visitor/edit/{{visitor.visitor_id}}">Editar</a>
+                        <button class="btn btn-danger btn-sm" (click)="deleteVisitor(visitor.visitor_id)">Eliminar</button>
                     </td>
                 </tr>
             }
