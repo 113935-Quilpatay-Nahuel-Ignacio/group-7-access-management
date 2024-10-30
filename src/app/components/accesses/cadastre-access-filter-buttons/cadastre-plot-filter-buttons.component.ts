@@ -20,7 +20,7 @@ export class CadastrePlotFilterButtonsComponent<T extends Record<string, any>> {
   private service = inject(AccessService)
   // Inject the Excel service for export functionality
   private excelService = inject(CadastreExcelService);
-  private exports = inject(CadastreExcelService);
+
 
   LIMIT_32BITS_MAX = 2147483647
 
@@ -61,7 +61,7 @@ export class CadastrePlotFilterButtonsComponent<T extends Record<string, any>> {
     this.service.getAll(0, this.LIMIT_32BITS_MAX, true).subscribe(
       data => {
         let response = this.transformResponseService.transformResponse(data, 0, this.LIMIT_32BITS_MAX, true)
-        this.exports.exportTableToPdf(this.tableName, `${this.getActualDayFormat()}_${this.objectName}`);
+        this.excelService.exportTableToPdf(this.tableName, `${this.getActualDayFormat()}_${this.objectName}`);
       },
       error => {
         console.log("Error retrieved all, on export component.")

@@ -3,6 +3,7 @@ export interface Visitor {
   owner_id: number;
   name: string;
   last_name: string;
+  doc_type: string;
   doc_number: string;
   birth_date: any;
   is_active: boolean;

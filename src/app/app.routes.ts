@@ -43,6 +43,10 @@ export const routes: Routes = [
     path: 'entity/list',
     component: EntityListComponent,
   },
+  {
+    path: 'visitor/list',
+    component: VisitorListComponent,
+  },
   { path: 'home', component: HomeComponent, /* canActivate: [authGuard] */ },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
