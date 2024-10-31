@@ -1,32 +1,68 @@
 <h1 class="mt-2 p-2">Nuevo acceso</h1>
 <form [formGroup]="accessForm" (ngSubmit)="onSubmit()" class="row g-3 m-2">
-<h6>Ingresante</h6>
+  <h6>Ingresante</h6>
   <!-- Número de Documento -->
   <div class="col-md-6 mt-3">
     <div class="d-flex align-items-center flex-row">
       <label for="doc_number" class="form-label m-0">
         Número de Documento<label class="text-danger">*</label>
       </label>
-      <input type="number" id="doc_number" class="form-control" formControlName="doc_number"
-             [ngClass]="{
-        'is-invalid': (accessForm.get('doc_number')?.invalid && accessForm.get('doc_number')?.touched) ||  accessForm.get('doc_number')?.hasError('unauthorized')
-      }"
-             (input)="onDocNumberChange($event)" />
+      <input
+        type="number"
+        id="doc_number"
+        class="form-control"
+        formControlName="doc_number"
+        [ngClass]="{
+          'is-invalid':
+            (accessForm.get('doc_number')?.invalid &&
+              accessForm.get('doc_number')?.touched) ||
+            accessForm.get('doc_number')?.hasError('unauthorized')
+        }"
+        (input)="onDocNumberChange($event)"
+      />
     </div>
     <div class="ms-5 ps-2">
-      <small class="text-danger ms-5 ps-4" *ngIf="accessForm.get('doc_number')?.invalid && accessForm.get('doc_number')?.touched && !accessForm.get('doc_number')?.hasError('unauthorized')">
+      <small
+        class="text-danger ms-5 ps-4"
+        *ngIf="
+          accessForm.get('doc_number')?.invalid &&
+          accessForm.get('doc_number')?.touched &&
+          !accessForm.get('doc_number')?.hasError('unauthorized')
+        "
+      >
         Por favor, ingrese el número de documento del visitante
       </small>
-      <small class="text-danger ms-5 ps-4" *ngIf="accessForm.get('doc_number')?.hasError('unauthorized')">
-          Por favor, ingrese un número de documento registrado
+      <small
+        class="text-danger ms-5 ps-4"
+        *ngIf="accessForm.get('doc_number')?.hasError('unauthorized')"
+      >
+        Por favor, ingrese un número de documento registrado
       </small>
     </div>
   </div>
 
   <div class="col-md-6 mt-3">
     <div class="d-flex align-items-center flex-row">
-      <button type="button" class="btn btn-info" (click)="isAuthorized()"
-              [disabled]="checkButtonDisabled">Consultar</button>
+      <button
+        type="button"
+        class="btn btn-info"
+        (click)="isAuthorized()"
+        [disabled]="checkButtonDisabled"
+      >
+        Consultar
+      </button>
+
+      <button
+        (click)="openScanner()"
+        class="btn btn-info mx-2 d-flex justify-content-center align-items-center"
+      >
+        <span class="mx-2">Escanear QR</span>
+        <img
+          class="mx-2"
+          [src]="'https://id1945.github.io/images/svg/camera-on.svg'"
+          width="30px"
+        />
+      </button>
     </div>
   </div>
 
@@ -42,7 +78,13 @@
       />
     </div>
     <div>
-      <small class="text-danger ms-2" *ngIf="accessForm.get('first_name')?.invalid && accessForm.get('first_name')?.touched">
+      <small
+        class="text-danger ms-2"
+        *ngIf="
+          accessForm.get('first_name')?.invalid &&
+          accessForm.get('first_name')?.touched
+        "
+      >
         requerido
       </small>
     </div>
@@ -52,22 +94,35 @@
   <div class="col-md-6 mt-3">
     <div class="d-flex align-items-center flex-row">
       <label for="last_name" class="form-label m-0">Apellido</label>
-      <input type="text" id="last_name" class="form-control ms-3" formControlName="last_name"  />
+      <input
+        type="text"
+        id="last_name"
+        class="form-control ms-3"
+        formControlName="last_name"
+      />
     </div>
     <div>
-      <small class="text-danger ms-2" *ngIf="accessForm.get('last_name')?.invalid && accessForm.get('last_name')?.touched">
+      <small
+        class="text-danger ms-2"
+        *ngIf="
+          accessForm.get('last_name')?.invalid &&
+          accessForm.get('last_name')?.touched
+        "
+      >
         requerido
       </small>
     </div>
   </div>
 
-<hr>
+  <hr />
   <h6>Detalles</h6>
 
   <!-- Destino -->
   <div class="col-md-6 mt-3">
     <div class="d-flex align-items-center flex-row">
-      <label for="first_name" class="form-label m-0">Nro de Lote de Destino</label>
+      <label for="first_name" class="form-label m-0"
+        >Nro de Lote de Destino</label
+      >
       <input
         type="text"
         id="plot_id"
@@ -81,7 +136,8 @@
 
   <div class="col-md-6 mt-3">
     <div class="d-flex align-items-center flex-row">
-      <label class="form-label m-0">Acción</label><label class="text-danger">*</label>
+      <label class="form-label m-0">Acción</label
+      ><label class="text-danger">*</label>
       <div class="ms-4">
         <div class="form-check form-check-inline">
           <input
@@ -89,7 +145,8 @@
             type="radio"
             id="entry"
             formControlName="action"
-            value="ENTRY">
+            value="ENTRY"
+          />
           <label class="form-check-label" for="entry">Entrada</label>
         </div>
         <div class="form-check form-check-inline">
@@ -98,40 +155,60 @@
             type="radio"
             id="exit"
             formControlName="action"
-            value="EXIT">
+            value="EXIT"
+          />
           <label class="form-check-label" for="exit">Salida</label>
         </div>
       </div>
     </div>
   </div>
 
-
   <!-- Tipo de Vehículo -->
   <div class="col-md-6 mt-3">
     <div class="d-flex align-items-center flex-row">
-    <label for="vehicle_type" class="form-label m-0">Tipo de Vehículo<label class="text-danger">*</label></label>
-    <select id="vehicle_type" class="form-select" formControlName="vehicle_type">
-      <option value="CAR">Automóvil</option>
-      <option value="PICKUP">Camioneta</option>
-      <option value="MOTORBIKE">Motocicleta</option>
-      <option value="TRUCK">Camión</option>
-   <!--   <option value="FOOT">A pie / Bicicleta</option>-->
-    </select>
+      <label for="vehicle_type" class="form-label m-0"
+        >Tipo de Vehículo<label class="text-danger">*</label></label
+      >
+      <select
+        id="vehicle_type"
+        class="form-select"
+        formControlName="vehicle_type"
+      >
+        <option value="CAR">Automóvil</option>
+        <option value="PICKUP">Camioneta</option>
+        <option value="MOTORBIKE">Motocicleta</option>
+        <option value="TRUCK">Camión</option>
+        <!--   <option value="FOOT">A pie / Bicicleta</option>-->
+      </select>
     </div>
   </div>
 
   <!-- Matrícula del Vehículo -->
   <div class="col-md-6 mt-3">
     <div class="d-flex align-items-center flex-row">
-      <label for="vehicle_reg" class="form-label m-0">Patente</label><label class="text-danger">*</label>
-      <input type="text" id="vehicle_reg" class="form-control ms-3" formControlName="vehicle_reg"
-             [ngClass]="{
-        'is-invalid': accessForm.get('vehicle_reg')?.invalid && accessForm.get('vehicle_reg')?.touched
-      }"/>
+      <label for="vehicle_reg" class="form-label m-0">Patente</label
+      ><label class="text-danger">*</label>
+      <input
+        type="text"
+        id="vehicle_reg"
+        class="form-control ms-3"
+        formControlName="vehicle_reg"
+        [ngClass]="{
+          'is-invalid':
+            accessForm.get('vehicle_reg')?.invalid &&
+            accessForm.get('vehicle_reg')?.touched
+        }"
+      />
     </div>
     <div class="ms-5">
-      <small class="text-danger ms-4 ps-1" *ngIf="accessForm.get('vehicle_reg')?.invalid && accessForm.get('vehicle_reg')?.touched">
-          Por favor, ingrese la matrícula del vehículo
+      <small
+        class="text-danger ms-4 ps-1"
+        *ngIf="
+          accessForm.get('vehicle_reg')?.invalid &&
+          accessForm.get('vehicle_reg')?.touched
+        "
+      >
+        Por favor, ingrese la matrícula del vehículo
       </small>
     </div>
   </div>
@@ -139,21 +216,66 @@
   <!-- Descripción Detallada del Vehículo -->
   <div class="col-md-12 mt-3">
     <div class="d-flex align-items-center flex-row">
-    <label for="vehicle_description" class="form-label m-0">Descripción del Vehículo</label>
-    <textarea id="vehicle_description" class="form-control" formControlName="vehicle_description"></textarea>
+      <label for="vehicle_description" class="form-label m-0"
+        >Descripción del Vehículo</label
+      >
+      <textarea
+        id="vehicle_description"
+        class="form-control"
+        formControlName="vehicle_description"
+      ></textarea>
     </div>
   </div>
 
   <!-- Comentarios -->
   <div class="col-md-12 mt-3">
     <div class="d-flex align-items-center flex-row">
-    <label for="comments" class="form-label m-0">Comentarios</label>
-    <textarea id="comments" class="form-control ms-3" formControlName="comments"></textarea>
+      <label for="comments" class="form-label m-0">Comentarios</label>
+      <textarea
+        id="comments"
+        class="form-control ms-3"
+        formControlName="comments"
+      ></textarea>
     </div>
   </div>
 
   <div class="col-12 d-flex justify-content-end mt-5">
-    <button type="button" class="btn btn-danger me-2" (click)="onCancel()">Cancelar</button>
+    <button type="button" class="btn btn-danger me-2" (click)="onCancel()">
+      Cancelar
+    </button>
     <button type="submit" class="btn btn-primary">Guardar</button>
   </div>
 </form>
+
+<ng-template #scannerModal let modal>
+  <div
+    style="
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+      background-color: lightgrey;
+    "
+  >
+    <ngx-scanner-qrcode
+      #action="scanner"
+      [config]="config"
+      (event)="onEvent($event, action)"
+    ></ngx-scanner-qrcode>
+    <button
+      class="btn"
+      [class.btn-info]="!action.isStart"
+      [class.btn-warning]="action.isStart"
+      [disabled]="action.isLoading"
+      (click)="handle(action, action.isStart ? 'stop' : 'start')"
+    >
+      <img
+        [src]="
+          action.isStart
+            ? 'https://id1945.github.io/images/svg/camera-off.svg'
+            : 'https://id1945.github.io/images/svg/camera-on.svg'
+        "
+        width="30px"
+      />
+    </button>
+  </div>
+</ng-template>
