@@ -15,6 +15,7 @@ import {AccessService} from "../../../services/access.service";
 import {TransformResponseService} from "../../../services/transform-response.service";
 import { CadastreExcelService } from '../../../services/cadastre-excel.service';
 import {UserTypeService} from "../../../services/userType.service";
+import {LoginService} from "../../../services/login.service";
 
 @Component({
   selector: 'app-auth-list',
@@ -43,6 +44,7 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
   private toastService = inject(ToastService)
   private modalService = inject(NgbModal)
   private userTypeService = inject(UserTypeService)
+  private loginService = inject(LoginService)
   //#endregion
 
   //#region ATT de PAGINADO
@@ -313,6 +315,9 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
   transformAuthRanges(ranges : AuthRange[]): string{
     let res = ""
     for (let authRange of ranges) {
+      if (!authRange.is_active){
+        continue
+      }
       let temp = ""
       temp += authRange.date_from.replaceAll('-','/') + ' - ' + authRange.date_to.replaceAll('-','/') + ' | '
       for (let day of authRange.days_of_week) {
@@ -400,6 +405,12 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
     }
 
   edit(doc_number: number) {
-    this.router.navigate(['/auth/form'], { queryParams: { doc_number: doc_number } });
+    this.router.navigate(['/auth/form'], { queryParams: { auth_id: doc_number } });
+  }
+
+  disable(auth_id: number) {
+  this.authService.delete(auth_id,this.loginService.getLogin().id).subscribe(data => {
+    alert('sycvc')
+  })
   }
 }

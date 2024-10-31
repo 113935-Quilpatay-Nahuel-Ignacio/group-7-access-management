@@ -53,13 +53,15 @@ export class AuthFormComponent implements OnInit {
       }
     });
 
-    const documentParam = this.paramRoutes.snapshot.queryParamMap.get('doc_number');
+    const documentParam = this.paramRoutes.snapshot.queryParamMap.get('auth_id');
     if (documentParam) {
       this.isUpdate = true
-      this.authService.getByDocument(parseInt(documentParam, 10)).subscribe(datas => {
+      this.authService.getById(parseInt(documentParam, 10)).subscribe(datas => {
         let data = datas[0]
         // Completa el formulario
         this.authForm.patchValue({
+          auth_id: data.auth_id,
+          is_active:data.is_active,
           visitor_type: data.visitor_type,
           plot_id: data.plot_id,
           visitor_request: {
@@ -99,6 +101,8 @@ export class AuthFormComponent implements OnInit {
 
   createForm(): FormGroup {
     return this.fb.group({
+      auth_id: 0,
+      is_active:true,
       visitor_type: ['VISITOR', Validators.required],
       plot_id: [null, Validators.required],
       visitor_request: this.fb.group({
@@ -114,6 +118,7 @@ export class AuthFormComponent implements OnInit {
 
   onSubmit() {
     if (this.authForm.valid) {
+      console.log("aaa")
       const formData = this.authForm.value;
       formData.visitor_request.birth_date = formatFormDate(formData.visitor_request.birth_date);
 
@@ -149,6 +154,18 @@ export class AuthFormComponent implements OnInit {
         };
 
         formData.auth_range_request = [authRange];
+      } else{
+        for (let range of formData.auth_range_request) {
+          range.date_from = formatDate(new Date(range.date_from));
+          range.date_to = formatDate(new Date(range.date_to));
+
+          if(range.hour_from.length< 8){
+            range.hour_from = range.hour_from + ':00';
+          }
+          if(range.hour_to.length< 8){
+            range.hour_to = range.hour_to + ':00';
+          }
+        }
       }
 
       if (!this.isUpdate) {
@@ -171,6 +188,7 @@ export class AuthFormComponent implements OnInit {
           });
         });
       } else {
+        console.log(formData)
         this.authService.updateAuth(formData, this.loginService.getLogin().id.toString()).subscribe(data => {
           Swal.fire({
             title: 'Actualización exitosa!',
@@ -202,10 +220,15 @@ export class AuthFormComponent implements OnInit {
 
   openModal() {
     const modalRef = this.modalService.open(RangeModalComponent, {size: 'xl'});
+    console.log(this.authForm.get('auth_range_request')?.value)
     modalRef.componentInstance.ranges = this.authForm.get('auth_range_request')?.value
     modalRef.result.then((result) => {
+      if (result != undefined){
+
       this.authForm.get('auth_range_request')?.setValue(result)
+      }
     }).catch((error) => {
+      console.log(this.authForm.get('auth_range_request')?.value)
       console.error('Modal cerrado sin guardar cambios', error);
     });
   }

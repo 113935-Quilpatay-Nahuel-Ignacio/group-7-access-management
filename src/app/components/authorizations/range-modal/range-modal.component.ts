@@ -30,6 +30,7 @@ export class RangeModalComponent implements OnInit{
     } else {
       this.loadForm(this.ranges[0])
     }
+    console.log(this.ranges)
   }
 
   selectRangeEvent(){
@@ -76,6 +77,7 @@ export class RangeModalComponent implements OnInit{
 
   createForm(): FormGroup {
     return this.fb.group({
+      auth_range_id: [0],
       date_from: [formatDate(), Validators.required],
       date_to: [formatDate(), Validators.required],
       hour_from: [formatTime(), Validators.required],
@@ -88,6 +90,7 @@ export class RangeModalComponent implements OnInit{
 
   loadForm(authRange: AuthRange) {
     this.rangeForm = this.fb.group({
+      auth_range_id: [authRange.auth_range_id],
       date_from: [authRange.date_from, Validators.required],
       date_to: [authRange.date_to, Validators.required],
       hour_from: [authRange.hour_from, Validators.required],
