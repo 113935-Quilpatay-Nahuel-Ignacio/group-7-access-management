@@ -103,6 +103,7 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
     this.userType = this.userTypeService.getType()
     this.userTypeService.userType$.subscribe((userType: string) => {
       this.userType = userType
+      this.confirmFilter();
     });
   }
 
@@ -111,6 +112,12 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
   //#region GET_ALL
   getAll() {
     this.authService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
+      if(this.userType === "OWNER"){
+          data = data.filter(x => x.plot_id == 2)
+      }
+        if(this.userType === "GUARD"){
+          data = data.filter(x => x.is_active)
+        }
         data.forEach(date => {
           date.authorizer = this.authorizerCompleterService.completeAuthorizer(date.authorizer_id)
         })
@@ -410,7 +417,12 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
 
   disable(auth_id: number) {
   this.authService.delete(auth_id,this.loginService.getLogin().id).subscribe(data => {
-    alert('sycvc')
+    this.confirmFilter();
   })
+  }
+  enable(auth_id: number) {
+    this.authService.enable(auth_id,this.loginService.getLogin().id).subscribe(data => {
+      this.confirmFilter();
+    })
   }
 }
