@@ -16,6 +16,8 @@ import {TransformResponseService} from "../../../services/transform-response.ser
 import { CadastreExcelService } from '../../../services/cadastre-excel.service';
 import {UserTypeService} from "../../../services/userType.service";
 import {LoginService} from "../../../services/login.service";
+import {RangeModalComponent} from "../range-modal/range-modal.component";
+import {QrComponent} from "../../../old/qr/features/qr/qr.component";
 
 @Component({
   selector: 'app-auth-list',
@@ -419,6 +421,10 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
   this.authService.delete(auth_id,this.loginService.getLogin().id).subscribe(data => {
     this.confirmFilter();
   })
+  }
+  qr(doc: number){
+    const modalRef = this.modalService.open(QrComponent, {size: 'xl'});
+    modalRef.componentInstance.docNumber = doc
   }
   enable(auth_id: number) {
     this.authService.enable(auth_id,this.loginService.getLogin().id).subscribe(data => {

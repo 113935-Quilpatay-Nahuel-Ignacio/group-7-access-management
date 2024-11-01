@@ -1,28 +1,28 @@
 <h1 class="mt-2 p-2">Nueva Autorización</h1>
 <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="row g-3 m-2">
-  <!-- Terreno -->
-  <div class="col-md-6">
-    <div class="d-flex align-items-center flex-row">
-      <label for="plot-id" class="form-label m-0">Número de lote<label class="text-danger">*</label></label>
-      <input list="plots" id="plot-id" class="form-control ms-2" formControlName="plot_id"
-             [ngClass]="{
-        'is-invalid': authForm.get('plot_id')?.invalid && authForm.get('plot_id')?.touched
-      }" (change)="setPlot(authForm.get('plot_id')?.value)"/>
-      <datalist id="plots">
-        @for (plot of plots; track $index){
-          <option value="{{plot.id}}">{{plot.id}} - {{plot.desc}}</option>
-        }
-      </datalist>
+    <!--Terreno-->
+    <div class="col-md-6 d-flex flex-column align-items-center justify-content-center">
+        <div class="d-flex align-items-center justify-content-center w-100">
+            <label for="plot-id" class="form-label m-0 w-25">Número de lote<label class="text-danger">*</label></label>
+            <ng-select [items]="plots" bindLabel="name" autofocus bindValue="id" class="w-100" formControlName="plot_id" (change)="onPlotSelected($event)">
+            </ng-select>
+        </div>
+        <div>
+            <div class="ms-1 mt-2">
+                @if (plot != null){
+                    <small class="ms-5 ps-2">Telefono: {{ plot.tel }}</small>
+                }
+                <small
+                        class="text-danger ms-1 ps-2"
+                        *ngIf="
+            authForm.get('plot_id')?.invalid && authForm.get('plot_id')?.touched
+          "
+                >
+                    Por favor, ingrese un número de lote
+                </small>
+            </div>
+        </div>
     </div>
-    <div class="ms-5">
-      @if (plot != null){
-        <small class="ms-5 ps-2">Telefono: {{plot.tel}}</small>
-      }
-      <small class="text-danger ms-5 ps-2" *ngIf="authForm.get('plot_id')?.invalid && authForm.get('plot_id')?.touched">
-          Por favor, ingrese un número de lote
-      </small>
-    </div>
-  </div>
 
   <!-- Visitante -->
   <div class="col-md-6">

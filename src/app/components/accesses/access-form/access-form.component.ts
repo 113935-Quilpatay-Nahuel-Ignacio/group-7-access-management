@@ -261,6 +261,7 @@ export class AccessFormComponent implements OnInit {
     if (e[0].value != null) {
       this.qrValue = e[0].value;
       this.modalService.dismissAll();
+      console.log(e[0].value)
       console.log(Number(this.getDocumentNumberFromString(e[0].value)))
       this.accessForm.get('doc_number')?.patchValue(Number(this.getDocumentNumberFromString(e[0].value)));
       this.autocompleteFields(Number(this.getDocumentNumberFromString(e[0].value)));
