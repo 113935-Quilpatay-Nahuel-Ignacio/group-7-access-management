@@ -13,6 +13,8 @@ import {AuthListComponent} from "./components/authorizations/auth-list/auth-list
 import {AccessListComponent} from "./components/accesses/access-list/access-list.component";
 import {EntityFormComponent} from "./components/entity/entity-form/entity-form.component";
 import {EntityListComponent} from "./components/entity/entity-list/entity-list.component";
+import { AccessHourlyDashboardComponent } from './components/accesses/access-hourly-dashboard/access-hourly-dashboard.component';
+import { AccessWeeklyDashboardComponent } from './components/accesses/access-weekly-dashboard/access-weekly-dashboard.component';
 
 export const routes: Routes = [
   {
@@ -43,6 +45,21 @@ export const routes: Routes = [
     path: 'entity/list',
     component: EntityListComponent,
   },
-  { path: 'home', component: HomeComponent, /* canActivate: [authGuard] */ },
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  {
+    path: 'dashboard/hourly',
+    component: AccessHourlyDashboardComponent,
+  },
+  {
+    path: 'dashboard/weekly',
+    component: AccessWeeklyDashboardComponent,
+  },
+  { 
+    path: 'home', 
+    component: HomeComponent, /* canActivate: [authGuard] */ 
+  },
+  { 
+    path: '', 
+    redirectTo: '/home', 
+    pathMatch: 'full' 
+  },
 ];
