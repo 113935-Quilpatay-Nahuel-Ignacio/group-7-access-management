@@ -1,10 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
 import { AccessService } from '../../../services/access.service';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { ChartState } from '../../../models/dashboard.model';
+import {
+  ChartState,
+  DashboardHourlyDTO,
+} from '../../../models/dashboard.model';
 
 @Component({
   selector: 'app-access-hourly-dashboard',
@@ -13,7 +16,7 @@ import { ChartState } from '../../../models/dashboard.model';
   templateUrl: './access-hourly-dashboard.component.html',
   styleUrl: './access-hourly-dashboard.component.css',
 })
-export class AccessHourlyDashboardComponent {
+export class AccessHourlyDashboardComponent implements AfterViewInit {
   @ViewChild(BaseChartDirective) chart!: BaseChartDirective;
 
   dateFrom: string = '';
@@ -59,8 +62,10 @@ export class AccessHourlyDashboardComponent {
 
   constructor(private dashboardService: AccessService) {}
 
-  ngOnInit() {
-    this.loadInitialData();
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.loadInitialData();
+    });
   }
 
   loadInitialData() {
@@ -87,7 +92,7 @@ export class AccessHourlyDashboardComponent {
     this.loadInitialData();
   }
 
-  private updateChartData(data: any[]) {
+  private updateChartData(data: DashboardHourlyDTO[]) {
     this.chartState.hasData =
       data.length > 0 && data.some((item) => item.value > 0);
 
@@ -103,6 +108,8 @@ export class AccessHourlyDashboardComponent {
       }
     }
 
-    this.chart.update();
+    if (this.chart && this.chart.chart) {
+      this.chart.chart.update();
+    }
   }
 }

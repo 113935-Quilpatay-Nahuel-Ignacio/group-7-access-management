@@ -5,7 +5,7 @@ import {Auth} from "../models/authorize.model";
 import {AccessModel} from "../models/access.model";
 import {VisitorAuthorizationRequest} from "../models/authorizeRequest.model";
 import {PaginatedResponse} from "../models/api-response";
-import { DashboardDTO } from '../models/dashboard.model';
+import { DashboardHourlyDTO, DashboardWeeklyDTO } from '../models/dashboard.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,14 +30,14 @@ export class AccessService {
     return this.http.get<AccessModel[]>(this.apiUrl);
   }
 
-  getHourlyAccesses(from: string, to: string): Observable<DashboardDTO[]> {
-    return this.http.get<DashboardDTO[]>(`${this.apiUrl}/hourly`, {
+  getHourlyAccesses(from: string, to: string): Observable<DashboardHourlyDTO[]> {
+    return this.http.get<DashboardHourlyDTO[]>(`${this.apiUrl}/hourly`, {
       params: { from, to }
     });
   }
 
-  getWeeklyAccesses(from: string, to: string): Observable<DashboardDTO[]> {
-    return this.http.get<DashboardDTO[]>(`${this.apiUrl}/weekly`, {
+  getWeeklyAccesses(from: string, to: string): Observable<DashboardWeeklyDTO[]> {
+    return this.http.get<DashboardWeeklyDTO[]>(`${this.apiUrl}/weekly`, {
       params: { from, to }
     });
   }

@@ -1,6 +1,12 @@
-export interface DashboardDTO {
+export interface DashboardHourlyDTO {
   key: string;
   value: number;
+}
+
+export interface DashboardWeeklyDTO {
+  key: string;
+  value: number;
+  secondary_value: number;
 }
 
 export interface AccessData {

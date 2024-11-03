@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
 import { AccessService } from '../../../services/access.service';
 import { ChartConfiguration } from 'chart.js';
-import { AccessData, ChartState } from '../../../models/dashboard.model';
+import { AccessData, ChartState, DashboardWeeklyDTO } from '../../../models/dashboard.model';
 
 @Component({
   selector: 'app-access-pie-dashboard',
@@ -72,8 +72,10 @@ export class AccessPieDashboardComponent {
 
   constructor(private dashboardService: AccessService) {}
 
-  ngOnInit() {
-    this.loadInitialData();
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.loadInitialData();
+    });
   }
 
   loadInitialData() {
@@ -100,7 +102,7 @@ export class AccessPieDashboardComponent {
     this.loadInitialData();
   }
 
-  private updateChartData(data: any[]) {
+  private updateChartData(data: DashboardWeeklyDTO[]) {
     this.chartState.hasData =
       data.length > 0 && data.some((item) => item.value > 0);
 
@@ -134,6 +136,8 @@ export class AccessPieDashboardComponent {
       }
     }
 
-    this.chart.update();
+    if (this.chart && this.chart.chart) {
+      this.chart.chart.update();
+    }
   }
 }

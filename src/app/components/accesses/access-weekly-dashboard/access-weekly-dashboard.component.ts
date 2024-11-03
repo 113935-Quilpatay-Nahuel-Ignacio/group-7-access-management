@@ -4,7 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { AccessService } from '../../../services/access.service';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { ChartState } from '../../../models/dashboard.model';
+import {
+  ChartState,
+  DashboardWeeklyDTO,
+} from '../../../models/dashboard.model';
 
 @Component({
   selector: 'app-access-weekly-dashboard',
@@ -29,8 +32,13 @@ export class AccessWeeklyDashboardComponent {
     datasets: [
       {
         data: [],
-        label: 'Accesos por Día',
+        label: 'Ingresos',
         backgroundColor: 'rgba(54, 162, 235, 0.8)',
+      },
+      {
+        data: [],
+        label: 'Egresos',
+        backgroundColor: 'rgba(255, 99, 132, 0.8)',
       },
     ],
     labels: [],
@@ -46,18 +54,35 @@ export class AccessWeeklyDashboardComponent {
           stepSize: 1,
         },
       },
+      x: {
+        ticks: {
+          autoSkip: false,
+        },
+      },
     },
     plugins: {
       legend: {
         display: true,
+        position: 'top',
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            const label = context.dataset.label || '';
+            const value = context.parsed.y;
+            return `${label}: ${value}`;
+          },
+        },
       },
     },
   };
 
   constructor(private dashboardService: AccessService) {}
 
-  ngOnInit() {
-    this.loadInitialData();
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.loadInitialData();
+    });
   }
 
   loadInitialData() {
@@ -84,22 +109,30 @@ export class AccessWeeklyDashboardComponent {
     this.loadInitialData();
   }
 
-  private updateChartData(data: any[]) {
+  private updateChartData(data: DashboardWeeklyDTO[]) {
     this.chartState.hasData =
-      data.length > 0 && data.some((item) => item.value > 0);
+      data.length > 0 &&
+      (data.some((item) => item.value > 0) ||
+        data.some((item) => item.secondary_value > 0));
 
     if (!this.chartState.hasData) {
       this.chartData.labels = [];
       if (this.chartData.datasets) {
         this.chartData.datasets[0].data = [];
+        this.chartData.datasets[1].data = [];
       }
     } else {
       this.chartData.labels = data.map((item) => item.key);
       if (this.chartData.datasets) {
         this.chartData.datasets[0].data = data.map((item) => item.value);
+        this.chartData.datasets[1].data = data.map(
+          (item) => item.secondary_value
+        );
       }
     }
 
-    this.chart.update();
+    if (this.chart && this.chart.chart) {
+      this.chart.chart.update();
+    }
   }
 }
