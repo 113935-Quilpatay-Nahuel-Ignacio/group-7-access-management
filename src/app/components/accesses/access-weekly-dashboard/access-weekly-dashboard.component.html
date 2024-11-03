@@ -22,10 +22,19 @@
                             </button>
                         </div>
                     </div>
+                    @if (chartState.hasData) {
                     <div class="chart-container" style="height: 300px;">
                         <canvas baseChart [type]="'bar'" [data]="chartData" [options]="chartOptions">
                         </canvas>
                     </div>
+                    } @else {
+                    <div class="d-flex justify-content-center align-items-center" style="height: 300px;">
+                        <div class="text-center">
+                            <i class="bi bi-graph-up text-muted mb-2" style="font-size: 2rem;"></i>
+                            <p class="text-muted mb-0">{{chartState.message}}</p>
+                        </div>
+                    </div>
+                    }
                 </div>
             </div>
         </div>

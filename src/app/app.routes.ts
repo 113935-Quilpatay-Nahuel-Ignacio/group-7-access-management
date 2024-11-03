@@ -16,6 +16,7 @@ import {EntityListComponent} from "./components/entity/entity-list/entity-list.c
 import { AccessHourlyDashboardComponent } from './components/accesses/access-hourly-dashboard/access-hourly-dashboard.component';
 import { AccessWeeklyDashboardComponent } from './components/accesses/access-weekly-dashboard/access-weekly-dashboard.component';
 import { AccessPieDashboardComponent } from './components/accesses/access-pie-dashboard/access-pie-dashboard.component';
+import { GeneralDashboardsComponent } from './components/dashboard/general-dashboards/general-dashboards.component';
 
 export const routes: Routes = [
   {
@@ -57,6 +58,10 @@ export const routes: Routes = [
   {
     path: 'dashboard/weekly-pie',
     component: AccessPieDashboardComponent,
+  },
+  {
+    path: 'dashboard',
+    component: GeneralDashboardsComponent,
   },
   { 
     path: 'home', 

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
 import { AccessService } from '../../../services/access.service';
 import { ChartConfiguration } from 'chart.js';
-import { AccessData } from '../../../models/dashboard.model';
+import { AccessData, ChartState } from '../../../models/dashboard.model';
 
 @Component({
   selector: 'app-access-pie-dashboard',
@@ -18,6 +18,10 @@ export class AccessPieDashboardComponent {
 
   dateFrom: string = '';
   dateUntil: string = '';
+  chartState: ChartState = {
+    hasData: false,
+    message: 'No hay información para esas fechas.',
+  };
 
   legendItems: Array<{ day: string; percentage: number; color: string }> = [];
 
@@ -96,21 +100,38 @@ export class AccessPieDashboardComponent {
     this.loadInitialData();
   }
 
-  private updateChartData(data: AccessData[]) {
-    this.chartData.labels = data.map((item) => item.key);
+  private updateChartData(data: any[]) {
+    this.chartState.hasData =
+      data.length > 0 && data.some((item) => item.value > 0);
 
-    if (this.chartData.datasets) {
-      const numericData = data.map((item) => item.value);
-      this.chartData.datasets[0].data = numericData;
+    if (!this.chartState.hasData) {
+      this.chartData.labels = [];
+      if (this.chartData.datasets) {
+        this.chartData.datasets[0].data = [];
+      }
+    } else {
+      this.chartData.labels = data.map((item) => item.key);
+      if (this.chartData.datasets) {
+        this.chartData.datasets[0].data = data.map((item) => item.value);
+      }
+    }
 
-      // Calcular porcentajes para la leyenda
-      const total = numericData.reduce((acc, curr) => acc + curr, 0);
-
-      this.legendItems = data.map((item, index) => ({
-        day: item.key,
-        percentage: Number(((item.value * 100) / total).toFixed(1)),
-        color: this.colors[index],
-      }));
+    if (this.legendItems) {
+      if (!this.chartState.hasData) {
+        this.legendItems = data.map((item) => ({
+          day: item.key,
+          percentage: 0,
+          color: this.colors[0],
+        }));
+      } else {
+        const numericData = data.map((item) => item.value);
+        const total = numericData.reduce((acc, curr) => acc + curr, 0);
+        this.legendItems = data.map((item, index) => ({
+          day: item.key,
+          percentage: Number(((item.value * 100) / total).toFixed(1)),
+          color: this.colors[index],
+        }));
+      }
     }
 
     this.chart.update();

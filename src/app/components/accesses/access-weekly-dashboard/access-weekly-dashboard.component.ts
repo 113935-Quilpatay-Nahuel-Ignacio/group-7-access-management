@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AccessService } from '../../../services/access.service';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
+import { ChartState } from '../../../models/dashboard.model';
 
 @Component({
   selector: 'app-access-weekly-dashboard',
@@ -17,6 +18,10 @@ export class AccessWeeklyDashboardComponent {
 
   dateFrom: string = '';
   dateUntil: string = '';
+  chartState: ChartState = {
+    hasData: false,
+    message: 'No hay información para esas fechas.',
+  };
 
   public chartType: ChartType = 'bar';
 
@@ -80,10 +85,21 @@ export class AccessWeeklyDashboardComponent {
   }
 
   private updateChartData(data: any[]) {
-    this.chartData.labels = data.map((item) => item.key);
-    if (this.chartData.datasets) {
-      this.chartData.datasets[0].data = data.map((item) => item.value);
+    this.chartState.hasData =
+      data.length > 0 && data.some((item) => item.value > 0);
+
+    if (!this.chartState.hasData) {
+      this.chartData.labels = [];
+      if (this.chartData.datasets) {
+        this.chartData.datasets[0].data = [];
+      }
+    } else {
+      this.chartData.labels = data.map((item) => item.key);
+      if (this.chartData.datasets) {
+        this.chartData.datasets[0].data = data.map((item) => item.value);
+      }
     }
+
     this.chart.update();
   }
 }
