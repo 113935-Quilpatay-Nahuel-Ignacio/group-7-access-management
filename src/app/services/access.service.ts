@@ -17,17 +17,17 @@ export class AccessService {
   constructor(private http: HttpClient) {
   }
 
-  getAll(page: number, size: number, isActive?: boolean): Observable<AccessModel[]> {
-    return this.http.get<AccessModel[]>(this.apiUrl);
+  getAll(page: number, size: number, isActive?: boolean): Observable<{items: AccessModel[]}> {
+    return this.http.get<{items: AccessModel[]}>(this.apiUrl);
   }
 
 
-  getByAction(page: number, size: number, type: string, isActive?: boolean): Observable<AccessModel[]> {
-    return this.http.get<AccessModel[]>(this.apiUrl);
+  getByAction(page: number, size: number, type: string, isActive?: boolean): Observable<{items: AccessModel[]}> {
+    return this.http.get<{items: AccessModel[]}>(this.apiUrl);
   }
 
-  getByType(page: number, size: number, type: string, isActive?: boolean): Observable<AccessModel[]> {
-    return this.http.get<AccessModel[]>(this.apiUrl);
+  getByType(page: number, size: number, type: string, isActive?: boolean): Observable<{items: AccessModel[]}> {
+    return this.http.get<{items: AccessModel[]}>(this.apiUrl);
   }
 
   getHourlyAccesses(from: string, to: string): Observable<DashboardHourlyDTO[]> {

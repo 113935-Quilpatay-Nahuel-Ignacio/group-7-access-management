@@ -24,9 +24,9 @@ export interface Visitor {
 }
 
 export interface Authorizer {
-  id: number;
-  name: string;
-  last_name: string | null;
+  auth_id: number;
+  auth_first_name: string;
+  auth_last_name: string | null;
   doc_type: string; // Tipo de documento (DNI, etc.)
   doc_number: number; // Número
 }
@@ -37,11 +37,12 @@ export interface Auth {
   authorizer_id: number;
   plot_id: number | null; // Puede ser null
   visitor: Visitor;
-  authorizer: Authorizer;
   visitor_type: string; // Tipos posibles
   external_id: number | null; // Puede ser null
   auth_ranges: AuthRange[];
   is_active: boolean;
+  auth_first_name: string;
+  auth_last_name: string | null;
 }
 
 export const VisitorTypeAccessDictionary: { [key: string]: string } = {

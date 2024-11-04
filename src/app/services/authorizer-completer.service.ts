@@ -11,72 +11,72 @@ export class AuthorizerCompleterService {
 
   authorizers: Authorizer[] = [
     {
-      id: 1,
-      name: 'Ana',
-      last_name: 'García',
+      auth_id: 1,
+      auth_first_name: 'Ana',
+      auth_last_name: 'García',
       doc_type: 'DNI',
       doc_number: 12345678
     },
     {
-      id: 2,
-      name: 'Javier',
-      last_name: 'Pérez',
+      auth_id: 2,
+      auth_first_name: 'Javier',
+      auth_last_name: 'Pérez',
       doc_type: 'CUIL',
       doc_number: 23456789
     },
     {
-      id: 3,
-      name: 'Sofía',
-      last_name: 'Rodríguez',
+      auth_id: 3,
+      auth_first_name: 'Sofía',
+      auth_last_name: 'Rodríguez',
       doc_type: 'DNI',
       doc_number: 34567890
     },
     {
-      id: 4,
-      name: 'Diego',
-      last_name: 'Martínez',
+      auth_id: 4,
+      auth_first_name: 'Diego',
+      auth_last_name: 'Martínez',
       doc_type: 'CUIT',
       doc_number: 45678901
     },
     {
-      id: 5,
-      name: 'Lucía',
-      last_name: 'Fernández',
+      auth_id: 5,
+      auth_first_name: 'Lucía',
+      auth_last_name: 'Fernández',
       doc_type: 'PASSPORT',
       doc_number: 56789012
     },
     {
-      id: 6,
-      name: 'Mateo',
-      last_name: 'López',
+      auth_id: 6,
+      auth_first_name: 'Mateo',
+      auth_last_name: 'López',
       doc_type: 'DNI',
       doc_number: 67890123
     },
     {
-      id: 7,
-      name: 'Valentina',
-      last_name: 'Gómez',
+      auth_id: 7,
+      auth_first_name: 'Valentina',
+      auth_last_name: 'Gómez',
       doc_type: 'CUIT',
       doc_number: 78901234
     },
     {
-      id: 8,
-      name: 'Samuel',
-      last_name: 'Díaz',
+      auth_id: 8,
+      auth_first_name: 'Samuel',
+      auth_last_name: 'Díaz',
       doc_type: 'DNI',
       doc_number: 89012345
     },
     {
-      id: 9,
-      name: 'Mariana',
-      last_name: 'Hernández',
+      auth_id: 9,
+      auth_first_name: 'Mariana',
+      auth_last_name: 'Hernández',
       doc_type: 'PASSPORT',
       doc_number: 90123456
     },
     {
-      id: 10,
-      name: 'Fernando',
-      last_name: 'Torres',
+      auth_id: 10,
+      auth_first_name: 'Fernando',
+      auth_last_name: 'Torres',
       doc_type: 'CUIL',
       doc_number: 10234567
     }
@@ -84,6 +84,6 @@ export class AuthorizerCompleterService {
 
 
   completeAuthorizer(id: number): Authorizer {
-    return this.authorizers.find(x => x.id == id)!;
+    return this.authorizers.find(x => x.auth_id == id)!;
   }
 }

@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class AuthRangeService {
 
-   private url = 'http://localhost:8080/auths'
+   private url = 'http://localhost:8001/auths'
 
 
   constructor(private http : HttpClient) {}

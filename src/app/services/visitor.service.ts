@@ -9,9 +9,9 @@ import {SendVisitor, Visitor} from "../models/visitor.model";
 })
 export class VisitorService {
 
-  private apiUrl = 'http://localhost:8080/visitors';
+  private apiUrl = 'http://localhost:8001/visitors';
 
-  private baseUrl = 'http://localhost:8080/';
+  private baseUrl = 'http://localhost:8001/';
 
   constructor(private http: HttpClient) {
   }

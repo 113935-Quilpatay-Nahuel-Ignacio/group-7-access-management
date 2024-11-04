@@ -97,7 +97,7 @@
             </td>
             <td>
               <!--TODO icono-->
-              {{ item.authorizer.name + ' ' + item.authorizer.last_name }}
+              {{ item.auth_first_name + ' ' + item.auth_last_name }}
             </td>
             @if (userType == "ADMIN" || userType == "OWNER") {
               <td>

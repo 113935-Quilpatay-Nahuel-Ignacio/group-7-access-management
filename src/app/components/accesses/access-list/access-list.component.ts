@@ -98,11 +98,14 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   //#region GET_ALL
   getAll() {
     this.accessService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-        data.forEach(date => {
+        data.items.forEach(date => {
+          if (date.authorizer_id != undefined){
+
           date.authorizer = this.authorizerCompleterService.completeAuthorizer(date.authorizer_id)
+          }
         })
-      this.completeList = this.transformListToTableData(data);
-        let response = this.transformResponseService.transformResponse(data,this.currentPage, this.pageSize, this.retrieveByActive)
+      this.completeList = this.transformListToTableData(data.items);
+        let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
 
 
         this.list = response.content;
@@ -118,8 +121,8 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   //#region GET_ALL
   getAllFiltered(filter: string) {
     this.accessService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-      data = data.filter(x => (x.first_name.toLowerCase().includes(filter) || x.last_name.toLowerCase().includes(filter) || x.doc_number.toString().includes(filter) || x.vehicle_reg.toLowerCase().includes(filter)))
-        let response = this.transformResponseService.transformResponse(data,this.currentPage, this.pageSize, this.retrieveByActive)
+      data.items = data.items.filter(x => (x.first_name.toLowerCase().includes(filter) || x.last_name.toLowerCase().includes(filter) || x.doc_number.toString().includes(filter) || x.vehicle_reg.toLowerCase().includes(filter)))
+        let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
         response.content.forEach(data => {
           data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
         })
@@ -140,7 +143,7 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   //#region FILTROS
   filterByVisitorType(type: string) {
     this.accessService.getByType(this.currentPage, this.pageSize, type, this.retrieveByActive).subscribe(data => {
-        let response = this.transformResponseService.transformType(data,this.currentPage, this.pageSize, type, this.retrieveByActive)
+        let response = this.transformResponseService.transformType(data.items,this.currentPage, this.pageSize, type, this.retrieveByActive)
         response.content.forEach(data => {
           data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
         })
@@ -161,8 +164,8 @@ export class AccessListComponent implements OnInit, AfterViewInit {
       return
     }
     this.accessService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-        data = data.filter(x => (new Date(new Date(x.action_date).setHours(0,0,0,0)) >= new Date(new Date(date_from+"T00:00:00").setHours(0,0,0,0)) && new Date(new Date(x.action_date).setHours(0,0,0,0)) <= new Date(new Date(date_to+"T00:00:00").setHours(0,0,0,0))))
-        let response = this.transformResponseService.transformResponse(data,this.currentPage, this.pageSize, this.retrieveByActive)
+        data.items = data.items.filter(x => (new Date(new Date(x.action_date).setHours(0,0,0,0)) >= new Date(new Date(date_from+"T00:00:00").setHours(0,0,0,0)) && new Date(new Date(x.action_date).setHours(0,0,0,0)) <= new Date(new Date(date_to+"T00:00:00").setHours(0,0,0,0))))
+        let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
         response.content.forEach(data => {
           data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
         })
@@ -180,7 +183,7 @@ export class AccessListComponent implements OnInit, AfterViewInit {
 
   filterByAction(action: string) {
     this.accessService.getByAction(this.currentPage, this.pageSize, action, this.retrieveByActive).subscribe(data => {
-      let response = this.transformResponseService.transformAction(data,this.currentPage, this.pageSize, action, this.retrieveByActive)
+      let response = this.transformResponseService.transformAction(data.items,this.currentPage, this.pageSize, action, this.retrieveByActive)
         response.content.forEach(data => {
           data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
         })

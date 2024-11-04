@@ -10,7 +10,7 @@ import {AccessModel} from "../models/access.model";
 })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:8080/auths';
+  private apiUrl = 'http://localhost:8001/auths';
 
   constructor(private http: HttpClient) { }
 

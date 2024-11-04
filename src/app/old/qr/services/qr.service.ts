@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class QrService {
 
-  private apiUrl = 'http://localhost:8080/qr';
+  private apiUrl = 'http://localhost:8001/qr';
 
   constructor(private http: HttpClient) {}
 
