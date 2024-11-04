@@ -44,6 +44,10 @@ export const routes: Routes = [
     component: EntityFormComponent,
   },
   {
+    path: 'entity/edit/:id',
+    component: EntityFormComponent,
+  },
+  {
     path: 'entity/list',
     component: EntityListComponent,
   },

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {AuthService} from "../../../services/auth.service";
 import {LoginService} from "../../../services/login.service";
@@ -23,6 +23,14 @@ import {VisitorService} from "../../../services/visitor.service";
 })
 export class EntityFormComponent implements OnInit {
   entityForm: FormGroup = {} as FormGroup;
+  url = inject(ActivatedRoute);
+  isEditMode = false;
+  visitorId: string | null = null;
+
+  // Método para habilitar el modo edición
+  activateEditMode() {
+    this.isEditMode = true;
+  }
 
   constructor(private fb: FormBuilder, private authService: AuthService, private loginService: LoginService, private router: Router, private visitorService: VisitorService, private route: ActivatedRoute) {
   }
@@ -36,6 +44,14 @@ export class EntityFormComponent implements OnInit {
       doc_number: [null, Validators.required],
       birth_date: [null, Validators.required]
     });
+
+    /*this.route.paramMap.subscribe(params => {
+      this.visitorId = params.get('visitor_id');
+      if (this.visitorId) {
+        this.isEditMode = true;
+        this.loadVisitorData(this.visitorId); // Carga los datos para editar
+      }
+    });*/
   }
 
 
