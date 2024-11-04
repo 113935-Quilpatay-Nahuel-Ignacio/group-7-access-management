@@ -59,6 +59,7 @@ export class AuthFormComponent implements OnInit {
       this.authService.getById(parseInt(documentParam, 10)).subscribe(datas => {
         let data = datas[0]
         // Completa el formulario
+        
         this.authForm.patchValue({
           auth_id: data.auth_id,
           is_active:data.is_active,
@@ -69,6 +70,7 @@ export class AuthFormComponent implements OnInit {
             last_name: data.visitor.last_name,
             doc_type: data.visitor.doc_type,
             doc_number: data.visitor.doc_number,
+            
             birth_date: this.formatDate(data.visitor.birth_date), // Asegúrate de formatear la fecha si es necesario
           }
         });
