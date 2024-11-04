@@ -149,7 +149,7 @@ export class AccessPieDashboardComponent {
         "EMPLOYEE": "Empleado",
         "PROVIDER": "Proveedor",
         "PROVIDER_ORGANIZATION": "Organización Proveedora",
-        "COHABITANT": "Cohabitante",
+        "COHABITANT": "Conviviente",
         "EMERGENCY": "Emergencia"
     };
 
