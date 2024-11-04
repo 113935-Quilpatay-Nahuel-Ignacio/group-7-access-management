@@ -1,7 +1,7 @@
 
 <div class="row g-3 m-2">
       <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
+        <h5 class="modal-title">Horarios</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -9,12 +9,12 @@
           <!-- Columna izquierda: lista de rangos -->
           <div class="col-md-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
-              <h4>Rangos</h4>
+              <h4>Horarios</h4>
               <button class="btn btn-outline-primary" id="addRangeButton" (click)="addRange()">Nuevo</button>
             </div>
             <select class="form-select" id="rangeSelect" (change)="selectRangeEvent()" [(ngModel)]="selectedRange">
               @for (range of ranges; track $index){
-                <option value="{{$index}}">Rango {{$index+1}}</option>
+                <option value="{{$index}}">Horario {{$index+1}}</option>
               }
             </select>
           </div>
