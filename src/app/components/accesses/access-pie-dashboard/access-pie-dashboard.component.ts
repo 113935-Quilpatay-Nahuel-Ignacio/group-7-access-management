@@ -91,7 +91,7 @@ export class AccessPieDashboardComponent {
   filterData() {
     if (this.dateFrom && this.dateUntil) {
       this.dashboardService
-        .getWeeklyAccesses(this.dateFrom, this.dateUntil)
+        .getVisitorTypeAccesses(this.dateFrom, this.dateUntil)
         .subscribe((data) => {
           this.updateChartData(data);
         });
@@ -112,7 +112,7 @@ export class AccessPieDashboardComponent {
         this.chartData.datasets[0].data = [];
       }
     } else {
-      this.chartData.labels = data.map((item) => this.traducirDiaSemana(item.key));
+      this.chartData.labels = data.map((item) => this.traducirRol(item.key));
       if (this.chartData.datasets) {
         this.chartData.datasets[0].data = data.map((item) => item.value);
       }
@@ -121,7 +121,7 @@ export class AccessPieDashboardComponent {
     if (this.legendItems) {
       if (!this.chartState.hasData) {
         this.legendItems = data.map((item) => ({
-          day: this.traducirDiaSemana(item.key),
+          day: this.traducirRol(item.key),
           percentage: 0,
           color: this.colors[0],
         }));
@@ -129,7 +129,7 @@ export class AccessPieDashboardComponent {
         const numericData = data.map((item) => item.value);
         const total = numericData.reduce((acc, curr) => acc + curr, 0);
         this.legendItems = data.map((item, index) => ({
-          day: this.traducirDiaSemana(item.key),
+          day: this.traducirRol(item.key),
           percentage: Number(((item.value * 100) / total).toFixed(1)),
           color: this.colors[index],
         }));
@@ -141,17 +141,18 @@ export class AccessPieDashboardComponent {
     }
   }
 
-  traducirDiaSemana(diaIngles: string): string {
-    const diasSemana: { [key: string]: string } = {
-        "MONDAY": "Lunes",
-        "TUESDAY": "Martes",
-        "WEDNESDAY": "Miércoles",
-        "THURSDAY": "Jueves",
-        "FRIDAY": "Viernes",
-        "SATURDAY": "Sábado",
-        "SUNDAY": "Domingo"
+  traducirRol(rolIngles: string): string {
+    const roles: { [key: string]: string } = {
+        "OWNER": "Propietario",
+        "WORKER": "Trabajador",
+        "VISITOR": "Visitante",
+        "EMPLOYEE": "Empleado",
+        "PROVIDER": "Proveedor",
+        "PROVIDER_ORGANIZATION": "Organización Proveedora",
+        "COHABITANT": "Conviviente",
+        "EMERGENCY": "Emergencia"
     };
 
-    return diasSemana[diaIngles] || "Día no válido";
+    return roles[rolIngles.toUpperCase()] || "Rol desconocido";
 }
 }
