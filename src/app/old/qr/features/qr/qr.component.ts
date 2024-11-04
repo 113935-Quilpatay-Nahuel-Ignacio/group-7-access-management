@@ -39,7 +39,7 @@ sendQRByEmail() {
         console.log(data)
         this.alertComponent.alertType = 'success';
           this.alertComponent.alertTitle = 'QR enviado';
-          this.alertComponent.alertMessage = 'Se ha enviado el QR al correo electrónico';
+          this.alertComponent.alertMessage = data.message ;
           this.showAlert = true;
        
       },
