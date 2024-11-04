@@ -122,7 +122,7 @@ export class AccessWeeklyDashboardComponent {
         this.chartData.datasets[1].data = [];
       }
     } else {
-      this.chartData.labels = data.map((item) => item.key);
+      this.chartData.labels = data.map((item) => this.traducirDiaSemana(item.key));
       if (this.chartData.datasets) {
         this.chartData.datasets[0].data = data.map((item) => item.value);
         this.chartData.datasets[1].data = data.map(
@@ -135,4 +135,19 @@ export class AccessWeeklyDashboardComponent {
       this.chart.chart.update();
     }
   }
+
+traducirDiaSemana(diaIngles: string): string {
+    const diasSemana: { [key: string]: string } = {
+        "MONDAY": "Lunes",
+        "TUESDAY": "Martes",
+        "WEDNESDAY": "Miércoles",
+        "THURSDAY": "Jueves",
+        "FRIDAY": "Viernes",
+        "SATURDAY": "Sábado",
+        "SUNDAY": "Domingo"
+    };
+
+    return diasSemana[diaIngles] || "Día no válido";
+}
+
 }

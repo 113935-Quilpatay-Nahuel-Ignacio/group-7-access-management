@@ -112,7 +112,7 @@ export class AccessPieDashboardComponent {
         this.chartData.datasets[0].data = [];
       }
     } else {
-      this.chartData.labels = data.map((item) => item.key);
+      this.chartData.labels = data.map((item) => this.traducirDiaSemana(item.key));
       if (this.chartData.datasets) {
         this.chartData.datasets[0].data = data.map((item) => item.value);
       }
@@ -121,7 +121,7 @@ export class AccessPieDashboardComponent {
     if (this.legendItems) {
       if (!this.chartState.hasData) {
         this.legendItems = data.map((item) => ({
-          day: item.key,
+          day: this.traducirDiaSemana(item.key),
           percentage: 0,
           color: this.colors[0],
         }));
@@ -129,7 +129,7 @@ export class AccessPieDashboardComponent {
         const numericData = data.map((item) => item.value);
         const total = numericData.reduce((acc, curr) => acc + curr, 0);
         this.legendItems = data.map((item, index) => ({
-          day: item.key,
+          day: this.traducirDiaSemana(item.key),
           percentage: Number(((item.value * 100) / total).toFixed(1)),
           color: this.colors[index],
         }));
@@ -140,4 +140,18 @@ export class AccessPieDashboardComponent {
       this.chart.chart.update();
     }
   }
+
+  traducirDiaSemana(diaIngles: string): string {
+    const diasSemana: { [key: string]: string } = {
+        "MONDAY": "Lunes",
+        "TUESDAY": "Martes",
+        "WEDNESDAY": "Miércoles",
+        "THURSDAY": "Jueves",
+        "FRIDAY": "Viernes",
+        "SATURDAY": "Sábado",
+        "SUNDAY": "Domingo"
+    };
+
+    return diasSemana[diaIngles] || "Día no válido";
+}
 }
