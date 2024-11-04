@@ -93,7 +93,28 @@
               {{ translateTable(item.visitor_type, typeDictionary) }}
             </td>
             <td>
-              {{ transformAuthRanges(item.auth_ranges) }}
+              <div *ngFor="let authRange of item.auth_ranges">
+                <div class="d-flex align-items-center mb-2">
+                  <!-- Barra de días -->
+                  <div class="d-flex days-bar">
+                    <div
+                      *ngFor="let day of daysOfWeek"
+                      class="day"
+                      [ngClass]="{
+          'bg-primary text-white': isDayActive(authRange, day),
+          'bg-light': !isDayActive(authRange, day)
+        }"
+                    >
+                      {{ getDayInitial(day) }}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Rango de horario -->
+                <div class="text-muted">
+                  {{ formatHour(authRange.hour_from) }} - {{ formatHour(authRange.hour_to) }}
+                </div>
+              </div>
             </td>
             <td>
               <!--TODO icono-->

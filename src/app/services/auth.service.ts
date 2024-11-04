@@ -31,7 +31,9 @@ export class AuthService {
   }
 
   getAll(page: number, size: number, isActive?: boolean): Observable<Auth[]> {
-    return this.http.get<Auth[]>(this.apiUrl);
+    return this.http.get<Auth[]>(this.apiUrl, {
+      params: { size: 1000000 }
+    });
   }
 
   createAccess(data: any, userId: string): Observable<AccessModel> {

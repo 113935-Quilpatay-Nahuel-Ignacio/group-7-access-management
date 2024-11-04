@@ -18,16 +18,22 @@ import {UserTypeService} from "../../../services/userType.service";
 import {LoginService} from "../../../services/login.service";
 import {RangeModalComponent} from "../range-modal/range-modal.component";
 import {QrComponent} from "../../../old/qr/features/qr/qr.component";
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import {NgClass} from "@angular/common";
+import {DaysOfWeek} from "../../../models/authorizeRequest.model";
 
 @Component({
   selector: 'app-auth-list',
   standalone: true,
   imports: [
+    CommonModule,
     CadastrePlotFilterButtonsComponent,
     MainContainerComponent,
     NgbPagination,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NgClass
   ],
   templateUrl: './auth-list.component.html',
   styleUrl: './auth-list.component.css'
@@ -412,6 +418,29 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
   onInfoButtonClick() {
     this.modalService.open(this.infoModal, { size: 'lg' });
     }
+  daysOfWeek = [
+    DaysOfWeek.MONDAY,
+    DaysOfWeek.TUESDAY,
+    DaysOfWeek.WEDNESDAY,
+    DaysOfWeek.THURSDAY,
+    DaysOfWeek.FRIDAY,
+    DaysOfWeek.SATURDAY,
+    DaysOfWeek.SUNDAY
+  ];
+
+  isDayActive(authRange: AuthRange, day: DaysOfWeek): boolean {
+    return authRange.days_of_week.includes(day) && authRange.is_active;
+  }
+
+  // Obtener inicial de cada día
+  getDayInitial(day: DaysOfWeek): string {
+    return day.charAt(0);
+  }
+
+  // Formatear el rango horario
+  formatHour(hour: string): string {
+    return hour.substring(0, 5); // Para obtener el formato HH:mm
+  }
 
   edit(doc_number: number) {
     this.router.navigate(['/auth/form'], { queryParams: { auth_id: doc_number } });

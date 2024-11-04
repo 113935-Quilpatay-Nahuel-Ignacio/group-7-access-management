@@ -18,7 +18,9 @@ export class AccessService {
   }
 
   getAll(page: number, size: number, isActive?: boolean): Observable<{items: AccessModel[]}> {
-    return this.http.get<{items: AccessModel[]}>(this.apiUrl);
+    return this.http.get<{items: AccessModel[]}>(this.apiUrl, {
+      params: { size: 1000000 }
+    });
   }
 
 
