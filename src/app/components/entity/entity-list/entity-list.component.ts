@@ -98,10 +98,9 @@ export class EntityListComponent  implements OnInit, AfterViewInit {
   getAll() {
     this.visitorService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
 
-        console.log(data)
-        this.completeList = this.transformListToTableData(data);
+        this.completeList = this.transformListToTableData(data.items)
         console.log(this.completeList)
-        let response = this.transformResponseService.transformResponse(data,this.currentPage, this.pageSize, this.retrieveByActive)
+        let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
 
 
         this.list = response.content;
@@ -117,8 +116,8 @@ export class EntityListComponent  implements OnInit, AfterViewInit {
 
   getAllFiltered(filter:string) {
     this.visitorService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-        data = data.filter(x => (x.name.toLowerCase().includes(filter) || x.last_name.toLowerCase().includes(filter) || x.doc_number.toString().includes(filter)))
-        let response = this.transformResponseService.transformResponse(data,this.currentPage, this.pageSize, this.retrieveByActive)
+        data.items = data.items.filter(x => (x.name.toLowerCase().includes(filter) || x.last_name.toLowerCase().includes(filter) || x.doc_number.toString().includes(filter)))
+        let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
         response.content.forEach(data => {
           data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
         })
@@ -139,8 +138,8 @@ export class EntityListComponent  implements OnInit, AfterViewInit {
   //#region FILTROS
   filterByVisitorType(type: string) {
    this.visitorService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-       data = data.filter(x => (x.visitor_types.includes(type)))
-        let response = this.transformResponseService.transformResponse(data,this.currentPage, this.pageSize, this.retrieveByActive)
+       data.items = data.items.filter(x => (x.visitor_types.includes(type)))
+        let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
         response.content.forEach(data => {
           data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
         })
@@ -356,6 +355,6 @@ export class EntityListComponent  implements OnInit, AfterViewInit {
     }
 
   edit(doc_number: any) {
-    
+
   }
 }

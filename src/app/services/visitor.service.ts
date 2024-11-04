@@ -16,8 +16,8 @@ export class VisitorService {
   constructor(private http: HttpClient) {
   }
 
-  getAll(page: number, size: number, isActive?: boolean): Observable<Visitor[]> {
-    return this.http.get<Visitor[]>(this.apiUrl);
+  getAll(page: number, size: number, isActive?: boolean): Observable<{items: Visitor[]}> {
+    return this.http.get<{items: Visitor[]}>(this.apiUrl);
   }
 
   getVisitor(visitorId: number): Observable<HttpResponse<Visitor>> {
