@@ -18,3 +18,9 @@ export interface ChartState {
   hasData: boolean;
   message: string;
 }
+
+export interface EntryReport {
+  entry_count: number;
+  exit_count: number;
+}
+

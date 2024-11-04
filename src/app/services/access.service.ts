@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Auth} from "../models/authorize.model";
 import {AccessModel} from "../models/access.model";
 import {VisitorAuthorizationRequest} from "../models/authorizeRequest.model";
 import {PaginatedResponse} from "../models/api-response";
-import { DashboardHourlyDTO, DashboardWeeklyDTO } from '../models/dashboard.model';
+import { DashboardHourlyDTO, DashboardWeeklyDTO, EntryReport} from '../models/dashboard.model';
 
 @Injectable({
   providedIn: 'root'
@@ -53,5 +53,13 @@ export class AccessService {
     return this.http.get<DashboardWeeklyDTO[]>(`${this.apiUrl}/visitor/type`, {
       params: { from, to }
     });
+  }
+
+  getAccessByDate(from: Date, to: Date): Observable<EntryReport> {
+    const params = new HttpParams()
+      .set('from', from.toISOString().split('T')[0])
+      .set('to', to.toISOString().split('T')[0]);
+
+    return this.http.get<EntryReport>(`${this.apiUrl}/getAccessCounts`, { params });
   }
 }
