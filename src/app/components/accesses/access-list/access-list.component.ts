@@ -121,7 +121,7 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   //#region GET_ALL
   getAllFiltered(filter: string) {
     this.accessService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-      data.items = data.items.filter(x => (x.first_name.toLowerCase().includes(filter) || x.last_name.toLowerCase().includes(filter) || x.doc_number.toString().includes(filter) || x.vehicle_reg.toLowerCase().includes(filter)))
+      data.items = data.items.filter(x => (x.first_name?.toLowerCase().includes(filter) || x.last_name?.toLowerCase().includes(filter) || x.doc_number?.toString().includes(filter) || x.vehicle_reg?.toLowerCase().includes(filter)))
         let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
         response.content.forEach(data => {
           data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)

@@ -75,7 +75,7 @@ export class AccessFormComponent implements OnInit {
       doc_number: [null, Validators.required],
       action: ['ENTRY', Validators.required], // Nueva acción (ENTRY/SALIDA)
       vehicle_type: ['CAR', Validators.required], // Tipo de vehículo (CAR/MOTORBIKE/etc.)
-      vehicle_reg: ['', Validators.required], // Matrícula del vehículo
+      vehicle_reg: [''], // Matrícula del vehículo
       vehicle_description: [''], // Descripción detallada del vehículo
       comments: [''], // Comentarios adicionales
     });

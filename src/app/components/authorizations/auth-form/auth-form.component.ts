@@ -75,6 +75,13 @@ export class AuthFormComponent implements OnInit {
         this.authForm.get('plot_id')?.enable()
       }
 
+      const documentParam = this.paramRoutes.snapshot.queryParamMap.get('doc_number');
+     console.log(documentParam)
+     
+      if (documentParam) {
+      this.authForm.get('visitor_request.doc_number')?.patchValue(documentParam);
+    }
+
     });
 
     const documentParam = this.paramRoutes.snapshot.queryParamMap.get('auth_id');
