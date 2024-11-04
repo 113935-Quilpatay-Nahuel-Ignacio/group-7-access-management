@@ -1,4 +1,5 @@
-<h1>Lista de Entidades</h1>
+<app-main-container [title]="'Lista de Entidades'" (infoButtonClick)="onInfoButtonClick()" >
+
   <div class="card-body">
     <!-- ESTE COMPONENTE LO VAN A TENER QUE MODIFICAR ES EL DEL BUSCAR, EXPORTAR, ETC -->
     <!-- @param itemList => Mandan la lista con la cual hacen la tabla
@@ -182,11 +183,6 @@
           [boundaryLinks]="false"
         ></ngb-pagination>
 
-        <div class="ms-2">
-          <button class="btn btn-secondary ms-3 mb-3" (click)="onInfoButtonClick()">
-            <i class="bi bi-info-circle"></i>
-          </button>
-        </div>
       </div>
 
     </div>
@@ -256,3 +252,7 @@
       <button type="button" class="btn btn-primary" (click)="modal.close()">Entendido</button>
     </div>
   </ng-template>
+
+</app-main-container>
+
+ 

@@ -17,10 +17,17 @@
     <div
       class="col-sm-12 col-md-4 col-xl-64 text-xl-center text-center mt-3 mt-md-0 d-flex align-items-center justify-content-end"
     >
-      <button type="button" class="btn btn-outline-primary" (click)="redirectToForm()">Nuevo</button>
+    
+    <button 
+    type="button" 
+    class="btn btn-outline-primary d-flex align-items-center justify-content-center p-0 mx-4" 
+    style="width: 35px; height: 35px;"
+    (click)="redirectToForm()" 
+    title="Agregar nuevo">
+    <i class="bi bi-plus fs-5"></i>
+  </button>
 
-      <!-- Línea vertical -->
-      <div class="vertical-line mx-3"></div>
+
 
       <button
         class="btn btn-success me-2 mb-md-2 mb-xl-0 mt-2 mt-xl-0"

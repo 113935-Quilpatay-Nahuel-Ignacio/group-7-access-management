@@ -475,7 +475,7 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
   })
   }
   qr(doc: number){
-    const modalRef = this.modalService.open(QrComponent, {size: 'xl'});
+    const modalRef = this.modalService.open(QrComponent, {size: 's'});
     modalRef.componentInstance.docNumber = doc
   }
   enable(auth_id: number) {
