@@ -31,7 +31,9 @@ export class AuthService {
   }
 
   getAll(page: number, size: number, isActive?: boolean): Observable<Auth[]> {
-    return this.http.get<Auth[]>(this.apiUrl);
+    return this.http.get<Auth[]>(this.apiUrl, {
+      params: { size: 1000000 }
+    });
   }
 
   createAccess(data: any, userId: string): Observable<AccessModel> {
@@ -52,6 +54,7 @@ export class AuthService {
   getById(document: number): Observable<Auth[]> {
     return this.http.get<Auth[]>(this.apiUrl + '?id=' + document.toString());
   }
+
   delete(authId: number, userId: number): Observable<any> {
     const headers = new HttpHeaders({
       'x-user-id': userId,
@@ -59,5 +62,14 @@ export class AuthService {
     });
 
     return this.http.delete<any>(this.apiUrl + '/authorization', { headers });
+  }
+
+  enable(authId: number, userId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'x-user-id': userId,
+      'auth-id': authId
+    });
+
+    return this.http.put<any>(this.apiUrl + '/authorization/activate',null, { headers });
   }
 }

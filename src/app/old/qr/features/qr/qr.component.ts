@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { QrService } from '../../services/qr.service';
 
@@ -10,8 +10,8 @@ import { QrService } from '../../services/qr.service';
   imports: [FormsModule, CommonModule],
   templateUrl: './qr.component.html',
 })
-export class QrComponent {
-  docNumber: number = 0;
+export class QrComponent implements OnInit{
+  @Input() docNumber: number = 0;
   qrImageSrc: string = '';
 
   constructor(private qrService: QrService) {}
@@ -24,5 +24,9 @@ export class QrComponent {
         this.qrImageSrc = reader.result as string;
       };
     });
+  }
+
+  ngOnInit(): void {
+    this.generateQr()
   }
 }

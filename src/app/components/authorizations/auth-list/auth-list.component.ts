@@ -16,16 +16,24 @@ import {TransformResponseService} from "../../../services/transform-response.ser
 import { CadastreExcelService } from '../../../services/cadastre-excel.service';
 import {UserTypeService} from "../../../services/userType.service";
 import {LoginService} from "../../../services/login.service";
+import {RangeModalComponent} from "../range-modal/range-modal.component";
+import {QrComponent} from "../../../old/qr/features/qr/qr.component";
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import {NgClass} from "@angular/common";
+import {DaysOfWeek} from "../../../models/authorizeRequest.model";
 
 @Component({
   selector: 'app-auth-list',
   standalone: true,
   imports: [
+    CommonModule,
     CadastrePlotFilterButtonsComponent,
     MainContainerComponent,
     NgbPagination,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NgClass
   ],
   templateUrl: './auth-list.component.html',
   styleUrl: './auth-list.component.css'
@@ -103,6 +111,7 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
     this.userType = this.userTypeService.getType()
     this.userTypeService.userType$.subscribe((userType: string) => {
       this.userType = userType
+      this.confirmFilter();
     });
   }
 
@@ -111,6 +120,12 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
   //#region GET_ALL
   getAll() {
     this.authService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
+            if(this.userType === "OWNER"){
+                data = data.filter(x => x.plot_id == 2)
+            }
+            if(this.userType === "GUARD"){
+                data = data.filter(x => x.is_active)
+            }
         /*data.forEach(date => {
           date.authorizer = this.authorizerCompleterService.completeAuthorizer(date.authorizer_id)
         })*/
@@ -403,6 +418,29 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
   onInfoButtonClick() {
     this.modalService.open(this.infoModal, { size: 'lg' });
     }
+  daysOfWeek = [
+    DaysOfWeek.MONDAY,
+    DaysOfWeek.TUESDAY,
+    DaysOfWeek.WEDNESDAY,
+    DaysOfWeek.THURSDAY,
+    DaysOfWeek.FRIDAY,
+    DaysOfWeek.SATURDAY,
+    DaysOfWeek.SUNDAY
+  ];
+
+  isDayActive(authRange: AuthRange, day: DaysOfWeek): boolean {
+    return authRange.days_of_week.includes(day) && authRange.is_active;
+  }
+
+  // Obtener inicial de cada día
+  getDayInitial(day: DaysOfWeek): string {
+    return day.charAt(0);
+  }
+
+  // Formatear el rango horario
+  formatHour(hour: string): string {
+    return hour.substring(0, 5); // Para obtener el formato HH:mm
+  }
 
   edit(doc_number: number) {
     this.router.navigate(['/auth/form'], { queryParams: { auth_id: doc_number } });
@@ -410,7 +448,16 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
 
   disable(auth_id: number) {
   this.authService.delete(auth_id,this.loginService.getLogin().id).subscribe(data => {
-    alert('sycvc')
+    this.confirmFilter();
   })
+  }
+  qr(doc: number){
+    const modalRef = this.modalService.open(QrComponent, {size: 'xl'});
+    modalRef.componentInstance.docNumber = doc
+  }
+  enable(auth_id: number) {
+    this.authService.enable(auth_id,this.loginService.getLogin().id).subscribe(data => {
+      this.confirmFilter();
+    })
   }
 }

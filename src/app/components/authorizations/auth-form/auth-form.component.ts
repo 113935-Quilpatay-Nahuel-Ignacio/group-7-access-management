@@ -10,6 +10,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {UserTypeService} from "../../../services/userType.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {RangeModalComponent} from "../range-modal/range-modal.component";
+import {NgSelectComponent} from "@ng-select/ng-select";
 
 @Component({
   selector: 'app-auth-form',
@@ -17,7 +18,8 @@ import {RangeModalComponent} from "../range-modal/range-modal.component";
   imports: [
     ReactiveFormsModule,
     NgIf,
-    NgClass
+    NgClass,
+    NgSelectComponent
   ],
   templateUrl: './auth-form.component.html',
   styleUrl: './auth-form.component.css'
@@ -40,17 +42,39 @@ export class AuthFormComponent implements OnInit {
 
 
     this.userType = this.userTypeService.getType()
-    if (this.userType != "ADMIN") {
+    if (this.userType == "OWNER"){
+      this.authForm.get('plot_id')?.setValue(2)
+      this.authForm.get('plot_id')?.disable()
+      this.authForm.get('visitor_type')?.setValue("VISITOR")
       this.authForm.get('visitor_type')?.disable()
+    }
+    if (this.userType == "ADMIN") {
+      this.authForm.get('plot_id')?.enable()
+      this.authForm.get('visitor_type')?.enable()
+    }
+    if  (this.userType == "GUARD") {
+      this.authForm.get('visitor_type')?.setValue("VISITOR")
+      this.authForm.get('visitor_type')?.disable()
+      this.authForm.get('plot_id')?.enable()
     }
     this.userTypeService.userType$.subscribe((userType: string) => {
       this.userType = userType
-      if (this.userType != "ADMIN") {
+      if (this.userType == "OWNER"){
+        this.authForm.get('plot_id')?.setValue(2)
+        this.authForm.get('plot_id')?.disable()
         this.authForm.get('visitor_type')?.setValue("VISITOR")
         this.authForm.get('visitor_type')?.disable()
-      } else {
+      }
+      if (this.userType == "ADMIN") {
+        this.authForm.get('plot_id')?.enable()
         this.authForm.get('visitor_type')?.enable()
       }
+      if  (this.userType == "GUARD") {
+        this.authForm.get('visitor_type')?.setValue("VISITOR")
+        this.authForm.get('visitor_type')?.disable()
+        this.authForm.get('plot_id')?.enable()
+      }
+
     });
 
     const documentParam = this.paramRoutes.snapshot.queryParamMap.get('auth_id');
@@ -120,7 +144,12 @@ export class AuthFormComponent implements OnInit {
 
   onSubmit() {
     if (this.authForm.valid) {
-      console.log("aaa")
+      if(this.authForm.value.visitor_type == undefined){
+        this.authForm.value.visitor_type = "VISITOR"
+      }
+      if(this.authForm.value.plot_id == undefined){
+        this.authForm.value.plot_id = 2
+      }
       const formData = this.authForm.value;
       formData.visitor_request.birth_date = formatFormDate(formData.visitor_request.birth_date);
 
@@ -172,6 +201,22 @@ export class AuthFormComponent implements OnInit {
 
       if (!this.isUpdate) {
         this.authService.createAuth(formData, this.loginService.getLogin().id.toString()).subscribe(data => {
+          if(this.userType === "OWNER"){
+            Swal.fire({
+              title: 'Registro exitoso!',
+              icon: 'success',
+              showCancelButton: true,
+              confirmButtonText: 'Cerrar',
+              cancelButtonText: 'Ir a autorizaciones',
+              customClass: {
+                confirmButton: 'btn btn-danger',
+                cancelButton: 'btn btn-primary'
+              }}).then((result) => {
+              if (result.isDismissed) {
+                this.router.navigate(['/auth/list']);
+              }
+            });
+          } else {
           Swal.fire({
             title: 'Registro exitoso!',
             text: 'Proceda a registrar el acceso',
@@ -188,9 +233,9 @@ export class AuthFormComponent implements OnInit {
               this.router.navigate(['/access/form']);
             }
           });
+          }
         });
       } else {
-        console.log(formData)
         this.authService.updateAuth(formData, this.loginService.getLogin().id.toString()).subscribe(data => {
           Swal.fire({
             title: 'Actualización exitosa!',
@@ -241,17 +286,56 @@ export class AuthFormComponent implements OnInit {
 
   initPlots() {
     this.plots = [
-      {id: 1, desc: "Andrés Torres", tel: "555-1234"},
-      {id: 2, desc: "Ana María", tel: "555-5678"},
-      {id: 3, desc: "Carlos Pérez", tel: "555-2345"},
-      {id: 4, desc: "Luisa Fernández", tel: "555-6789"},
-      {id: 5, desc: "Miguel Ángel", tel: "555-3456"},
-      {id: 6, desc: "Sofía Martínez", tel: "555-7890"},
-      {id: 7, desc: "David Gómez", tel: "555-4567"},
-      {id: 8, desc: "Isabel García", tel: "555-8901"},
-      {id: 9, desc: "Fernando López", tel: "555-5679"},
-      {id: 10, desc: "María José", tel: "555-6780"}
-    ]
+      {
+        id: 1,
+        desc: 'Andrés Torres',
+        tel: '555-1234',
+        name: '1 - Andrés Torres',
+      },
+      { id: 2, desc: 'Ana María', tel: '555-5678', name: '2 - Ana María' },
+      {
+        id: 3,
+        desc: 'Carlos Pérez',
+        tel: '555-2345',
+        name: '3 - Carlos Pérez',
+      },
+      {
+        id: 4,
+        desc: 'Luisa Fernández',
+        tel: '555-6789',
+        name: '4 - Luisa Fernández',
+      },
+      {
+        id: 5,
+        desc: 'Miguel Ángel',
+        tel: '555-3456',
+        name: '5 - Miguel Ángel',
+      },
+      {
+        id: 6,
+        desc: 'Sofía Martínez',
+        tel: '555-7890',
+        name: '6 - Sofía Martínez',
+      },
+      { id: 7, desc: 'David Gómez', tel: '555-4567', name: '7 - David Gómez' },
+      {
+        id: 8,
+        desc: 'Isabel García',
+        tel: '555-8901',
+        name: '8 - Isabel García',
+      },
+      {
+        id: 9,
+        desc: 'Fernando López',
+        tel: '555-5679',
+        name: '9 - Fernando López',
+      },
+      { id: 10, desc: 'María José', tel: '555-6780', name: '10 - María José' },
+    ];
+  }
+
+  onPlotSelected(selectedPlot: plot) {
+    this.plot = this.plots.find((plot) => plot.id === selectedPlot.id) || null;
   }
 
   private markAllAsTouched(): void {
@@ -311,5 +395,6 @@ function formatFormDate(inputDate: string): string {
 export interface plot {
   id: number,
   desc: string,
-  tel: string
+  tel: string,
+  name: string
 }

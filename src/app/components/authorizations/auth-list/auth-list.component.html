@@ -93,7 +93,28 @@
               {{ translateTable(item.visitor_type, typeDictionary) }}
             </td>
             <td>
-              {{ transformAuthRanges(item.auth_ranges) }}
+              <div *ngFor="let authRange of item.auth_ranges">
+                <div class="d-flex align-items-center mb-2">
+                  <!-- Barra de días -->
+                  <div class="d-flex days-bar">
+                    <div
+                      *ngFor="let day of daysOfWeek"
+                      class="day"
+                      [ngClass]="{
+          'bg-primary text-white': isDayActive(authRange, day),
+          'bg-light': !isDayActive(authRange, day)
+        }"
+                    >
+                      {{ getDayInitial(day) }}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Rango de horario -->
+                <div class="text-muted">
+                  {{ formatHour(authRange.hour_from) }} - {{ formatHour(authRange.hour_to) }}
+                </div>
+              </div>
             </td>
             <td>
               <!--TODO icono-->
@@ -113,7 +134,14 @@
               </td>
               <td>
                 <button class="btn btn-warning" (click)="edit(item.auth_id)"><i class="bi bi-pencil"></i></button>
+                @if (item.is_active) {
                 <button class="btn btn-danger ms-1" (click)="disable(item.auth_id)"><i class="bi bi-trash"></i></button>
+                }@else {
+                <button class="btn btn-success ms-1" (click)="enable(item.auth_id)"><i class="bi bi-check"></i></button>
+                }
+                  @if (userType == "OWNER") {
+                      <button class="btn btn-info ms-1" (click)="qr(item.visitor.doc_number)"><i class="bi bi-qr-code"></i></button>
+                  }
               </td>
             }
           </tr>
