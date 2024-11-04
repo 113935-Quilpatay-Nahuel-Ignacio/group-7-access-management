@@ -6,7 +6,7 @@ import {MainContainerComponent, ToastService} from "ngx-dabd-grupo01";
 import {NgbModal, NgbPagination} from "@ng-bootstrap/ng-bootstrap";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {AccessActionDictionary, AccessFilters, AccessModel} from "../../../models/access.model";
-import {Router} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {AccessService} from "../../../services/access.service";
 import {TransformResponseService} from "../../../services/transform-response.service";
 import {AuthorizerCompleterService} from "../../../services/authorizer-completer.service";
@@ -23,7 +23,8 @@ import {UserTypeService} from "../../../services/userType.service";
     MainContainerComponent,
     NgbPagination,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    RouterLink
   ],
   templateUrl: './entity-list.component.html',
   styleUrl: './entity-list.component.css'

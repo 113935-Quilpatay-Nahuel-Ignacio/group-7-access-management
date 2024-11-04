@@ -20,16 +20,25 @@ export class VisitorService {
     return this.http.get<{items: Visitor[]}>(this.apiUrl);
   }
 
-  getVisitor(visitorId: number): Observable<HttpResponse<Visitor>> {
-    return this.http.get<Visitor>(`${this.apiUrl}/by-doc-number/${visitorId}`, {observe: 'response'});
+  getVisitor(docNumber: number): Observable<HttpResponse<Visitor>> {
+    return this.http.get<Visitor>(`${this.apiUrl}/by-doc-number/${docNumber}`, {observe: 'response'});
   }
 
+ getVisitorById(visitoirId : number){
 
-  upsertVisitor(visitor: SendVisitor, userId: number): Observable<HttpResponse<Visitor>> {
+ return this.http.get<Visitor>(`${this.apiUrl}/visitorId/${visitoirId}`, {observe: 'response'});
+ }
+  upsertVisitor(visitor: SendVisitor,userId: number , entityId?:number): Observable<HttpResponse<Visitor>> {
     const headers = new HttpHeaders({
       'x-user-id': userId
     });
-    return this.http.put<Visitor>(this.apiUrl, visitor, {observe: 'response', headers});
+
+    const params = new HttpParams();
+    if(entityId){
+      params.set('visitorId', entityId.toString());
+    }
+
+    return this.http.put<Visitor>(this.apiUrl, visitor, {observe: 'response', headers , params});
   }
 
   checkAccess(plate: string, action: string): Observable<Boolean> {

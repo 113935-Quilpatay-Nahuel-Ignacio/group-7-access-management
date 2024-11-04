@@ -17,7 +17,7 @@ export class QrComponent implements OnInit{
 
   form: FormGroup = new FormGroup({
     email: new FormControl('' , [Validators.required, Validators.email]),
-    invitorName: new FormControl('' , [Validators.required]),
+    //invitorName: new FormControl('' , [Validators.required]),
   });
 
 
@@ -29,7 +29,7 @@ sendQRByEmail() {
   if(this.form.valid){
     const request: sendQRByEmailRequest = {
       email: this.form.value.email,
-      invitor_name: this.form.value.invitorName,
+      invitor_name: 'Lucas Angel',
       doc_number: this.docNumber
     }
 
