@@ -57,6 +57,7 @@ export class AccessFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private accessService: AccessService,
     private loginService: LoginService,
     private router: Router,
     private visitorService: VisitorService
@@ -130,7 +131,7 @@ export class AccessFormComponent implements OnInit {
                 },
               }).then((result) => {
                 if (result.isDismissed) {
-                  this.authService
+                  this.accessService
                     .createAccess(
                       formData,
                       this.loginService.getLogin().id.toString()
@@ -146,7 +147,7 @@ export class AccessFormComponent implements OnInit {
                 }
               });
             } else {
-              this.authService
+              this.accessService
                 .createAccess(
                   formData,
                   this.loginService.getLogin().id.toString()
@@ -191,7 +192,7 @@ export class AccessFormComponent implements OnInit {
           this.accessForm.get('first_name')?.setValue(data.body.name);
           this.accessForm.get('doc_number')?.setErrors(null);
           let plots = '';
-          this.authService.getValid(document).subscribe((data) => {
+          this.authService.getValidAuths(document).subscribe((data) => {
             data.forEach((auth) => {
               plots += auth.plot_id?.toString() + ', ';
             });
@@ -233,7 +234,7 @@ export class AccessFormComponent implements OnInit {
       return;
     }
     this.authService.getValid(document).subscribe((data) => {
-      if (data.length > 0) {
+      if (data) {
         Swal.fire('Autorizado', 'Tiene permitido el ingreso', 'success');
       } else {
         Swal.fire({
@@ -306,7 +307,7 @@ export class AccessFormComponent implements OnInit {
           this.accessForm.get('plot_id')?.setValue(lote);
           this.accessForm.get('doc_number')?.setErrors(null);
           let plots = '';
-          this.authService.getValid(document).subscribe((data) => {
+          this.authService.getValidAuths(document).subscribe((data) => {
             data.forEach((auth) => {
               plots += auth.plot_id?.toString() + ', ';
             });
