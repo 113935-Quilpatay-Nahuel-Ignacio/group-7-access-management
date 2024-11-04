@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 import {Auth} from "../models/authorize.model";
-import {HttpClient, HttpParams, HttpResponse} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from "@angular/common/http";
 import {SendVisitor, Visitor} from "../models/visitor.model";
 
 @Injectable({
@@ -25,8 +25,11 @@ export class VisitorService {
   }
 
 
-  upsertVisitor(visitor: SendVisitor): Observable<HttpResponse<Visitor>> {
-    return this.http.put<Visitor>(this.apiUrl, visitor, {observe: 'response'});
+  upsertVisitor(visitor: SendVisitor, userId: number): Observable<HttpResponse<Visitor>> {
+    const headers = new HttpHeaders({
+      'x-user-id': userId
+    });
+    return this.http.put<Visitor>(this.apiUrl, visitor, {observe: 'response', headers});
   }
 
   checkAccess(plate: string, action: string): Observable<Boolean> {

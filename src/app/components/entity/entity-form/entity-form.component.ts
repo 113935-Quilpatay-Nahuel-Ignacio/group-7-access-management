@@ -34,8 +34,7 @@ export class EntityFormComponent implements OnInit {
       last_name: ['', Validators.required],
       doc_type: ['DNI', Validators.required],
       doc_number: [null, Validators.required],
-      birth_date: [null, Validators.required],
-      visitor_type: ["VISITOR"]
+      birth_date: [null, Validators.required]
     });
   }
 
@@ -50,7 +49,7 @@ export class EntityFormComponent implements OnInit {
     if (this.entityForm.valid) {
       const formData = this.entityForm.value;
       formData.birth_date = formatFormDate(formData.birth_date);
-      this.visitorService.upsertVisitor(formData).subscribe((response) => {
+      this.visitorService.upsertVisitor(formData,this.loginService.getLogin().id).subscribe((response) => {
         console.log(response)
         Swal.fire('Registro exitoso...', "Se registró correctamente", 'success');
         this.ngOnInit();
