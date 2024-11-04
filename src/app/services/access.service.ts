@@ -49,4 +49,9 @@ export class AccessService {
       params: { from, to }
     });
   }
+  getVisitorTypeAccesses(from: string, to: string): Observable<DashboardWeeklyDTO[]> {
+    return this.http.get<DashboardWeeklyDTO[]>(`${this.apiUrl}/visitor/type`, {
+      params: { from, to }
+    });
+  }
 }
