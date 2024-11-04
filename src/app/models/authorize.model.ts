@@ -37,6 +37,7 @@ export interface Auth {
   authorizer_id: number;
   plot_id: number | null; // Puede ser null
   visitor: Visitor;
+  authorizer: Authorizer;
   visitor_type: string; // Tipos posibles
   external_id: number | null; // Puede ser null
   auth_ranges: AuthRange[];

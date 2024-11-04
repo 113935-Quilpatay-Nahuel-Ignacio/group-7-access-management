@@ -87,13 +87,15 @@
               {{ item.visitor.name + ' ' + (item.visitor.last_name ? item.visitor.last_name : '') }}
             </td>
             <td>
-              {{ (item.visitor.doc_type === "PASSPORT" ? "PASAPORTE" : item.visitor.doc_type) + ' ' + item.visitor.doc_number }}
+                {{ getDocumentAbbreviation(item.visitor.doc_type) + ' ' + item.visitor.doc_number }}
             </td>
             <td>
               {{ translateTable(item.visitor_type, typeDictionary) }}
             </td>
             <td>
               <div *ngFor="let authRange of item.auth_ranges">
+                  @if (authRange.is_active){
+
                 <div class="d-flex align-items-center mb-2">
                   <!-- Barra de días -->
                   <div class="d-flex days-bar">
@@ -114,11 +116,12 @@
                 <div class="text-muted">
                   {{ formatHour(authRange.hour_from) }} - {{ formatHour(authRange.hour_to) }}
                 </div>
+                  }
               </div>
             </td>
             <td>
               <!--TODO icono-->
-              {{ item.auth_first_name + ' ' + item.auth_last_name }}
+              {{ item.authorizer?.auth_first_name + ' ' + item.authorizer?.auth_last_name }}
             </td>
             @if (userType == "ADMIN" || userType == "OWNER") {
               <td>

@@ -126,9 +126,12 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
             if(this.userType === "GUARD"){
                 data = data.filter(x => x.is_active)
             }
-        /*data.forEach(date => {
+        data.forEach(date => {
           date.authorizer = this.authorizerCompleterService.completeAuthorizer(date.authorizer_id)
-        })*/
+          if (date.authorizer === undefined){
+            date.authorizer = this.authorizerCompleterService.completeAuthorizer(1)
+          }
+        })
         this.completeList = this.transformLotListToTableData(data);
         let response = this.transformResponseService.transformResponse(data,this.currentPage, this.pageSize, this.retrieveByActive)
 
@@ -434,7 +437,27 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
 
   // Obtener inicial de cada día
   getDayInitial(day: DaysOfWeek): string {
-    return day.charAt(0);
+    const dayInitials: { [key in DaysOfWeek]: string } = {
+      [DaysOfWeek.MONDAY]: 'L',
+      [DaysOfWeek.TUESDAY]: 'M',
+      [DaysOfWeek.WEDNESDAY]: 'X',
+      [DaysOfWeek.THURSDAY]: 'J',
+      [DaysOfWeek.FRIDAY]: 'V',
+      [DaysOfWeek.SATURDAY]: 'S',
+      [DaysOfWeek.SUNDAY]: 'D'
+    };
+    return dayInitials[day];
+  }
+
+  getDocumentAbbreviation(docType: string): string {
+    const abbreviations: { [key: string]: string } = {
+      'DNI': 'D -',
+      'PASSPORT': 'P -',
+      'CUIL': 'CL -',
+      'CUIT': 'CT -'
+    };
+
+    return abbreviations[docType] || docType; // Devuelve la abreviatura o el tipo original si no está en el mapeo
   }
 
   // Formatear el rango horario
