@@ -16,6 +16,8 @@ import {TransformResponseService} from "../../../services/transform-response.ser
 import { CadastreExcelService } from '../../../services/cadastre-excel.service';
 import {UserTypeService} from "../../../services/userType.service";
 import {LoginService} from "../../../services/login.service";
+import {RangeModalComponent} from "../range-modal/range-modal.component";
+import {QrComponent} from "../../../old/qr/features/qr/qr.component";
 
 @Component({
   selector: 'app-auth-list',
@@ -103,6 +105,7 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
     this.userType = this.userTypeService.getType()
     this.userTypeService.userType$.subscribe((userType: string) => {
       this.userType = userType
+      this.confirmFilter();
     });
   }
 
@@ -111,6 +114,12 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
   //#region GET_ALL
   getAll() {
     this.authService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
+            if(this.userType === "OWNER"){
+                data = data.filter(x => x.plot_id == 2)
+            }
+            if(this.userType === "GUARD"){
+                data = data.filter(x => x.is_active)
+            }
         /*data.forEach(date => {
           date.authorizer = this.authorizerCompleterService.completeAuthorizer(date.authorizer_id)
         })*/
@@ -410,7 +419,16 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
 
   disable(auth_id: number) {
   this.authService.delete(auth_id,this.loginService.getLogin().id).subscribe(data => {
-    alert('sycvc')
+    this.confirmFilter();
   })
+  }
+  qr(doc: number){
+    const modalRef = this.modalService.open(QrComponent, {size: 'xl'});
+    modalRef.componentInstance.docNumber = doc
+  }
+  enable(auth_id: number) {
+    this.authService.enable(auth_id,this.loginService.getLogin().id).subscribe(data => {
+      this.confirmFilter();
+    })
   }
 }

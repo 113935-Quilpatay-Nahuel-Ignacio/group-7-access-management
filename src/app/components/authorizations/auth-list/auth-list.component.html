@@ -113,7 +113,14 @@
               </td>
               <td>
                 <button class="btn btn-warning" (click)="edit(item.auth_id)"><i class="bi bi-pencil"></i></button>
+                @if (item.is_active) {
                 <button class="btn btn-danger ms-1" (click)="disable(item.auth_id)"><i class="bi bi-trash"></i></button>
+                }@else {
+                <button class="btn btn-success ms-1" (click)="enable(item.auth_id)"><i class="bi bi-check"></i></button>
+                }
+                  @if (userType == "OWNER") {
+                      <button class="btn btn-info ms-1" (click)="qr(item.visitor.doc_number)"><i class="bi bi-qr-code"></i></button>
+                  }
               </td>
             }
           </tr>
