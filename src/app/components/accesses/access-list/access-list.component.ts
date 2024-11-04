@@ -324,6 +324,17 @@ export class AccessListComponent implements OnInit, AfterViewInit {
     return;
   }
 
+  getDocumentAbbreviation(docType: string): string {
+    const abbreviations: { [key: string]: string } = {
+      'DNI': 'D -',
+      'PASSPORT': 'P -',
+      'CUIL': 'CL -',
+      'CUIT': 'CT -'
+    };
+
+    return abbreviations[docType] || docType; // Devuelve la abreviatura o el tipo original si no está en el mapeo
+  }
+
   translateTable(value: any, dictionary: { [key: string]: any }) {
     if (value !== undefined && value !== null) {
       for (const key in dictionary) {

@@ -105,7 +105,7 @@
               {{ item.first_name + ' ' + item.last_name }}
             </td>
             <td>
-              {{ (item.doc_type === "PASSPORT" ? "PASAPORTE" : item.doc_type) + ' ' + item.doc_number }}
+              {{ getDocumentAbbreviation(item.doc_type) + ' ' + item.doc_number }}
             </td>
             <td>
               {{ translateTable(item.visitor_type, typeDictionary) }}
@@ -124,7 +124,7 @@
               {{ item.vehicle_reg }}
             </td>
             <td>
-              {{ item.comments === "" ? "N/A" : item.comments }}
+              {{ (item.comments === "" || item.comments == undefined) ? "N/A" : item.comments }}
             </td>
             <td>
               <!--TODO icono-->
