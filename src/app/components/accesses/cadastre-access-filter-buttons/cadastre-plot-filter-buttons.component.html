@@ -12,6 +12,80 @@
           (input)="onFilterTextBoxChanged($event)"
           [(ngModel)]="filterText"
         />
+                  <!-- Filter dropdown -->
+          <div class="btn-group">
+            <button 
+              type="button" 
+              class="btn btn-outline-info dropdown-toggle" 
+              data-bs-toggle="dropdown" 
+              aria-expanded="false"
+            >
+            <i class="bi bi-funnel-fill"></i>{{ selectedFilter ? filterTypes[selectedFilter]: '' }}
+            </button>
+            
+            <ul class="dropdown-menu">
+              <li>
+                <a class="dropdown-item" (click)="clearFilters()">
+                  <i class="bi bi-x-circle me-2"></i>Limpiar filtros
+                </a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              @for (filter of availableFilters; track filter) {
+                <li>
+                  <a class="dropdown-item" (click)="selectFilter(filter.value)">
+                    {{ filter.label }}
+                  </a>
+                </li>
+              }
+            </ul>
+          </div>
+
+          <!-- Filter value input based on selected filter type -->
+          @if (selectedFilter && showFilterInput) {
+            <div class="ms-3">
+              @switch (filterInputType) {
+                @case ('select') {
+                  <select 
+                    class="form-select" 
+                    [(ngModel)]="filterValue"
+                    (change)="applyFilter()"
+                  >
+                    <option value="">Seleccionar...</option>
+                    @for (option of filterOptions; track option) {
+                      <option [value]="option.value">{{ option.label }}</option>
+                    }
+                  </select>
+                }
+                @case ('date') {
+                  <div class="d-flex align-items-center">
+                    <input 
+                      type="date" 
+                      class="form-control me-2" 
+                      [(ngModel)]="filterDateStart"
+                      (change)="applyFilter()"
+                    />
+                    <span class="me-2">hasta</span>
+                    <input 
+                      type="date" 
+                      class="form-control" 
+                      [(ngModel)]="filterDateEnd"
+                      (change)="applyFilter()"
+                    />
+                  </div>
+                }
+                @default {
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    [(ngModel)]="filterValue"
+                    (input)="applyFilter()"
+                    [placeholder]="'Filtrar por ' + filterTypes[selectedFilter]"
+                  />
+                }
+              }
+
+            </div>
+          }
       </div>
     </div>
     <div

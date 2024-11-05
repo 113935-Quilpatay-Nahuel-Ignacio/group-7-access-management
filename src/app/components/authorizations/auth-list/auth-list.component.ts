@@ -8,7 +8,7 @@ import {ExcelService} from "../../../services/excel.service";
 import {
     CadastrePlotFilterButtonsComponent
 } from "../../accesses/cadastre-access-filter-buttons/cadastre-plot-filter-buttons.component";
-import {MainContainerComponent, ToastService} from "ngx-dabd-grupo01";
+import {MainContainerComponent, TableColumn, TableComponent, ToastService} from "ngx-dabd-grupo01";
 import {NgbModal, NgbPagination} from "@ng-bootstrap/ng-bootstrap";
 import {AccessActionDictionary, AccessModel} from "../../../models/access.model";
 import {AccessService} from "../../../services/access.service";
@@ -33,7 +33,8 @@ import {DaysOfWeek} from "../../../models/authorizeRequest.model";
     NgbPagination,
     ReactiveFormsModule,
     FormsModule,
-    NgClass
+    NgClass,
+    TableComponent
   ],
   templateUrl: './auth-list.component.html',
   styleUrl: './auth-list.component.css'
@@ -78,7 +79,7 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
     "Tipo",
     "Horarios",
     "Autorizador"]
-
+  
   //#region ATT de ACTIVE
   retrieveByActive: boolean | undefined = true;
   //#endregion

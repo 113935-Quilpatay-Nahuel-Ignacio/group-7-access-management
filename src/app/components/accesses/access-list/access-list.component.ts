@@ -88,9 +88,36 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.filterComponent.filter$.subscribe((filter: string) => {
-      this.getAllFiltered(filter)
+    // Subscribe to filter changes
+    this.filterComponent.filter$.subscribe((filterCriteria: string) => {
+      if (!filterCriteria) {
+        this.getAll();
+        return;
+      }
+
+      const [filterType, ...values] = filterCriteria.split(':');
+      
+      switch (filterType) {
+        case 'visitor':
+          const visitorType = values[0];
+          this.filterByVisitorType(this.translateCombo(visitorType, this.typeDictionary));
+          break;
+          
+        case 'date':
+          const [startDate, endDate] = values;
+          this.filterByDate(new Date(startDate), new Date(endDate));
+          break;
+             
+        case 'status':
+          this.filterByAction(this.translateCombo(values[0], this.actionDictionary));
+          break;
+
+      }
     });
+  
+  /*  this.filterComponent.filter$.subscribe((filter: string) => {
+      this.getAllFiltered(filter)
+    });*/
   }
 
   //#endregion

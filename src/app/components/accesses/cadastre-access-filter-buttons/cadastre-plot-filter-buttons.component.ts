@@ -17,111 +17,135 @@ import {FormsModule} from "@angular/forms";
 })
 export class CadastrePlotFilterButtonsComponent<T extends Record<string, any>> {
   private router = inject(Router);
-  filterText: string = ""
-  private transformResponseService = inject(TransformResponseService)
-  // Reemplazen con su servicio para el getAll.
-  private service = inject(AccessService)
-  // Inject the Excel service for export functionality
+  private transformResponseService = inject(TransformResponseService);
+  private service = inject(AccessService);
   private excelService = inject(CadastreExcelService);
 
-  LIMIT_32BITS_MAX = 2147483647
+  filterText: string = "";
+  selectedFilter: string | null = null;
+  filterValue: string = "";
+  filterDateStart: string = "";
+  filterDateEnd: string = "";
+  showFilterInput: boolean = false;
+  filterInputType: 'text' | 'select' | 'date' = 'text';
+  filterOptions: Array<{ value: string, label: string }> = [];
 
-  // Input to receive the HTML table from the parent
+  readonly filterTypes: Record<string, string> = {
+    'visitor': 'Tipo de visitante',
+    'document': 'Documento',
+    'date': 'Fecha',
+    'status': 'Estado'
+  };
+
+  availableFilters = [
+    { value: 'visitor', label: 'Tipo de visitante' },
+    { value: 'document', label: 'Documento' },
+    { value: 'date', label: 'Fecha' },
+    { value: 'status', label: 'Estado' }
+  ];
+
   @Input() tableName!: HTMLTableElement;
-  // Input to receive a generic list from the parent component
   @Input() itemsList!: T[];
   @Input() heads!: string[];
   @Input() props!: string[];
-  // Input to redirect to the form.
   @Input() formPath: string = "";
-  // Represent the name of the object for the exports.
-  // Se va a usar para los nombres de los archivos.
-  @Input() objectName: string = ""
-  // Represent the dictionaries of ur object.
-  // Se va a usar para las traducciones de enum del back.
+  @Input() objectName: string = "";
   @Input() dictionaries: Array<{ [key: string]: any }> = [];
 
-  // Subject to emit filtered results
   private filterSubject = new Subject<string>();
-  // Observable that emits filtered owner list
   filter$ = this.filterSubject.asObservable();
 
-  ngOnInit(): void {
+  // Select filter type
+  selectFilter(filterType: string) {
+    this.selectedFilter = filterType;
+    this.showFilterInput = true;
+    this.filterValue = '';
+    this.filterDateStart = '';
+    this.filterDateEnd = '';
+
+    switch (filterType) {
+      case 'visitor':
+        this.filterInputType = 'select';
+        this.filterOptions = [
+          { value: 'propietario', label: 'Propietario' },
+          { value: 'visitante', label: 'Visitante' },
+          { value: 'trabajador', label: 'Trabajador' }
+        ];
+        break;
+      case 'date':
+        this.filterInputType = 'date';
+        break;
+      default:
+        this.filterInputType = 'text';
+        break;
+    }
   }
 
-  // Se va a usar para los nombres de los archivos.
-  getActualDayFormat() {
-    const today = new Date();
+  // Apply selected filter
+  applyFilter() {
+    let filterCriteria = '';
 
-    const formattedDate = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
+    switch (this.selectedFilter) {
+      case 'date':
+        if (this.filterDateStart && this.filterDateEnd) {
+          filterCriteria = `date:${this.filterDateStart}:${this.filterDateEnd}`;
+        }
+        break;
+      default:
+        if (this.filterValue) {
+          filterCriteria = `${this.selectedFilter}:${this.filterValue}`;
+        }
+        break;
+    }
 
-    return formattedDate;
+    this.filterSubject.next(filterCriteria);
   }
 
-  /**
-   * Export the HTML table to a PDF file.
-   * Calls the `exportTableToPdf` method from the `CadastreExcelService`.
-   */
-  exportToPdf() {
-        this.excelService.exportListToPdf(this.itemsList, this.heads, this.props, `${this.getActualDayFormat()}_${this.objectName}`);
-
-
+  // Clear all filters
+  clearFilters() {
+    this.selectedFilter = null;
+    this.filterValue = '';
+    this.filterDateStart = '';
+    this.filterDateEnd = '';
+    this.showFilterInput = false;
+    this.filterSubject.next('');
   }
 
-  /**
-   * Export the HTML table to an Excel file (.xlsx).
-   * Calls the `exportTableToExcel` method from the `CadastreExcelService`.
-   */
-  //#region TIENEN QUE MODIFICAR EL SERIVCIO CON SU GETALL
-  exportToExcel() {
-
-        this.excelService.exportListToExcel(this.itemsList, this.heads, this.props, `${this.getActualDayFormat()}_${this.objectName}`);
-
-  }
-
-  //#endregion
-
-  /**
-   * Filters the list of items based on the input value in the text box.
-   * The filter checks if any property of the item contains the search string (case-insensitive).
-   * The filtered list is then emitted through the `filterSubject`.
-   *
-   * @param event - The input event from the text box.
-   */
   onFilterTextBoxChanged(event: Event) {
     const target = event.target as HTMLInputElement;
-
     this.filterSubject.next(target.value.toLowerCase());
-
   }
 
-  /**
-   * Translates a value using the provided dictionary.
-   *
-   * @param value - The value to translate.
-   * @param dictionary - The dictionary used for translation.
-   * @returns The key that matches the value in the dictionary, or undefined if no match is found.
-   */
-  translateDictionary(value: any, dictionary?: { [key: string]: any }) {
-    if (value !== undefined && value !== null && dictionary) {
-      for (const key in dictionary) {
-        if (dictionary[key].toString().toLowerCase() === value.toLowerCase()) {
-          return key;
-        }
-      }
-    }
-    return;
+  // Export functions remain the same
+  exportToPdf() {
+    this.excelService.exportListToPdf(
+      this.itemsList, 
+      this.heads, 
+      this.props, 
+      `${this.getActualDayFormat()}_${this.objectName}`
+    );
   }
 
-  /**
-   * Redirects to the specified form path.
-   */
+  exportToExcel() {
+    this.excelService.exportListToExcel(
+      this.itemsList, 
+      this.heads, 
+      this.props, 
+      `${this.getActualDayFormat()}_${this.objectName}`
+    );
+  }
+
+  getActualDayFormat() {
+    const today = new Date();
+    return today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
+  }
+
   redirectToForm() {
-    console.log(this.formPath);
     this.router.navigate([this.formPath]);
   }
 
   clearFilter() {
-    this.filterText = ""
+    this.filterText = "";
+    this.clearFilters();
   }
 }
