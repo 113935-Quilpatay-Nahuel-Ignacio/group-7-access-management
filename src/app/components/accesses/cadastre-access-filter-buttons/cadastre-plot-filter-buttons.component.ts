@@ -1,21 +1,31 @@
-import {Component, inject, Input} from '@angular/core';
+import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {Subject} from 'rxjs';
 import {CadastreExcelService} from '../../../services/cadastre-excel.service';
 import {Router} from '@angular/router';
 import {AccessService} from "../../../services/access.service";
 import {TransformResponseService} from "../../../services/transform-response.service";
 import {FormsModule} from "@angular/forms";
+import { Filter, TableComponent, TableFiltersComponent } from 'ngx-dabd-grupo01';
 
 @Component({
   selector: 'app-cadastre-plot-filter-buttons',
   standalone: true,
   imports: [
-    FormsModule
+    FormsModule,
+    TableFiltersComponent,
   ],
   templateUrl: './cadastre-plot-filter-buttons.component.html',
   styleUrl: './cadastre-plot-filter-buttons.component.css'
 })
 export class CadastrePlotFilterButtonsComponent<T extends Record<string, any>> {
+  
+  
+  @Output() filterValueChange = new EventEmitter<Record<string, any>>();
+
+
+  onFilterValueChange(filterValues: Record<string, any>): void {
+    this.filterValueChange.emit(filterValues);
+  }
   private router = inject(Router);
   filterText: string = ""
   private transformResponseService = inject(TransformResponseService)
@@ -40,6 +50,8 @@ export class CadastrePlotFilterButtonsComponent<T extends Record<string, any>> {
   // Represent the dictionaries of ur object.
   // Se va a usar para las traducciones de enum del back.
   @Input() dictionaries: Array<{ [key: string]: any }> = [];
+  
+  @Input() tableFilters: Filter[] = [];
 
   // Subject to emit filtered results
   private filterSubject = new Subject<string>();

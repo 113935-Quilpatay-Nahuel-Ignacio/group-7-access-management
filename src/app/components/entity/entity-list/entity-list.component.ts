@@ -2,7 +2,7 @@ import {AfterViewInit, Component, ElementRef, inject, OnInit, TemplateRef, ViewC
 import {
     CadastrePlotFilterButtonsComponent
 } from "../../accesses/cadastre-access-filter-buttons/cadastre-plot-filter-buttons.component";
-import {MainContainerComponent, ToastService} from "ngx-dabd-grupo01";
+import {Filter, FilterConfigBuilder, MainContainerComponent, ToastService} from "ngx-dabd-grupo01";
 import {NgbModal, NgbPagination} from "@ng-bootstrap/ng-bootstrap";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {AccessActionDictionary, AccessFilters, AccessModel} from "../../../models/access.model";
@@ -30,7 +30,7 @@ import {UserTypeService} from "../../../services/userType.service";
   styleUrl: './entity-list.component.css'
 })
 export class EntityListComponent  implements OnInit, AfterViewInit {
-
+  
   @ViewChild('filterComponent') filterComponent!: CadastrePlotFilterButtonsComponent<Visitor>;
   @ViewChild('table', {static: true}) tableName!: ElementRef<HTMLTableElement>;
   @ViewChild('infoModal') infoModal!: TemplateRef<any>;
@@ -78,6 +78,86 @@ export class EntityListComponent  implements OnInit, AfterViewInit {
   dictionaries = [this.typeDictionary, this.actionDictionary]
   //#endregion
 
+
+  //#region FILTRADO
+
+  searchParams: { [key: string]: any } = {};
+
+  // Filtro dinámico
+  filterType: string = '';
+  startDate: string = '';
+  endDate: string = '';
+  type: string = '';
+
+  setFilterType(type: string): void {
+    this.filterType = type;
+  }
+
+  applyFilters(): void {
+    if (this.filterType === 'Tipo Visitante') {
+      this.searchParams = { visitorTypes: [this.type] }
+     }
+}
+
+  clearFilters(): void {
+ // Restablece todos los filtros a su valor inicial.
+  this.filterType = '';
+  this.startDate = '';
+  this.endDate = '';
+  this.type = '';
+  this.searchParams = {};
+
+  // Reinicia la página actual a la primera
+  this.currentPage = 0;
+  
+  // Llama a getAll para cargar todos los registros sin filtros
+  this.getAll();
+  }
+
+
+  filterConfig: Filter[] = new FilterConfigBuilder()
+  .selectFilter('Tipo Visitante', 'visitorTypes', 'Seleccione el tipo de visitante', [
+    { value: 'VISITOR', label: 'Visitante' },
+    { value: 'WORKER', label: 'Trabajador' },
+    { value: 'OWNER', label: 'Propietario' },
+    { value: 'PROVIDER', label: 'Proveedor' },
+    { value: 'EMPLOYEE', label: 'Empleado' },
+    { value: 'COHABITANT', label: 'Conviviente' },
+    { value: 'EMERGENCY', label: 'Emergencia' },
+    { value: 'PROVIDER_ORGANIZATION', label: 'Entidad' },
+  ])
+  /*.dateFilter(
+    'Fecha desde',
+    'startDate',
+    'Placeholder',
+    "yyyy-MM-dd'T'HH:mm:ss"
+  )
+  .dateFilter(
+    'Fecha hasta',
+    'endDate',
+    'Placeholder',
+    "yyyy-MM-dd'T'HH:mm:ss"
+  )*/
+  .build();
+
+
+onFilterValueChange(filters: Record<string, any>) {
+    this.searchParams = {
+      ...filters,
+    };
+
+    this.currentPage = 1;
+    console.log(this.searchParams);
+
+    if(this.searchParams['visitorTypes']){
+      this.filterByVisitorType(this.searchParams['visitorTypes']);
+    }else{
+     this.getAll();
+    }
+  
+  }
+  //#endregion
+
   //#region NgOnInit | BUSCAR
   ngOnInit() {
     this.confirmFilter();
@@ -98,7 +178,7 @@ export class EntityListComponent  implements OnInit, AfterViewInit {
   //#region GET_ALL
   getAll() {
     this.visitorService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-
+        debugger
         this.completeList = this.transformListToTableData(data.items)
         console.log(this.completeList)
         let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
@@ -321,14 +401,6 @@ export class EntityListComponent  implements OnInit, AfterViewInit {
   }
 
   //#endregion
-
-  //#region SHOW INFO | TODO
-  showInfo() {
-    // TODO: En un futuro agregar un modal que mostrara informacion de cada componente
-  }
-
-  //#endregion
-
 
   editVisitor(id:number){
 
