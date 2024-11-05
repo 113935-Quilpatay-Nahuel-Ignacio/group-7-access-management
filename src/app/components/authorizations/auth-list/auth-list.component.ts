@@ -8,7 +8,7 @@ import {ExcelService} from "../../../services/excel.service";
 import {
     CadastrePlotFilterButtonsComponent
 } from "../../accesses/cadastre-access-filter-buttons/cadastre-plot-filter-buttons.component";
-import {MainContainerComponent, ToastService} from "ngx-dabd-grupo01";
+import {Filter, FilterConfigBuilder, MainContainerComponent, ToastService} from "ngx-dabd-grupo01";
 import {NgbModal, NgbPagination} from "@ng-bootstrap/ng-bootstrap";
 import {AccessActionDictionary, AccessModel} from "../../../models/access.model";
 import {AccessService} from "../../../services/access.service";
@@ -39,6 +39,71 @@ import {DaysOfWeek} from "../../../models/authorizeRequest.model";
   styleUrl: './auth-list.component.css'
 })
 export class AuthListComponent  implements OnInit, AfterViewInit {
+  
+  
+  //#region FILTRADO
+
+   searchParams: { [key: string]: any } = {};
+
+   // Filtro dinámico
+   filterType: string = '';
+   startDate: string = '';
+   endDate: string = '';
+   type: string = '';
+ 
+   setFilterType(type: string): void {
+     this.filterType = type;
+   }
+ 
+   applyFilters(): void {
+     if (this.filterType === 'Tipo Visitante') {
+       this.searchParams = { visitorTypes: [this.type] }
+      }
+  }
+ 
+   clearFilters(): void {
+  // Restablece todos los filtros a su valor inicial.
+   this.filterType = '';
+   this.startDate = '';
+   this.endDate = '';
+   this.type = '';
+   this.searchParams = {};
+ 
+   // Reinicia la página actual a la primera
+   this.currentPage = 0;
+   }
+
+  filterConfig: Filter[] = new FilterConfigBuilder()
+  .selectFilter('Tipo Visitante', 'visitorTypes', 'Seleccione el tipo de visitante', [
+    { value: 'VISITOR', label: 'Visitante' },
+    { value: 'WORKER', label: 'Trabajador' },
+    { value: 'OWNER', label: 'Propietario' },
+    { value: 'PROVIDER', label: 'Proveedor' },
+    { value: 'EMPLOYEE', label: 'Empleado' },
+    { value: 'COHABITANT', label: 'Conviviente' },
+    { value: 'EMERGENCY', label: 'Emergencia' },
+    { value: 'PROVIDER_ORGANIZATION', label: 'Entidad' },
+  ])
+  .numberFilter('Nro de lote' , 'plotNumber' , 'Seleccione un numero de lote')
+  .build();
+
+
+   onFilterValueChange(filters: Record<string,any>) {
+    this.searchParams = {
+      ...filters,
+    };
+
+    this.currentPage = 1;
+    console.log(this.searchParams);
+
+    if(this.searchParams['visitorTypes']){
+      this.filterByVisitorType(this.searchParams['visitorTypes']);
+    }else if(this.searchParams['plotNumber']){
+    this.filterByPlot(this.searchParams['plotNumber']);
+    }else{
+     this.getAll();
+    }
+}
 
   @ViewChild('filterComponent') filterComponent!: CadastrePlotFilterButtonsComponent<AccessModel>;
   @ViewChild('table', {static: true}) tableName!: ElementRef<HTMLTableElement>;
