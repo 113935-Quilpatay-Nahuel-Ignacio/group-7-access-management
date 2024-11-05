@@ -1,0 +1,107 @@
+<aside
+  id="sidebar"
+  class="p-3 vh-100 sticky-top bg-dark vw-20 z-0"
+>
+  <div class="sidebar-header mb-2">
+    <a class="navbar-brand text-white h2" href="#">Menu Accesos</a>
+  </div>
+  <ul class="nav flex-column">
+    <li class="nav-item">
+      <a
+        class="nav-link dropdown-toggle text-white"
+        data-bs-toggle="collapse"
+        href="#authorizationMenu"
+        role="button"
+        aria-expanded="false"
+        aria-controls="ownersMenu"
+      >
+        Autorizaciones
+      </a>
+      <div class="collapse" id="authorizationMenu">
+        <ul class="nav flex-column ms-3">
+          <li>
+            <a
+              class="nav-link text-white"
+              routerLink="/auth/list"
+              routerLinkActive="active"
+              >Autorizaciones</a
+            >
+          </li>
+          <li>
+            <a
+              class="nav-link text-white"
+              routerLink="/auth/form"
+              routerLinkActive="active"
+              >Cargar Autorización</a
+            >
+          </li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="nav-item">
+      <a
+        class="nav-link dropdown-toggle text-white"
+        data-bs-toggle="collapse"
+        href="#accessMenu"
+        role="button"
+        aria-expanded="false"
+        aria-controls="plotsMenu"
+      >
+        Accesos
+      </a>
+      <div class="collapse" id="accessMenu">
+        <ul class="nav flex-column ms-3">
+          <li>
+            <a
+              class="nav-link text-white"
+              routerLink="/access/list"
+              routerLinkActive="active"
+              >Accesos</a
+            >
+          </li>
+          <li>
+            <a
+              class="nav-link text-white"
+              routerLink="/access/form"
+              routerLinkActive="active"
+              >Cargar Acceso</a
+            >
+          </li>
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link dropdown-toggle text-white"
+        data-bs-toggle="collapse"
+        href="#entityMenu"
+        role="button"
+        aria-expanded="false"
+        aria-controls="usersMenu"
+      >
+        Entidades
+      </a>
+      <div class="collapse" id="entityMenu">
+        <ul class="nav flex-column ms-3">
+          <li>
+            <a
+              class="nav-link text-white"
+              routerLink="/entity/list"
+              routerLinkActive="active"
+            >Entidades</a
+            >
+          </li>
+          <li>
+            <a
+              class="nav-link text-white"
+              routerLink="/entity/form"
+              routerLinkActive="active"
+            >Cargar Visitante</a
+            >
+          </li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+</aside>

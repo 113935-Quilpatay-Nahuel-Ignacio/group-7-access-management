@@ -1,65 +1,10 @@
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar Superior WIP</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTop" aria-controls="navbarTop" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarTop">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-<!--        <li class="nav-item">-->
-<!--          <a class="nav-link active" aria-current="page" href="#">Home</a>-->
-<!--        </li>-->
-<!--        <li class="nav-item">-->
-<!--          <a class="nav-link" href="#">Features</a>-->
-<!--        </li>-->
-<!--        <li class="nav-item">-->
-<!--          <a class="nav-link" href="#">Pricing</a>-->
-<!--        </li>-->
-      </ul>
-    </div>
-  </div>
-</nav>
-
-<div class="container-fluid">
-  <div class="row">
-    <!-- Sidebar izquierda -->
-    <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light collapse">
-      <div class="position-sticky">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" routerLink="/new/auth" routerLinkActive="active">
-              Registrar autorización
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" routerLink="/visitors" routerLinkActive="active">
-              Registrar acceso
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" routerLink="/access-query" routerLinkActive="active">
-              Lista de accesos
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" routerLink="/visitors" routerLinkActive="active">
-              Visitors List
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" routerLink="/auth-list" routerLinkActive="active">
-              Lista de autorizaciones
-            </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-
-    <!-- Contenido principal -->
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-      <router-outlet></router-outlet>
-    </main>
+<!-- Navbar -->
+<app-navbar></app-navbar>
+<div class="main-container d-flex">
+  <!-- Sidebar -->
+  <app-sidebar></app-sidebar>
+  <!-- Contenido principal -->
+  <div class="content-container flex-grow-1 p-3">
+    <router-outlet></router-outlet>
   </div>
 </div>
-

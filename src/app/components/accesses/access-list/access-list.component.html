@@ -1,0 +1,237 @@
+<app-main-container title="Lista de Accesos">
+  <div class="card-body">
+    <!-- ESTE COMPONENTE LO VAN A TENER QUE MODIFICAR ES EL DEL BUSCAR, EXPORTAR, ETC -->
+    <!-- @param itemList => Mandan la lista con la cual hacen la tabla
+         @param tableName => Mandan el nombre de la tabla el que definen con #
+         @param tableName => Mandan el nombre de la tabla el que definen con #
+         @param formPath => Van a poner la ruta de su formulario para crear uno nuevo
+         @param dictionaries => En caso de usar diccionarios mandenlos, si no los mandan no pasa nada
+         @param objectName => Hace referencia al nombre de su objeto para guardar el archivo pdf o excel. Ej: 25/10/2024_LOTES
+         -->
+    <app-cadastre-plot-filter-buttons
+      #filterComponent
+      [itemsList]="completeList"
+      [tableName]="tableName.nativeElement"
+      [heads]="heads"
+      [props]="props"
+      formPath="/access/form"
+      [dictionaries]="dictionaries"
+      objectName="ACCESOS"></app-cadastre-plot-filter-buttons>
+  
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="btn-group me-5" role="group">
+        <div class="d-flex align-items-center">
+          <div class="btn-group me-2">
+            <button type="button" class="btn btn-outline-danger" (click)="changeFilterMode(filterTypes.NOTHING)">
+              <i class="bi bi-trash-fill"></i> Limpiar filtros
+            </button>
+  
+            <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+              <i class="bi bi-funnel-fill"></i> Filtros
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" (click)="changeFilterMode(filterTypes.VISITOR_TYPE)">Tipo de visitante</a></li>
+              <li><a class="dropdown-item" (click)="changeFilterMode(filterTypes.ACTION)">Acción</a></li>
+            </ul>
+          </div>
+  
+          @if (applyFilterWithNumber === true || applyFilterWithCombo === true) {
+            <div class="d-flex">
+              @if (applyFilterWithNumber === true) {
+                <input type="number" class="form-control me-2" id="filter-number" [(ngModel)]="filterInput" name="ngModel"
+                       placeholder="Número">
+              } @else if (applyFilterWithCombo === true) {
+                <select id="content-filter" class="form-select me-2" [(ngModel)]="filterInput" name="ngModel">
+                  <option disabled selected>Selecciona un filtro</option>
+                  @for (content of contentForFilterCombo; track content) {
+                    <option value="{{content}}">{{ content }}</option>
+                  }
+                </select>
+              }
+              <div class="ms-auto">
+                <button class="btn btn-dark" type="button" (click)="confirmFilter()">Buscar</button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+  
+  
+      <!--      <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+              <input type="radio" class="btn-check"
+                     name="btnradio" id="btnradio1"
+                     autocomplete="off" (change)="changeActiveFilter(true)" checked>
+              <label class="btn btn-outline-primary" for="btnradio1">Lotes Activos</label>
+  
+              <input type="radio" class="btn-check"
+                     name="btnradio" id="btnradio2"
+                     autocomplete="off" (change)="changeActiveFilter(false)">
+              <label class="btn btn-outline-primary" for="btnradio2">Lotes Inactivos</label>
+  
+              <input type="radio" class="btn-check"
+                     name="btnradio" id="btnradio3"
+                     autocomplete="off" (change)="changeActiveFilter()">
+              <label class="btn btn-outline-primary" for="btnradio3">Todos</label>
+            </div>-->
+    </div>
+  
+    <div class="table-container">
+      <table class="table table-striped fixed-table"
+             style="border: 1px solid rgba(0, 0, 0, 0.150); border-collapse: collapse;" #table>
+        <thead>
+        <tr>
+          <th scope="col">Visitante</th>
+          <th scope="col">Documento</th>
+          <th scope="col">Tipo</th>
+          <th scope="col">Accion</th>
+          <th scope="col">Hora</th>
+          <th scope="col">Vehículo</th>
+          <th scope="col">Comentario</th>
+          <th scope="col">Autorizador</th>
+        </tr>
+        </thead>
+        <tbody>
+          @for (item of (filteredList.length ? filteredList : list); track item) {
+  
+            <tr>
+              <td>
+                <!--TODO icono-->
+                {{ item.first_name + ' ' + item.last_name }}
+              </td>
+              <td>
+                {{ (item.doc_type === "PASSPORT" ? "PASS" : item.doc_type) + ' ' + item.doc_number }}
+              </td>
+              <td>
+                {{ translateTable(item.visitor_type, typeDictionary) }}
+              </td>
+              <td>
+                {{ translateTable(item.action, actionDictionary) }}
+              </td>
+              <td>
+                {{ transformDate(item.action_date) }}
+              </td>
+              <td>
+                {{ item.vehicle_reg }}
+              </td>
+              <td>
+                {{ item.comments }}
+              </td>
+              <td>
+                <!--TODO icono-->
+                {{ item.authorizer.name + ' ' + item.authorizer.last_name }}
+              </td>
+            </tr>
+  
+          }
+        </tbody>
+      </table>
+    </div>
+  
+    <div class="d-flex justify-content-between align-items-center mt-3">
+      <div class="form-group mb-3 me-2">
+        <select
+          id="itemsPerPage"
+          class="form-select"
+          [(ngModel)]="pageSize"
+          (change)="onItemsPerPageChange()"
+        >
+          @for (option of sizeOptions; track $index) {
+            <option [value]="option">{{ option }} Elementos</option>
+          }
+        </select>
+      </div>
+  
+      <div class="ms-auto">
+      </div>
+  
+      <div class="d-flex">
+  
+        <ngb-pagination
+          [(page)]="currentPage"
+          [pageSize]="pageSize"
+          [collectionSize]="totalItems"
+          (pageChange)="onPageChange($event)"
+          [maxSize]="5"
+          [boundaryLinks]="false"
+        ></ngb-pagination>
+  
+        <div class="ms-2">
+          <button class="btn btn-secondary ms-3 mb-3" (click)="onInfoButtonClick()">
+            <i class="bi bi-info-circle"></i>
+          </button>
+        </div>
+      </div>
+  
+  
+    </div>
+  </div>
+  
+  <ng-template #infoModal let-modal>
+    <div class="modal-header fs-6 py-1">
+      <h4 class="modal-title">Información de la Lista de Accesos</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body fs-6 py-2">
+      <div class="container-fluid">
+        <!-- Introducción -->
+        <div class="alert alert-info mb-2 py-2">
+          <h5 class="alert-heading">¿Qué es esta pantalla?</h5>
+          <p class="mb-0 small">Esta pantalla permite gestionar y visualizar los accesos de visitantes. Aquí puedes revisar los detalles de cada acceso, aplicar filtros personalizados, y exportar la información.</p>
+        </div>
+  
+        <!-- Campos Principales -->
+        <div class="card mb-2">
+          <div class="card-header py-1">
+            <h5 class="mb-0">Detalles de Accesos</h5>
+          </div>
+          <div class="card-body py-2">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item py-1">
+                <strong>Lista de Accesos:</strong> Muestra información sobre cada visitante, su documento, tipo, la acción realizada, hora de acceso, vehículo asociado, comentarios y el nombre del autorizador.
+              </li>
+              <li class="list-group-item py-1">
+                <strong>Filtros:</strong> Puedes aplicar filtros como "Tipo de visitante" o "Acción" para localizar accesos específicos rápidamente.
+              </li>
+              <li class="list-group-item py-1">
+                <strong>Paginación:</strong> Navega entre varias páginas de accesos.
+              </li>
+              <li class="list-group-item py-1">
+                <strong>Exportar:</strong> Puedes exportar la lista de accesos en formato PDF o Excel para informes o respaldos.
+              </li>
+            </ul>
+          </div>
+        </div>
+  
+        <!-- Acciones -->
+        <div class="card mb-2">
+          <div class="card-header py-1">
+            <h5 class="mb-0">Acciones Disponibles</h5>
+          </div>
+          <div class="card-body py-2">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item py-1">
+                <strong>Buscar:</strong> Usa campos de texto o selección para localizar registros de accesos específicos.
+              </li>
+              <li class="list-group-item py-1">
+                <strong>Limpiar Filtros:</strong> Restablece los filtros aplicados para ver todos los registros de accesos.
+              </li>
+            </ul>
+          </div>
+        </div>
+  
+        <!-- Nota (OPCIONAL) -->
+        <div class="alert alert-warning py-2 mb-0">
+          <h5 class="alert-heading">Nota:</h5>
+          <p class="mb-0 small">Asegúrate de verificar la precisión de la información antes de modificar o exportar datos. Revisa los detalles de los visitantes y el autorizador para garantizar su exactitud.</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer py-2">
+      <button type="button" class="btn btn-primary" (click)="modal.close()">Entendido</button>
+    </div>
+  </ng-template>
+  
+  
+  
+</app-main-container>
