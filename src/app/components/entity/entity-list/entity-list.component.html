@@ -80,7 +80,10 @@
           <th scope="col">Nombre</th>
           <th scope="col">Documento</th>
           <th scope="col">Tipo</th>
-          <!--<th scope="col">Acción</th>-->
+          @if (userType == "ADMIN"|| userType == "OWNER"){
+            <th scope="col">Activo</th>
+            <th scope="col">Acciones</th>
+          }
         </tr>
         </thead>
         <tbody>
@@ -99,6 +102,23 @@
                   {{ translateTable(type, typeDictionary) }}
                 }
               </td>
+              @if (userType == "ADMIN" || userType == "OWNER"){
+                <td>
+                  @if (item.is_active) {
+                    <p class="mb-0">
+                      <i class="bi bi-check2-circle text-success" style="font-size: 1.5rem;"></i>
+                    </p>
+                  } @else {
+                    <p class="mb-0">
+                      <i class="bi bi-x-circle text-danger" style="font-size: 1.5rem;"></i>
+                    </p>
+                  }
+                </td>
+                <td>
+                  <button class="btn btn-warning"> <i class="bi bi-pencil" (click)="edit(item.doc_number)"></i></button>
+                  <button class="btn btn-danger ms-1"> <i class="bi bi-trash"></i></button>
+                </td>
+              }
               <!--<td>
                   &lt;!&ndash; Botones visibles en pantallas medianas y grandes &ndash;&gt;
                   <div class="d-none d-md-flex">
@@ -184,7 +204,7 @@
           <h5 class="alert-heading">¿Qué es esta pantalla?</h5>
           <p class="mb-0 small">Esta pantalla permite visualizar y gestionar los registros de visitantes. Puedes ver los detalles de cada visitante, aplicar filtros, y realizar acciones específicas sobre cada registro.</p>
         </div>
-  
+
         <!-- Campos Principales -->
         <div class="card mb-2">
           <div class="card-header py-1">
@@ -207,7 +227,7 @@
             </ul>
           </div>
         </div>
-  
+
         <!-- Acciones -->
         <div class="card mb-2">
           <div class="card-header py-1">
@@ -224,7 +244,7 @@
             </ul>
           </div>
         </div>
-  
+
         <!-- Nota (OPCIONAL) -->
         <div class="alert alert-warning py-2 mb-0">
           <h5 class="alert-heading">Nota:</h5>
@@ -236,4 +256,3 @@
       <button type="button" class="btn btn-primary" (click)="modal.close()">Entendido</button>
     </div>
   </ng-template>
-  

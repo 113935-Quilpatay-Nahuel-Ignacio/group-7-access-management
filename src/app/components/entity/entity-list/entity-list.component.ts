@@ -13,6 +13,7 @@ import {AuthorizerCompleterService} from "../../../services/authorizer-completer
 import {VisitorTypeAccessDictionary} from "../../../models/authorize.model";
 import {Visitor} from "../../../models/visitor.model";
 import {VisitorService} from "../../../services/visitor.service";
+import {UserTypeService} from "../../../services/userType.service";
 
 @Component({
   selector: 'app-entity-list',
@@ -40,6 +41,7 @@ export class EntityListComponent  implements OnInit, AfterViewInit {
   private authorizerCompleterService = inject(AuthorizerCompleterService)
   private toastService = inject(ToastService)
   private modalService = inject(NgbModal)
+  private userTypeService = inject(UserTypeService)
   //#endregion
 
   //#region ATT de PAGINADO
@@ -57,6 +59,7 @@ export class EntityListComponent  implements OnInit, AfterViewInit {
 
   //#region ATT de ACTIVE
   retrieveByActive: boolean | undefined = true;
+  userType: string = "ADMIN";
   //#endregion
 
   //#region ATT de FILTROS
@@ -82,6 +85,10 @@ export class EntityListComponent  implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
    this.filterComponent.filter$.subscribe((filter: string) => {
      this.getAllFiltered(filter)
+    });
+    this.userType = this.userTypeService.getType()
+    this.userTypeService.userType$.subscribe((userType: string) => {
+      this.userType = userType
     });
   }
 
@@ -347,4 +354,8 @@ export class EntityListComponent  implements OnInit, AfterViewInit {
   onInfoButtonClick() {
     this.modalService.open(this.infoModal, {centered: true, size: 'lg'});
     }
+
+  edit(doc_number: any) {
+    
+  }
 }

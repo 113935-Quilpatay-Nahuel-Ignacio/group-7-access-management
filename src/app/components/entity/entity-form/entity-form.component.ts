@@ -34,7 +34,8 @@ export class EntityFormComponent implements OnInit {
       last_name: ['', Validators.required],
       doc_type: ['DNI', Validators.required],
       doc_number: [null, Validators.required],
-      birth_date: [null, Validators.required]
+      birth_date: [null, Validators.required],
+      visitor_type: ["VISITOR"]
     });
   }
 

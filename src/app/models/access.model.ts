@@ -30,5 +30,6 @@ export const AccessActionDictionary: { [key: string]: string } = {
 export enum AccessFilters {
   NOTHING = 'NOTHING',
   ACTION = 'ACTION',
+  DATE = 'DATE',
   VISITOR_TYPE = 'VISITOR_TYPE'
 }

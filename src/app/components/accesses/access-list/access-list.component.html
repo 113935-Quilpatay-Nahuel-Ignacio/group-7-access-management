@@ -1,3 +1,4 @@
+
 <h1>Lista de Accesos</h1>
 <div class="card-body">
   <!-- ESTE COMPONENTE LO VAN A TENER QUE MODIFICAR ES EL DEL BUSCAR, EXPORTAR, ETC -->
@@ -33,10 +34,11 @@
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" (click)="changeFilterMode(filterTypes.VISITOR_TYPE)">Tipo de visitante</a></li>
             <li><a class="dropdown-item" (click)="changeFilterMode(filterTypes.ACTION)">Acción</a></li>
+            <li><a class="dropdown-item" (click)="changeFilterMode(filterTypes.DATE)">Fecha</a></li>
           </ul>
         </div>
 
-        @if (applyFilterWithNumber === true || applyFilterWithCombo === true) {
+        @if (applyFilterWithNumber === true || applyFilterWithCombo === true || applyFilterWithDate === true) {
           <div class="d-flex">
             @if (applyFilterWithNumber === true) {
               <input type="number" class="form-control me-2" id="filter-number" [(ngModel)]="filterInput" name="ngModel"
@@ -48,6 +50,9 @@
                   <option value="{{content}}">{{ content }}</option>
                 }
               </select>
+            } @else if (applyFilterWithDate === true) {
+              <label for="date_from" class="form-label m-0">Fecha desde</label> <input type="date" id="date_from" class="form-control ms-2" [(ngModel)]="date_from"/>
+              <label for="date_to" class="form-label m-0">Fecha hasta</label> <input type="date" id="date_to" class="form-control ms-2" [(ngModel)]="date_to"/>
             }
             <div class="ms-auto">
               <button class="btn btn-dark" type="button" (click)="confirmFilter()">Buscar</button>
@@ -107,9 +112,9 @@
             </td>
             <td>
                 @if (item.action === "ENTRY") {
-                    <span class="badge text-bg-success">{{ translateTable(item.action, actionDictionary) }}</span>
+                    <span class="badge badge-success badge-outlined">{{ translateTable(item.action, actionDictionary) }}</span>
                 } @else {
-                    <span class="badge text-bg-danger">{{ translateTable(item.action, actionDictionary) }}</span>
+                    <span class="badge badge-danger badge-outlined">{{ translateTable(item.action, actionDictionary) }}</span>
                 }
             </td>
             <td>
@@ -235,5 +240,3 @@
     <button type="button" class="btn btn-primary" (click)="modal.close()">Entendido</button>
   </div>
 </ng-template>
-
-

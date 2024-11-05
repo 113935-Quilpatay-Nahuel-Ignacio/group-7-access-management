@@ -1,0 +1,84 @@
+
+<div class="row g-3 m-2">
+      <div class="modal-body">
+        <div class="row">
+          <!-- Columna izquierda: lista de rangos -->
+          <div class="col-md-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h4>Rangos</h4>
+              <button class="btn btn-outline-primary" id="addRangeButton" (click)="addRange()">Nuevo</button>
+            </div>
+            <select class="form-select" id="rangeSelect" (change)="selectRangeEvent()" [(ngModel)]="selectedRange">
+              @for (range of ranges; track $index){
+                <option value="{{$index}}">Rango {{$index+1}}</option>
+              }
+            </select>
+          </div>
+
+          <!-- Columna derecha: detalles del rango seleccionado -->
+          <div class="col-md-8">
+            <form [formGroup]="rangeForm" (ngSubmit)="onSubmit()" class="row">
+            <div class="form-group">
+              <label>Días de la semana:</label><br>
+              <div class="d-flex justify-content-around m-2">
+                <label><input type="checkbox"
+                              [checked]="containsDay('MONDAY')"
+                              (change)="toggleDay('MONDAY', $event)"> Lunes</label>
+                <label><input type="checkbox"
+                              [checked]="containsDay('TUESDAY')"
+                              (change)="toggleDay('TUESDAY', $event)"> Martes</label>
+                <label><input type="checkbox"
+                              [checked]="containsDay('WEDNESDAY')"
+                              (change)="toggleDay('WEDNESDAY', $event)"> Miércoles</label>
+                <label><input type="checkbox"
+                              [checked]="containsDay('THURSDAY')"
+                              (change)="toggleDay('THURSDAY', $event)"> Jueves</label>
+                <label><input type="checkbox"
+                              [checked]="containsDay('FRIDAY')"
+                              (change)="toggleDay('FRIDAY', $event)"> Viernes</label>
+                <label><input type="checkbox"
+                              [checked]="containsDay('SATURDAY')"
+                              (change)="toggleDay('SATURDAY', $event)"> Sábado</label>
+                <label><input type="checkbox"
+                              [checked]="containsDay('SUNDAY')"
+                              (change)="toggleDay('SUNDAY', $event)"> Domingo</label>
+              </div>
+            </div>
+            <div class="form-group row mb-2">
+              <div class="col-md-6">
+                <label>Fecha desde</label>
+                <input type="date" class="form-control" formControlName="date_from">
+              </div>
+              <div class="col-md-6">
+                <label>Fecha hasta</label>
+                <input type="date" class="form-control" formControlName="date_to">
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Hora desde</label>
+                <input type="time" class="form-control" formControlName="hour_from">
+              </div>
+              <div class="col-md-6">
+                <label>Hora hasta</label>
+                <input type="time" class="form-control" formControlName="hour_to">
+              </div>
+            </div>
+            <div class="form-group row mt-2">
+              <div class="col-md-6">
+                <label>Comentarios</label>
+                <input type="text" class="form-control" formControlName="comment">
+              </div>
+              <div class="col-md-6 align-content-center">
+                <label><input type="checkbox" class="ms-2" formControlName="is_active"> Activo?</label>
+              </div>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="close()">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="onSubmit()">Guardar</button>
+      </div>
+</div>

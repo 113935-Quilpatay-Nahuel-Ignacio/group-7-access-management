@@ -22,6 +22,14 @@ export class AuthService {
     return this.http.post<VisitorAuthorizationRequest>(this.apiUrl + '/authorization', ownerData, { headers });
   }
 
+  updateAuth(ownerData: any, userId: string): Observable<VisitorAuthorizationRequest> {
+    const headers = new HttpHeaders({
+      'x-user-id': userId
+    });
+
+    return this.http.put<VisitorAuthorizationRequest>(this.apiUrl + '/authorization', ownerData, { headers });
+  }
+
   getAll(page: number, size: number, isActive?: boolean): Observable<Auth[]> {
     return this.http.get<Auth[]>(this.apiUrl);
   }
@@ -36,5 +44,30 @@ export class AuthService {
 
   getValid(document: number): Observable<Auth[]> {
     return this.http.get<Auth[]>(this.apiUrl + '/valids/' + document.toString());
+  }
+
+  getByDocument(document: number): Observable<Auth[]> {
+    return this.http.get<Auth[]>(this.apiUrl + '?docNumber=' + document.toString());
+  }
+  getById(document: number): Observable<Auth[]> {
+    return this.http.get<Auth[]>(this.apiUrl + '?id=' + document.toString());
+  }
+
+  delete(authId: number, userId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'x-user-id': userId,
+      'auth-id': authId
+    });
+
+    return this.http.delete<any>(this.apiUrl + '/authorization', { headers });
+  }
+
+  enable(authId: number, userId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'x-user-id': userId,
+      'auth-id': authId
+    });
+
+    return this.http.put<any>(this.apiUrl + '/authorization/activate',null, { headers });
   }
 }

@@ -11,7 +11,7 @@ import {
   CadastrePlotFilterButtonsComponent
 } from "../cadastre-access-filter-buttons/cadastre-plot-filter-buttons.component";
 import {NgbModal, NgbPagination} from "@ng-bootstrap/ng-bootstrap";
-import {MainContainerComponent, TableComponent, ToastService} from "ngx-dabd-grupo01";
+import {MainContainerComponent, TableComponent} from "ngx-dabd-grupo01";
 import {PaginatedResponse} from "../../../models/api-response";
 import {TransformResponseService} from "../../../services/transform-response.service";
 
@@ -42,7 +42,7 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   private accessService = inject(AccessService)
   private transformResponseService = inject(TransformResponseService)
   private authorizerCompleterService = inject(AuthorizerCompleterService)
-  private toastService = inject(ToastService)
+ // private toastService = inject(ToastService)
   private modalService = inject(NgbModal)
   //#endregion
 
@@ -67,10 +67,13 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   //#region ATT de FILTROS
   applyFilterWithNumber: boolean = false;
   applyFilterWithCombo: boolean = false;
+  applyFilterWithDate: boolean = false;
   contentForFilterCombo: string[] = []
   actualFilter: string | undefined = AccessFilters.NOTHING;
   filterTypes = AccessFilters;
   filterInput: string = "";
+  date_from: Date = new Date();
+  date_to: Date = new Date();
   //#endregion
 
   //#region ATT de DICCIONARIOS
@@ -95,7 +98,6 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   //#region GET_ALL
   getAll() {
     this.accessService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-      console.log(data)
         data.forEach(date => {
           date.authorizer = this.authorizerCompleterService.completeAuthorizer(date.authorizer_id)
         })
@@ -153,6 +155,28 @@ export class AccessListComponent implements OnInit, AfterViewInit {
       }
     );
   }
+  filterByDate(date_from: Date, date_to: Date) {
+    if((new Date(new Date(date_from+"T00:00:00"))) > (new Date(new Date(date_to+"T00:00:00")))){
+      alert("aa")
+      return
+    }
+    this.accessService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
+        data = data.filter(x => (new Date(new Date(x.action_date).setHours(0,0,0,0)) >= new Date(new Date(date_from+"T00:00:00").setHours(0,0,0,0)) && new Date(new Date(x.action_date).setHours(0,0,0,0)) <= new Date(new Date(date_to+"T00:00:00").setHours(0,0,0,0))))
+        let response = this.transformResponseService.transformResponse(data,this.currentPage, this.pageSize, this.retrieveByActive)
+        response.content.forEach(data => {
+          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
+        })
+
+        this.list = response.content;
+        this.filteredList = [...this.list]
+        this.lastPage = response.last
+        this.totalItems = response.totalElements;
+      },
+      error => {
+        console.error('Error getting:', error);
+      }
+    );
+  }
 
   filterByAction(action: string) {
     this.accessService.getByAction(this.currentPage, this.pageSize, action, this.retrieveByActive).subscribe(data => {
@@ -187,6 +211,7 @@ export class AccessListComponent implements OnInit, AfterViewInit {
         this.actualFilter = AccessFilters.NOTHING
         this.applyFilterWithNumber = false;
         this.applyFilterWithCombo = false;
+        this.applyFilterWithDate = false;
         this.filterComponent.clearFilter();
         this.confirmFilter();
         break;
@@ -196,6 +221,7 @@ export class AccessListComponent implements OnInit, AfterViewInit {
         this.contentForFilterCombo = this.getKeys(this.actionDictionary)
         this.applyFilterWithNumber = false;
         this.applyFilterWithCombo = true;
+        this.applyFilterWithDate = false;
         break;
 
       case AccessFilters.VISITOR_TYPE:
@@ -203,6 +229,14 @@ export class AccessListComponent implements OnInit, AfterViewInit {
         this.contentForFilterCombo = this.getKeys(this.typeDictionary)
         this.applyFilterWithNumber = false;
         this.applyFilterWithCombo = true;
+        this.applyFilterWithDate = false;
+        break;
+
+      case AccessFilters.DATE:
+        this.actualFilter = AccessFilters.DATE
+        this.applyFilterWithNumber = false;
+        this.applyFilterWithCombo = false;
+        this.applyFilterWithDate = true;
         break;
 
       default:
@@ -222,6 +256,10 @@ export class AccessListComponent implements OnInit, AfterViewInit {
 
       case "VISITOR_TYPE":
         this.filterByVisitorType(this.translateCombo(this.filterInput, this.typeDictionary));
+        break;
+
+      case "DATE":
+        this.filterByDate(this.date_from, this.date_to);
         break;
 
       default:

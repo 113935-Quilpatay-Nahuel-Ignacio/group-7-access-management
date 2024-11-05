@@ -1,4 +1,4 @@
-<h1 class="mt-2 p-2">Nuevo Visitante</h1>
+<h1 class="mt-2 p-2">Nueva Entidad</h1>
 <form [formGroup]="entityForm" (ngSubmit)="onSubmit()" class="row g-3 m-2">
   <h6 class="mt-3 p-2">Detalles</h6>
   <div class="col-md-6">
@@ -73,6 +73,21 @@
       <small class="text-danger ms-2"
              *ngIf="entityForm.get('birth_date')?.invalid && entityForm.get('birth_date')?.touched">
           Por favor, ingrese la fecha de nacimiento del visitante
+      </small>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="d-flex align-items-center flex-row">
+      <label for="visitor-type" class="form-label m-0">Tipo de Visitante</label>
+      <select id="visitor-type" class="form-select ms-2" formControlName="visitor_type">
+        <option value="VISITOR">Visitante</option>
+      </select>
+    </div>
+    <div>
+      <small class="text-danger ms-2"
+             *ngIf="entityForm.get('visitor_type')?.invalid && entityForm.get('visitor_type')?.touched">
+        requerido
       </small>
     </div>
   </div>

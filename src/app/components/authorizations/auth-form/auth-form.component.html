@@ -1,25 +1,28 @@
 <h1 class="mt-2 p-2">Nueva Autorización</h1>
 <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="row g-3 m-2">
-  <!-- Terreno -->
-  <div class="col-md-6">
-    <div class="d-flex align-items-center flex-row">
-      <label for="plot-id" class="form-label m-0">Número de lote<label class="text-danger">*</label></label>
-      <input list="plots" id="plot-id" class="form-control ms-2" formControlName="plot_id"
-             [ngClass]="{
-        'is-invalid': authForm.get('plot_id')?.invalid && authForm.get('plot_id')?.touched
-      }"/>
-      <datalist id="plots">
-        @for (plot of plots; track $index){
-          <option value="{{plot.id}}">{{plot.id}} - {{plot.desc}}</option>
-        }
-      </datalist>
+    <!--Terreno-->
+    <div class="col-md-6 d-flex flex-column align-items-center justify-content-center">
+        <div class="d-flex align-items-center justify-content-center w-100">
+            <label for="plot-id" class="form-label m-0 w-25">Número de lote<label class="text-danger">*</label></label>
+            <ng-select [items]="plots" bindLabel="name" autofocus bindValue="id" class="w-100" formControlName="plot_id" (change)="onPlotSelected($event)">
+            </ng-select>
+        </div>
+        <div>
+            <div class="ms-1 mt-2">
+                @if (plot != null){
+                    <small class="ms-5 ps-2">Telefono: {{ plot.tel }}</small>
+                }
+                <small
+                        class="text-danger ms-1 ps-2"
+                        *ngIf="
+            authForm.get('plot_id')?.invalid && authForm.get('plot_id')?.touched
+          "
+                >
+                    Por favor, ingrese un número de lote
+                </small>
+            </div>
+        </div>
     </div>
-    <div class="ms-5">
-      <small class="text-danger ms-5 ps-2" *ngIf="authForm.get('plot_id')?.invalid && authForm.get('plot_id')?.touched">
-          Por favor, ingrese un número de lote
-      </small>
-    </div>
-  </div>
 
   <!-- Visitante -->
   <div class="col-md-6">
@@ -27,6 +30,13 @@
       <label for="visitor-type" class="form-label m-0">Tipo de Visitante</label>
       <select id="visitor-type" class="form-select ms-2" formControlName="visitor_type">
         <option value="VISITOR">Visitante</option>
+        <option value="PROVIDER_ORGANIZATION">Organización Proveedora</option>
+        <option value="CONSTRUCTION">Obra</option>
+        <option value="PROVIDER">Proveedor</option>
+        <option value="WORKER">Trabajador</option>
+        <option value="EMPLOYEE">Empleado</option>
+        <option value="OWNER">Dueño</option>
+        <option value="COHABITANT">Conviviente</option>
       </select>
     </div>
     <div>
@@ -77,8 +87,9 @@
         <label for="doc-type" class="form-label m-0">Tipo de Documento<label class="text-danger">*</label></label>
         <select id="doc-type" class="form-select ms-2" formControlName="doc_type">
           <option value="DNI">DNI</option>
-          <option value="Passport">Pasaporte</option>
-          <option value="Cédula">Cédula</option>
+          <option value="PASSPORT">Pasaporte</option>
+          <option value="CUIL">CUIL</option>
+          <option value="CUIT">CUIT</option>
         </select>
       </div>
     </div>
@@ -102,7 +113,7 @@
     <div class="col-md-6 mt-3">
       <div class="d-flex align-items-center flex-row">
         <label for="birth-date" class="form-label m-0">Fecha de Nacimiento<label class="text-danger">*</label></label>
-        <input type="date" id="birth-date" class="form-control ms-1s" formControlName="birth_date"
+        <input type="date" id="birth-date" class="form-control ms-1" formControlName="birth_date"
                [ngClass]="{
         'is-invalid': authForm.get('visitor_request.birth_date')?.invalid && authForm.get('visitor_request.birth_date')?.touched
       }"/>
@@ -114,64 +125,16 @@
         </small>
       </div>
     </div>
-  </div>
-  <!--
-    <div class="col-3">
+    @if (this.userType != "GUARD"){
 
-    <h5 class="mt-3 p-2">Detalles de Autorización</h5>
-  </div>
-    <div class="col-3">
-
-    <button type="button" class="btn btn-primary" (click)="addAuthRange()">Agregar Rango</button>
+  <div class="col-md-6 mt-3">
+    <div class="d-flex align-items-center flex-row">
+      <label class="form-label m-0">Lista de horarios</label>
+      <button type="button" class="btn btn-info ms-4" (click)="openModal()"> Horarios</button>
     </div>
-    <div formArrayName="auth_range_request">
-      @for (range of authRangeRequests.controls; track range){
-
-      <div [formGroupName]="$index" class="row">
-        <h4>Rango {{ $index + 1 }}</h4>
-
-        <div class="col-md-6">
-          <label for="date-from" class="form-label">Fecha Desde</label>
-          <input type="date" id="date-from" class="form-control" formControlName="date_from" />
-        </div>
-
-        <div class="col-md-6">
-          <label for="date-to" class="form-label">Fecha Hasta</label>
-          <input type="date" id="date-to" class="form-control" formControlName="date_to" />
-        </div>
-
-        <div class="col-md-6">
-          <label for="hour-from" class="form-label">Hora Desde</label>
-          <input type="time" id="hour-from" class="form-control" formControlName="hour_from" />
-        </div>
-
-        <div class="col-md-6">
-          <label for="hour-to" class="form-label">Hora Hasta</label>
-          <input type="time" id="hour-to" class="form-control" formControlName="hour_to" />
-        </div>
-
-        <div class="col-md-12">
-          <label for="days-of-week" class="form-label">Días de la Semana</label>
-          <select id="days-of-week" class="form-select" formControlName="days_of_week" multiple>
-            <option value="MONDAY">Lunes</option>
-            <option value="TUESDAY">Martes</option>
-            <option value="WEDNESDAY">Miércoles</option>
-            <option value="THURSDAY">Jueves</option>
-            <option value="FRIDAY">Viernes</option>
-            <option value="SATURDAY">Sábado</option>
-            <option value="SUNDAY">Domingo</option>
-          </select>
-        </div>
-
-        <div class="col-md-12">
-          <label for="comment" class="form-label">Comentario</label>
-          <textarea id="comment" class="form-control" formControlName="comment"></textarea>
-        </div>
-
-        <button type="button" class="btn btn-danger me-2" (click)="removeAuthRange($index)">Cancelar</button>
-      </div>
-        }
-    </div>-->
+  </div>
+    }
+  </div>
 
   <div class="col-12 d-flex justify-content-end mt-5">
     <button type="button" class="btn btn-danger me-2" (click)="onCancel()">Cancelar</button>
