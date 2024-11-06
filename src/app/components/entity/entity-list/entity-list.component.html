@@ -98,7 +98,7 @@
                 {{ item.name + ' ' + (item.lastName == null ? '' : item.lastName) }}
               </td>
               <td>
-                {{ (item.docType === "PASSPORT" ? "PASAPORTE" : item.docType) + ' ' + item.docNumber }}
+                {{ getDocumentAbbreviation(item.docType) + ' ' + item.docNumber }}
               </td>
               <td>
                 @for (type of item.visitorTypes; track $index){
