@@ -12,6 +12,12 @@
           (input)="onFilterTextBoxChanged($event)"
           [(ngModel)]="filterText"
         />
+        <app-table-filters
+        class="btn-group"
+        [filters]="tableFilters"
+        (filterValueChange)="onFilterValueChange($event)"
+      ></app-table-filters>
+      
       </div>
     </div>
     <div

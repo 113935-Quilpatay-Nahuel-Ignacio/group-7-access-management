@@ -11,7 +11,7 @@ import {
   CadastrePlotFilterButtonsComponent
 } from "../cadastre-access-filter-buttons/cadastre-plot-filter-buttons.component";
 import {NgbModal, NgbPagination} from "@ng-bootstrap/ng-bootstrap";
-import {MainContainerComponent, TableComponent} from "ngx-dabd-grupo01";
+import {Filter, FilterConfigBuilder, MainContainerComponent, TableComponent} from "ngx-dabd-grupo01";
 import {PaginatedResponse} from "../../../models/api-response";
 import {TransformResponseService} from "../../../services/transform-response.service";
 
@@ -81,6 +81,90 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   actionDictionary = AccessActionDictionary;
   dictionaries = [this.typeDictionary, this.actionDictionary]
   //#endregion
+
+  //#region FILTRADO
+
+  searchParams: { [key: string]: any } = {};
+
+  // Filtro dinámico
+  filterType: string = '';
+  startDate: string = '';
+  endDate: string = '';
+  type: string = '';
+
+  setFilterType(type: string): void {
+    this.filterType = type;
+  }
+
+  applyFilters(): void {
+    if (this.filterType === 'Tipo Visitante') {
+      this.searchParams = { visitorTypes: [this.type] }
+     }
+ }
+
+  clearFilters(): void {
+ // Restablece todos los filtros a su valor inicial.
+  this.filterType = '';
+  this.startDate = '';
+  this.endDate = '';
+  this.type = '';
+  this.searchParams = {};
+
+  // Reinicia la página actual a la primera
+  this.currentPage = 0;
+  }
+
+ filterConfig: Filter[] = new FilterConfigBuilder()
+ .selectFilter('Tipo Visitante', 'visitorTypes', 'Seleccione el tipo de visitante', [
+   { value: 'VISITOR', label: 'Visitante' },
+   { value: 'WORKER', label: 'Trabajador' },
+   { value: 'OWNER', label: 'Propietario' },
+   { value: 'PROVIDER', label: 'Proveedor' },
+   { value: 'EMPLOYEE', label: 'Empleado' },
+   { value: 'COHABITANT', label: 'Conviviente' },
+   { value: 'EMERGENCY', label: 'Emergencia' },
+   { value: 'PROVIDER_ORGANIZATION', label: 'Entidad' },
+  ])
+  .selectFilter('Acción' , 'action' , 'Seleccione una acción',[
+    {value : 'ENTRY' , label:'Entrada'},
+    {value : 'EXIT' , label:'Salida' }
+  ])
+  .dateFilter(
+      'Fecha desde',
+      'startDate',
+      'Placeholder',
+      "yyyy-MM-dd"
+    )
+    .dateFilter(
+      'Fecha hasta',
+      'endDate',
+      'Placeholder',
+      "yyyy-MM-dd"
+    )
+
+ .build();
+
+
+  onFilterValueChange(filters: Record<string,any>) {
+   this.searchParams = {
+     ...filters,
+   };
+
+   this.currentPage = 1;
+   console.log(this.searchParams);
+
+   if(this.searchParams['visitorTypes']){
+     this.filterByVisitorType(this.searchParams['visitorTypes']);
+   } else if(this.searchParams['action']){
+    this.filterByAction(this.searchParams['action'])
+   }else if(this.searchParams['startDate'] && this.searchParams['endDate'] ){
+    console.log('hhhh')
+    this.filterByDate(this.searchParams['startDate'] , this.searchParams['endDate'] )
+   }
+   else{
+    this.getAll();
+   }
+}
 
   //#region NgOnInit | BUSCAR
   ngOnInit() {
@@ -159,6 +243,7 @@ export class AccessListComponent implements OnInit, AfterViewInit {
     );
   }
   filterByDate(date_from: Date, date_to: Date) {
+    console.log(date_from , date_to)
     if((new Date(new Date(date_from+"T00:00:00"))) > (new Date(new Date(date_to+"T00:00:00")))){
       alert("aa")
       return
