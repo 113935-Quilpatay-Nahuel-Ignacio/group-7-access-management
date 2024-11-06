@@ -6,7 +6,7 @@ export interface DashboardHourlyDTO {
 export interface DashboardWeeklyDTO {
   key: string;
   value: number;
-  secondary_value: number;
+  secondaryValue: number;
 }
 
 export interface AccessData {
@@ -20,7 +20,7 @@ export interface ChartState {
 }
 
 export interface EntryReport {
-  entry_count: number;
-  exit_count: number;
+  entryCount: number;
+  exitCount: number;
 }
 

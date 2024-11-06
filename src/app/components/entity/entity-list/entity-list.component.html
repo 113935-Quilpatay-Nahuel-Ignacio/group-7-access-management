@@ -95,19 +95,19 @@
             <tr>
               <td>
                 <!--TODO icono-->
-                {{ item.name + ' ' + (item.last_name == null ? '' : item.last_name) }}
+                {{ item.name + ' ' + (item.lastName == null ? '' : item.lastName) }}
               </td>
               <td>
-                {{ (item.doc_type === "PASSPORT" ? "PASAPORTE" : item.doc_type) + ' ' + item.doc_number }}
+                {{ (item.docType === "PASSPORT" ? "PASAPORTE" : item.docType) + ' ' + item.docNumber }}
               </td>
               <td>
-                @for (type of item.visitor_types; track $index){
+                @for (type of item.visitorTypes; track $index){
                   {{ translateTable(type, typeDictionary) }}
                 }
               </td>
               @if (userType == "ADMIN" || userType == "OWNER"){
                 <td>
-                  @if (item.is_active) {
+                  @if (item.isActive) {
                     <p class="mb-0">
                       <i class="bi bi-check2-circle text-success" style="font-size: 1.5rem;"></i>
                     </p>
@@ -118,17 +118,17 @@
                   }
                 </td>
                 <td>
-                  <button class="btn btn-warning"> <i class="bi bi-pencil" (click)="edit(item.doc_number)"></i></button>
+                  <button class="btn btn-warning"> <i class="bi bi-pencil" (click)="edit(item.docNumber)"></i></button>
                   <button class="btn btn-danger ms-1"> <i class="bi bi-trash"></i></button>
                 </td>
               }
               <!--<td>
                   &lt;!&ndash; Botones visibles en pantallas medianas y grandes &ndash;&gt;
                   <div class="d-none d-md-flex">
-                    <button class="btn btn-warning btn-sm me-2" (click)="editVisitor(item.visitor_id)">
+                    <button class="btn btn-warning btn-sm me-2" (click)="editVisitor(item.visitorId)">
                       Editar
                     </button>
-                    <button class="btn btn-danger btn-sm" (click)="deleteVisitor(item.visitor_id)">
+                    <button class="btn btn-danger btn-sm" (click)="deleteVisitor(item.visitorId)">
                       Eliminar
                     </button>
                   </div>
@@ -140,10 +140,10 @@
                     </button>
 
                     <div ngbDropdownMenu class="dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                      <button class="dropdown-item" (click)="editVisitor(item.visitor_id)">
+                      <button class="dropdown-item" (click)="editVisitor(item.visitorId)">
                         Editar
                       </button>
-                      <button class="dropdown-item text-white" (click)="deleteVisitor(item.visitor_id)">
+                      <button class="dropdown-item text-white" (click)="deleteVisitor(item.visitorId)">
                         Eliminar
                       </button>
                     </div>

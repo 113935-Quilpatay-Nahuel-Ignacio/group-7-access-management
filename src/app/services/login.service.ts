@@ -14,7 +14,7 @@ export class LoginService {
 
   getLogin():LoginModel{
     return {
-      birth_date: "", doc_number: 0, doc_type: "", id: 2, last_name: "R.", name: "Juan"
+      birthDate: "", docNumber: 0, docType: "", id: 2, lastName: "R.", name: "Juan"
     }
   }
 }

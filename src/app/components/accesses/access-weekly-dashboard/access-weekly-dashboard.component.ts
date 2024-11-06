@@ -113,7 +113,7 @@ export class AccessWeeklyDashboardComponent {
     this.chartState.hasData =
       data.length > 0 &&
       (data.some((item) => item.value > 0) ||
-        data.some((item) => item.secondary_value > 0));
+        data.some((item) => item.secondaryValue > 0));
 
     if (!this.chartState.hasData) {
       this.chartData.labels = [];
@@ -126,7 +126,7 @@ export class AccessWeeklyDashboardComponent {
       if (this.chartData.datasets) {
         this.chartData.datasets[0].data = data.map((item) => item.value);
         this.chartData.datasets[1].data = data.map(
-          (item) => item.secondary_value
+          (item) => item.secondaryValue
         );
       }
     }

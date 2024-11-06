@@ -1,58 +1,128 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {Auth} from "../models/authorize.model";
-import {AccessModel} from "../models/access.model";
-import {VisitorAuthorizationRequest} from "../models/authorizeRequest.model";
-import {PaginatedResponse} from "../models/api-response";
-import { DashboardHourlyDTO, DashboardWeeklyDTO, EntryReport} from '../models/dashboard.model';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { map, Observable } from 'rxjs';
+import { Auth } from '../models/authorize.model';
+import { AccessModel } from '../models/access.model';
+import { VisitorAuthorizationRequest } from '../models/authorizeRequest.model';
+import { PaginatedResponse } from '../models/api-response';
+import {
+  DashboardHourlyDTO,
+  DashboardWeeklyDTO,
+  EntryReport,
+} from '../models/dashboard.model';
+import { CaseTransformerService } from './case-transformer.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AccessService {
-
   private apiUrl = 'http://localhost:8001/access';
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(
+    private http: HttpClient,
+    private caseTransformer: CaseTransformerService
+  ) {}
 
-  getAll(page: number, size: number, isActive?: boolean): Observable<{items: AccessModel[]}> {
-    return this.http.get<{items: AccessModel[]}>(this.apiUrl, {
-      params: { size: 1000000 }
-    });
+  getAll(
+    page: number,
+    size: number,
+    isActive?: boolean
+  ): Observable<{ items: AccessModel[] }> {
+    return this.http
+      .get<{ items: AccessModel[] }>(this.apiUrl, {
+        params: { size: 1000000 },
+      })
+      .pipe(
+        map((response) => ({
+          //items: this.caseTransformer.toCamelCase(response.items),
+          items: response.items.map(item => this.caseTransformer.toCamelCase(item))
+        }))
+      );
   }
 
   createAccess(data: any, userId: string): Observable<AccessModel> {
     const headers = new HttpHeaders({
-      'x-user-id': userId
+      'x-user-id': userId,
     });
 
-    return this.http.post<AccessModel>(this.apiUrl + '/authorize', data, { headers });
-  }
-  getByAction(page: number, size: number, type: string, isActive?: boolean): Observable<{items: AccessModel[]}> {
-    return this.http.get<{items: AccessModel[]}>(this.apiUrl);
+    const snakeCaseData = this.caseTransformer.toSnakeCase(data);
+
+    return this.http
+      .post<AccessModel>(this.apiUrl + '/authorize', snakeCaseData, {
+        headers,
+      })
+      .pipe(map((response) => this.caseTransformer.toCamelCase(response)));
   }
 
-  getByType(page: number, size: number, type: string, isActive?: boolean): Observable<{items: AccessModel[]}> {
-    return this.http.get<{items: AccessModel[]}>(this.apiUrl);
+  getByAction(
+    page: number,
+    size: number,
+    type: string,
+    isActive?: boolean
+  ): Observable<{ items: AccessModel[] }> {
+    return this.http
+      .get<{ items: AccessModel[] }>(this.apiUrl)
+      .pipe(
+        map((response) => ({
+          items: response.items.map(item => this.caseTransformer.toCamelCase(item))
+        }))
+      );
+      /*.pipe(
+        map((response) => 
+          this.caseTransformer.toCamelCase(response)
+      ));*/
   }
 
-  getHourlyAccesses(from: string, to: string): Observable<DashboardHourlyDTO[]> {
-    return this.http.get<DashboardHourlyDTO[]>(`${this.apiUrl}/hourly`, {
-      params: { from, to }
-    });
+  getByType(
+    page: number,
+    size: number,
+    type: string,
+    isActive?: boolean
+  ): Observable<{ items: AccessModel[] }> {
+    return this.http
+      .get<{ items: AccessModel[] }>(this.apiUrl)
+      .pipe(
+        map((response) => ({
+          items: response.items.map(item => this.caseTransformer.toCamelCase(item))
+        }))
+      );
+      //.pipe(map((response) => this.caseTransformer.toCamelCase(response)));
   }
 
-  getWeeklyAccesses(from: string, to: string): Observable<DashboardWeeklyDTO[]> {
-    return this.http.get<DashboardWeeklyDTO[]>(`${this.apiUrl}/weekly`, {
-      params: { from, to }
-    });
+  getHourlyAccesses(
+    from: string,
+    to: string
+  ): Observable<DashboardHourlyDTO[]> {
+    return this.http
+      .get<DashboardHourlyDTO[]>(`${this.apiUrl}/hourly`, {
+        params: { from, to },
+      })
+      .pipe(map((response) => response.map(item => this.caseTransformer.toCamelCase(item))));
+      //.pipe(map((response) => this.caseTransformer.toCamelCase(response)));
   }
-  getVisitorTypeAccesses(from: string, to: string): Observable<DashboardWeeklyDTO[]> {
-    return this.http.get<DashboardWeeklyDTO[]>(`${this.apiUrl}/visitor/type`, {
-      params: { from, to }
-    });
+
+  getWeeklyAccesses(
+    from: string,
+    to: string
+  ): Observable<DashboardWeeklyDTO[]> {
+    return this.http
+      .get<DashboardWeeklyDTO[]>(`${this.apiUrl}/weekly`, {
+        params: { from, to },
+      })
+      .pipe(map((response) => response.map(item => this.caseTransformer.toCamelCase(item))));
+      //.pipe(map((response) => this.caseTransformer.toCamelCase(response)));
+  }
+
+  getVisitorTypeAccesses(
+    from: string,
+    to: string
+  ): Observable<DashboardWeeklyDTO[]> {
+    return this.http
+      .get<DashboardWeeklyDTO[]>(`${this.apiUrl}/visitor/type`, {
+        params: { from, to },
+      })
+      .pipe(map((response) => response.map(item => this.caseTransformer.toCamelCase(item))));
+      //.pipe(map((response) => this.caseTransformer.toCamelCase(response)));
   }
 
   getAccessByDate(from: Date, to: Date): Observable<EntryReport> {
@@ -60,6 +130,10 @@ export class AccessService {
       .set('from', from.toISOString().split('T')[0])
       .set('to', to.toISOString().split('T')[0]);
 
-    return this.http.get<EntryReport>(`${this.apiUrl}/getAccessCounts`, { params });
+    return this.http
+      .get<EntryReport>(`${this.apiUrl}/getAccessCounts`, {
+        params,
+      })
+      .pipe(map((response) => this.caseTransformer.toCamelCase(response)));
   }
 }

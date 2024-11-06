@@ -43,48 +43,48 @@ export class AuthFormComponent implements OnInit {
 
     this.userType = this.userTypeService.getType()
     if (this.userType == "OWNER"){
-      this.authForm.get('plot_id')?.setValue(2)
-      this.authForm.get('plot_id')?.disable()
-      this.authForm.get('visitor_type')?.setValue("VISITOR")
-      this.authForm.get('visitor_type')?.disable()
+      this.authForm.get('plotId')?.setValue(2)
+      this.authForm.get('plotId')?.disable()
+      this.authForm.get('visitorType')?.setValue("VISITOR")
+      this.authForm.get('visitorType')?.disable()
     }
     if (this.userType == "ADMIN") {
-      this.authForm.get('plot_id')?.enable()
-      this.authForm.get('visitor_type')?.enable()
+      this.authForm.get('plotId')?.enable()
+      this.authForm.get('visitorType')?.enable()
     }
     if  (this.userType == "GUARD") {
-      this.authForm.get('visitor_type')?.setValue("VISITOR")
-      this.authForm.get('visitor_type')?.disable()
-      this.authForm.get('plot_id')?.enable()
+      this.authForm.get('visitorType')?.setValue("VISITOR")
+      this.authForm.get('visitorType')?.disable()
+      this.authForm.get('plotId')?.enable()
     }
     this.userTypeService.userType$.subscribe((userType: string) => {
       this.userType = userType
       if (this.userType == "OWNER"){
-        this.authForm.get('plot_id')?.setValue(2)
-        this.authForm.get('plot_id')?.disable()
-        this.authForm.get('visitor_type')?.setValue("VISITOR")
-        this.authForm.get('visitor_type')?.disable()
+        this.authForm.get('plotId')?.setValue(2)
+        this.authForm.get('plotId')?.disable()
+        this.authForm.get('visitorType')?.setValue("VISITOR")
+        this.authForm.get('visitorType')?.disable()
       }
       if (this.userType == "ADMIN") {
-        this.authForm.get('plot_id')?.enable()
-        this.authForm.get('visitor_type')?.enable()
+        this.authForm.get('plotId')?.enable()
+        this.authForm.get('visitorType')?.enable()
       }
       if  (this.userType == "GUARD") {
-        this.authForm.get('visitor_type')?.setValue("VISITOR")
-        this.authForm.get('visitor_type')?.disable()
-        this.authForm.get('plot_id')?.enable()
+        this.authForm.get('visitorType')?.setValue("VISITOR")
+        this.authForm.get('visitorType')?.disable()
+        this.authForm.get('plotId')?.enable()
       }
 
-      const documentParam = this.paramRoutes.snapshot.queryParamMap.get('doc_number');
+      const documentParam = this.paramRoutes.snapshot.queryParamMap.get('docNumber');
      console.log(documentParam)
      
       if (documentParam) {
-      this.authForm.get('visitor_request.doc_number')?.patchValue(documentParam);
+      this.authForm.get('visitorRequest.docNumber')?.patchValue(documentParam);
     }
 
     });
 
-    const documentParam = this.paramRoutes.snapshot.queryParamMap.get('auth_id');
+    const documentParam = this.paramRoutes.snapshot.queryParamMap.get('authId');
     if (documentParam) {
       this.isUpdate = true
       this.authService.getById(parseInt(documentParam, 10)).subscribe(datas => {
@@ -92,33 +92,33 @@ export class AuthFormComponent implements OnInit {
         // Completa el formulario
         
         this.authForm.patchValue({
-          auth_id: data.auth_id,
-          is_active:data.is_active,
-          visitor_type: data.visitor_type,
-          plot_id: data.plot_id,
-          visitor_request: {
+          authId: data.authId,
+          isActive:data.isActive,
+          visitorType: data.visitorType,
+          plotId: data.plotId,
+          visitorRequest: {
             name: data.visitor.name,
-            last_name: data.visitor.last_name,
-            doc_type: data.visitor.doc_type,
-            doc_number: data.visitor.doc_number,
+            lastName: data.visitor.lastName,
+            docType: data.visitor.docType,
+            docNumber: data.visitor.docNumber,
             
-            birth_date: this.formatDate(data.visitor.birth_date), // Asegúrate de formatear la fecha si es necesario
+            birthDate: this.formatDate(data.visitor.birthDate), // Asegúrate de formatear la fecha si es necesario
           }
         });
 
-        // Completar auth_range_request
-        const authRanges = data.auth_ranges.map(range => ({
-          auth_range_id: range.auth_range_id,
-          date_from: this.formatDate(range.date_from),
-          date_to: this.formatDate(range.date_to),
-          hour_from: range.hour_from,
-          hour_to: range.hour_to,
-          days_of_week: range.days_of_week,
+        // Completar authRangeRequest
+        const authRanges = data.authRanges.map(range => ({
+          authRangeId: range.authRangeId,
+          dateFrom: this.formatDate(range.dateFrom),
+          dateTo: this.formatDate(range.dateTo),
+          hourFrom: range.hourFrom,
+          hourTo: range.hourTo,
+          daysOfWeek: range.daysOfWeek,
           comment: range.comment,
-          is_active: range.is_active
+          isActive: range.isActive
         }));
 
-        this.authForm.patchValue({auth_range_request: authRanges});
+        this.authForm.patchValue({authRangeRequest: authRanges});
       });
     }
   }
@@ -134,31 +134,31 @@ export class AuthFormComponent implements OnInit {
 
   createForm(): FormGroup {
     return this.fb.group({
-      auth_id: 0,
-      is_active:true,
-      visitor_type: ['VISITOR', Validators.required],
-      plot_id: [null, Validators.required],
-      visitor_request: this.fb.group({
+      authId: 0,
+      isActive:true,
+      visitorType: ['VISITOR', Validators.required],
+      plotId: [null, Validators.required],
+      visitorRequest: this.fb.group({
         name: ['', Validators.required],
-        last_name: ['', Validators.required],
-        doc_type: ['DNI', Validators.required],
-        doc_number: [null, Validators.required],
-        birth_date: [null, Validators.required],
+        lastName: ['', Validators.required],
+        docType: ['DNI', Validators.required],
+        docNumber: [null, Validators.required],
+        birthDate: [null, Validators.required],
       }),
-      auth_range_request: [[]]
+      authRangeRequest: [[]]
     });
   }
 
   onSubmit() {
     if (this.authForm.valid) {
-      if(this.authForm.value.visitor_type == undefined){
-        this.authForm.value.visitor_type = "VISITOR"
+      if(this.authForm.value.visitorType == undefined){
+        this.authForm.value.visitorType = "VISITOR"
       }
-      if(this.authForm.value.plot_id == undefined){
-        this.authForm.value.plot_id = 2
+      if(this.authForm.value.plotId == undefined){
+        this.authForm.value.plotId = 2
       }
       const formData = this.authForm.value;
-      formData.visitor_request.birth_date = formatFormDate(formData.visitor_request.birth_date);
+      formData.visitorRequest.birthDate = formatFormDate(formData.visitorRequest.birthDate);
 
       const now = new Date();
 
@@ -181,27 +181,27 @@ export class AuthFormComponent implements OnInit {
       const isNewDay = dateTo.getDate() !== now.getDate();
       const finalDateFrom = isNewDay ? formatDate(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0)) : dateFrom;
 
-      if (formData.auth_range_request.length === 0) {
+      if (formData.authRangeRequest.length === 0) {
         const authRange = {
-          date_from: finalDateFrom,
-          date_to: formatDate(dateTo),
-          hour_from: isNewDay ? "00:00:00" : formatTime(now),
-          hour_to: formatTime(dateTo),
-          days_of_week: [this.getDayOfWeek(now)],
+          dateFrom: finalDateFrom,
+          dateTo: formatDate(dateTo),
+          hourFrom: isNewDay ? "00:00:00" : formatTime(now),
+          hourTo: formatTime(dateTo),
+          daysOfWeek: [this.getDayOfWeek(now)],
           comment: "Access for John Doe"
         };
 
-        formData.auth_range_request = [authRange];
+        formData.authRangeRequest = [authRange];
       } else{
-        for (let range of formData.auth_range_request) {
-          range.date_from = formatDate(new Date(range.date_from));
-          range.date_to = formatDate(new Date(range.date_to));
+        for (let range of formData.authRangeRequest) {
+          range.dateFrom = formatDate(new Date(range.dateFrom));
+          range.dateTo = formatDate(new Date(range.dateTo));
 
-          if(range.hour_from.length< 8){
-            range.hour_from = range.hour_from + ':00';
+          if(range.hourFrom.length< 8){
+            range.hourFrom = range.hourFrom + ':00';
           }
-          if(range.hour_to.length< 8){
-            range.hour_to = range.hour_to + ':00';
+          if(range.hourTo.length< 8){
+            range.hourTo = range.hourTo + ':00';
           }
         }
       }
@@ -274,15 +274,15 @@ export class AuthFormComponent implements OnInit {
 
   openModal() {
     const modalRef = this.modalService.open(RangeModalComponent, {size: 'xl'});
-    console.log(this.authForm.get('auth_range_request')?.value)
-    modalRef.componentInstance.ranges = this.authForm.get('auth_range_request')?.value
+    console.log(this.authForm.get('authRangeRequest')?.value)
+    modalRef.componentInstance.ranges = this.authForm.get('authRangeRequest')?.value
     modalRef.result.then((result) => {
       if (result != undefined){
 
-      this.authForm.get('auth_range_request')?.setValue(result)
+      this.authForm.get('authRangeRequest')?.setValue(result)
       }
     }).catch((error) => {
-      console.log(this.authForm.get('auth_range_request')?.value)
+      console.log(this.authForm.get('authRangeRequest')?.value)
       console.error('Modal cerrado sin guardar cambios', error);
     });
   }

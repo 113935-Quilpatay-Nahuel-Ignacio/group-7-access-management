@@ -1,21 +1,21 @@
 export interface Visitor {
-  visitor_id: number;
-  owner_id: number;
-  loader_id: string;
-  loader_name: string;
+  visitorId: number;
+  ownerId: number;
+  loaderId: string;
+  loaderName: string;
   name: string;
-  last_name: string;
-  visitor_types:string[];
-  doc_type:string;
-  doc_number: string;
-  birth_date: any;
-  is_active: boolean;
+  lastName: string;
+  visitorTypes:string[];
+  docType:string;
+  docNumber: string;
+  birthDate: any;
+  isActive: boolean;
 }
 
 export interface SendVisitor {
   name: string;
-  last_name: string;
-  doc_number: string;
-  birth_date: any;
-  is_active: boolean;
+  lastName: string;
+  docNumber: string;
+  birthDate: any;
+  isActive: boolean;
 }

@@ -21,14 +21,14 @@
 
     <div class="d-flex align-items-center flex-row">
       <label for="last-name" class="form-label m-0">Apellido</label><label class="text-danger">*</label>
-      <input type="text" id="last-name" class="form-control ms-4" formControlName="last_name"
+      <input type="text" id="last-name" class="form-control ms-4" formControlName="lastName"
              [ngClass]="{
-        'is-invalid': entityForm.get('last_name')?.invalid && entityForm.get('last_name')?.touched
+        'is-invalid': entityForm.get('lastName')?.invalid && entityForm.get('lastName')?.touched
       }"/>
     </div>
     <div>
       <small class="text-danger ms-2"
-             *ngIf="entityForm.get('last_name')?.invalid && entityForm.get('last_name')?.touched">
+             *ngIf="entityForm.get('lastName')?.invalid && entityForm.get('lastName')?.touched">
           Por favor, ingrese el apellido del visitante
       </small>
     </div>
@@ -37,7 +37,7 @@
   <div class="col-md-6 mt-3">
     <div class="d-flex align-items-center flex-row">
       <label for="doc-type" class="form-label m-0">Tipo de Documento<label class="text-danger">*</label></label>
-      <select id="doc-type" class="form-select ms-2" formControlName="doc_type">
+      <select id="doc-type" class="form-select ms-2" formControlName="docType">
         <option value="DNI">DNI</option>
         <option value="Passport">Pasaporte</option>
         <option value="Cédula">Cédula</option>
@@ -48,14 +48,14 @@
   <div class="col-md-6 mt-3">
     <div class="d-flex align-items-center flex-row">
       <label for="doc-number" class="form-label m-0">Número de Documento<label class="text-danger">*</label></label>
-      <input type="number" id="doc-number" class="form-control ms-2" formControlName="doc_number"
+      <input type="number" id="doc-number" class="form-control ms-2" formControlName="docNumber"
              [ngClass]="{
-        'is-invalid': entityForm.get('doc_number')?.invalid && entityForm.get('doc_number')?.touched
+        'is-invalid': entityForm.get('docNumber')?.invalid && entityForm.get('docNumber')?.touched
       }"/>
     </div>
     <div>
       <small class="text-danger ms-2"
-             *ngIf="entityForm.get('doc_number')?.invalid && entityForm.get('doc_number')?.touched">
+             *ngIf="entityForm.get('docNumber')?.invalid && entityForm.get('docNumber')?.touched">
           Por favor, ingrese el número de documento del visitante
       </small>
     </div>
@@ -64,14 +64,14 @@
   <div class="col-md-6 mt-3">
     <div class="d-flex align-items-center flex-row">
       <label for="birth-date" class="form-label m-0">Fecha de Nacimiento<label class="text-danger">*</label></label>
-      <input type="date" id="birth-date" class="form-control ms-2" formControlName="birth_date"
+      <input type="date" id="birth-date" class="form-control ms-2" formControlName="birthDate"
              [ngClass]="{
-        'is-invalid': entityForm.get('birth_date')?.invalid && entityForm.get('birth_date')?.touched
+        'is-invalid': entityForm.get('birthDate')?.invalid && entityForm.get('birthDate')?.touched
       }"/>
     </div>
     <div>
       <small class="text-danger ms-2"
-             *ngIf="entityForm.get('birth_date')?.invalid && entityForm.get('birth_date')?.touched">
+             *ngIf="entityForm.get('birthDate')?.invalid && entityForm.get('birthDate')?.touched">
           Por favor, ingrese la fecha de nacimiento del visitante
       </small>
     </div>

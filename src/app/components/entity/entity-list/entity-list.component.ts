@@ -178,7 +178,6 @@ onFilterValueChange(filters: Record<string, any>) {
   //#region GET_ALL
   getAll() {
     this.visitorService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-        debugger
         this.completeList = this.transformListToTableData(data.items)
         console.log(this.completeList)
         let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
@@ -197,10 +196,10 @@ onFilterValueChange(filters: Record<string, any>) {
 
   getAllFiltered(filter:string) {
     this.visitorService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-        data.items = data.items.filter(x => (x.name.toLowerCase().includes(filter) || x.last_name.toLowerCase().includes(filter) || x.doc_number.toString().includes(filter)))
+        data.items = data.items.filter(x => (x.name.toLowerCase().includes(filter) || x.lastName.toLowerCase().includes(filter) || x.docNumber.toString().includes(filter)))
         let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
         response.content.forEach(data => {
-          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
+          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
         })
 
         this.list = response.content;
@@ -219,10 +218,10 @@ onFilterValueChange(filters: Record<string, any>) {
   //#region FILTROS
   filterByVisitorType(type: string) {
    this.visitorService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-       data.items = data.items.filter(x => (x.visitor_types.includes(type)))
+       data.items = data.items.filter(x => (x.visitorTypes.includes(type)))
         let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
         response.content.forEach(data => {
-          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
+          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
         })
 
         this.list = response.content;
@@ -240,7 +239,7 @@ onFilterValueChange(filters: Record<string, any>) {
     /*this.visitorService.getByAction(this.currentPage, this.pageSize, action, this.retrieveByActive).subscribe(data => {
         let response = this.transformResponseService.transformAction(data,this.currentPage, this.pageSize, action, this.retrieveByActive)
         response.content.forEach(data => {
-          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
+          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
         })
 
         this.list = response.content;
@@ -411,14 +410,14 @@ onFilterValueChange(filters: Record<string, any>) {
   transformListToTableData(list: any) {
     return list.map((item: {
       name: any;
-      last_name: any;
-      doc_type: any;
-      doc_number: any;
-      visitor_types: any[]; // Suponiendo que visitor_types es un array
+      lastName: any;
+      docType: any;
+      docNumber: any;
+      visitorTypes: any[]; // Suponiendo que visitorTypes es un array
     }) => ({
-      Nombre: `${item.name} ${item.last_name}`,
-      Documento: `${item.doc_type === "PASSPORT" ? "PASAPORTE" : item.doc_type} ${item.doc_number}`,
-      Tipos: item.visitor_types?.map(type => this.translateTable(type, this.typeDictionary)).join(', '), // Traducir cada tipo y unirlos en una cadena
+      Nombre: `${item.name} ${item.lastName}`,
+      Documento: `${item.docType === "PASSPORT" ? "PASAPORTE" : item.docType} ${item.docNumber}`,
+      Tipos: item.visitorTypes?.map(type => this.translateTable(type, this.typeDictionary)).join(', '), // Traducir cada tipo y unirlos en una cadena
     }));
   }
 
@@ -427,7 +426,7 @@ onFilterValueChange(filters: Record<string, any>) {
     this.modalService.open(this.infoModal, {centered: true, size: 'lg'});
     }
 
-  edit(doc_number: any) {
+  edit(docNumber: any) {
 
   }
 }

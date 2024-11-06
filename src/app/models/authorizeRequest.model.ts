@@ -1,25 +1,25 @@
 export interface VisitorRequest {
   name: string;
-  last_name: string;
-  doc_type: string;
-  doc_number: number;
-  birth_date: string;
+  lastName: string;
+  docType: string;
+  docNumber: number;
+  birthDate: string;
 }
 
 export interface AuthRangeRequest {
-  date_from: string;
-  date_to: string;
-  hour_from: string;
-  hour_to: string;
-  days_of_week: DaysOfWeek[];
+  dateFrom: string;
+  dateTo: string;
+  hourFrom: string;
+  hourTo: string;
+  daysOfWeek: DaysOfWeek[];
   comment: string;
 }
 
 export interface VisitorAuthorizationRequest {
-  visitor_type: VisitorType;
-  plot_id: number;
-  visitor_request: VisitorRequest;
-  auth_range_request: AuthRangeRequest[];
+  visitorType: VisitorType;
+  plotId: number;
+  visitorRequest: VisitorRequest;
+  authRangeRequest: AuthRangeRequest[];
 }
 
 export enum VisitorType {
