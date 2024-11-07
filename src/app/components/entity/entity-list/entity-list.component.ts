@@ -371,8 +371,7 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   edit(id: any) {
     const modalRef = this.modalService.open(EntityFormComponent, { centered: true, size: 'lg' });
     modalRef.componentInstance.visitorId = id;
-    debugger
-  
+
     // Suscribirse al evento 'entitySaved' del modal para recargar la lista
     modalRef.componentInstance.entitySaved.subscribe(() => {
       this.ngOnInit()

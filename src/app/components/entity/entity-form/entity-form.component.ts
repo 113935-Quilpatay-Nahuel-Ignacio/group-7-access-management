@@ -48,7 +48,7 @@ export class EntityFormComponent implements OnInit {
   ngOnInit(): void {
 
     if(this.visitorId){
-      console.log('entra en edición');
+      
       this.activateEditMode(); 
       this.loadData(this.visitorId);  
     }
@@ -91,6 +91,7 @@ export class EntityFormComponent implements OnInit {
             this.toastService.sendSuccess("Registro exitoso!");
             this.entityCreated.emit();
           }
+
         // Emitir el evento para informar al componente principal que se realizó la operación
           this.entitySaved.emit(true);
     
