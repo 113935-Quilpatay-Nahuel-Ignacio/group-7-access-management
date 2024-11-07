@@ -11,7 +11,8 @@ import { SendVisitor, Visitor } from '../models/visitor.model';
 import { CaseTransformerService } from './case-transformer.service';
 
 export interface VisitorFilter {
-  active : boolean
+  active? : boolean,
+  textFilter?: string
 }
 
 export interface PaginatedResponse<T>{
@@ -22,70 +23,7 @@ export interface PaginatedResponse<T>{
   providedIn: 'root',
 })
 export class VisitorService {
-  /*private apiUrl = 'http://localhost:8001/visitors';
-
-  private baseUrl = 'http://localhost:8001/';
-
-  constructor(private http: HttpClient) {
-  }
-
-  getAll(page: number, size: number, filter?: boolean): Observable<{items: Visitor[]}> {
-    return this.http.get<{items: Visitor[]}>(this.apiUrl);
-  }
-
-  getAllPaginated(page: number, size: number, filter?: VisitorFilter): Observable<PaginatedResponse<Visitor>> {
-
-    let params = new HttpParams()
-    .set('page', page.toString())
-    .set('size', size.toString());
-
-  // Agregar filtros opcionales si están presentes
-  if (filter?.textFilter) {
-    params = params.set('textFilter', filter.textFilter);
-  }
-  if (filter?.documentType) {
-    params = params.set('documentType', filter.documentType);
-  }
-  if (filter?.visitorType) {
-    params = params.set('visitorType', filter.visitorType);
-  }
-  if (filter?.active !== undefined) {
-    params = params.set('active', filter.active.toString());
-  }
-
-  return this.http.get<PaginatedResponse<Visitor>>(this.apiUrl, { params });
-
-  }
-
-  getVisitor(docNumber: number): Observable<HttpResponse<Visitor>> {
-    return this.http.get<Visitor>(`${this.apiUrl}/by-doc-number/${docNumber}`, {observe: 'response'});
-  }
-
- getVisitorById(visitoirId : number){
-
- return this.http.get<Visitor>(`${this.apiUrl}/visitorId/${visitoirId}`, {observe: 'response'});
- }
-  upsertVisitor(visitor: SendVisitor,userId: number , entityId?:number): Observable<HttpResponse<Visitor>> {
-    const headers = new HttpHeaders({
-      'x-user-id': userId
-    });
-
-    const params = new HttpParams();
-    if(entityId){
-      params.set('visitorId', entityId.toString());
-    }
-
-    return this.http.put<Visitor>(this.apiUrl, visitor, {observe: 'response', headers , params});
-  }
-
-  checkAccess(plate: string, action: string): Observable<Boolean> {
-    const params = new HttpParams()
-      .set('carPlate', plate)
-      .set('action', action);
-
-    return this.http.get<Boolean>(`${this.baseUrl}access/check-access`, { params });
-  }*/
-
+ 
   private apiUrl = 'http://localhost:8001/visitors';
   private baseUrl = 'http://localhost:8001/';
 
@@ -119,25 +57,44 @@ export class VisitorService {
   }
 
   getAllPaginated(
-    page: number,
-    size: number,
-    filter: VisitorFilter
+    page?: number,
+    size?: number,
+    filter?: VisitorFilter
   ): Observable<PaginatedResponse<Visitor>> {
     let snakeCaseParams = this.caseTransformer.toSnakeCase({
-      page: page.toString(),
-      size: size.toString(),
+      page: page?.toString(),
+      size: size?.toString(),
       filter,
     });
   
+    
     return this.http.get<{ items: Visitor[], total_elements: number }>(this.apiUrl, {params: snakeCaseParams as any,})
       .pipe(
         map((response) => {
-          console.log(response); 
           return {
             items: response.items.map((item) =>
               this.caseTransformer.toCamelCase(item)
             ),
             totalElements: response.total_elements, 
+          };
+        })
+      );
+  }
+
+
+  getAllFiltered(filter: string): Observable<PaginatedResponse<Visitor>> {
+    // Definir un objeto de parámetros solo con el filtro de texto
+    const filterParams = { textFilter: filter };
+  
+    // Llamada al backend con los parámetros de filtro y sin la paginación
+    return this.http.get<{ items: Visitor[], total_elements: number }>(this.apiUrl, { params: filterParams })
+      .pipe(
+        map((response) => {
+          return {
+            items: response.items.map((item) =>
+              this.caseTransformer.toCamelCase(item) // Convertir a camelCase si es necesario
+            ),
+            totalElements: response.total_elements,
           };
         })
       );
@@ -165,8 +122,8 @@ export class VisitorService {
   }
 
   getVisitorById(visitorId: number): Observable<HttpResponse<Visitor>> {
-    return this.http
-      .get<Visitor>(`${this.apiUrl}/visitorId/${visitorId}`, {
+    
+    return this.http.get<Visitor>(`${this.apiUrl}/${visitorId}`, {
         observe: 'response',
       })
       .pipe(
@@ -185,31 +142,22 @@ export class VisitorService {
       );
   }
 
-  upsertVisitor(
-    visitor: SendVisitor,
-    userId: number,
-    entityId?: number
-  ): Observable<HttpResponse<Visitor>> {
+  upsertVisitor(visitor: SendVisitor,userId: number, visitorId?: number): Observable<HttpResponse<Visitor>> {
     const headers = new HttpHeaders({
       'x-user-id': userId.toString(),
     });
-
+  
     const snakeCaseVisitor = this.caseTransformer.toSnakeCase(visitor);
     let params = new HttpParams();
-
-    if (entityId) {
-      const snakeCaseParams = this.caseTransformer.toSnakeCase({
-        visitorId: entityId.toString(),
-      });
-      params = new HttpParams({ fromObject: snakeCaseParams });
+  
+    if (visitorId) {
+      params = params.set('visitorId', visitorId.toString()); // Asignar el resultado de `set` a `params`
     }
-
+    
+    console.log('params: ', params.toString()); // Verificar qué parámetros se están enviando
+  
     return this.http
-      .put<Visitor>(this.apiUrl, snakeCaseVisitor, {
-        observe: 'response',
-        headers,
-        params,
-      })
+      .put<Visitor>(this.apiUrl, snakeCaseVisitor, {observe: 'response',headers,params,})
       .pipe(
         map(
           (response) =>
@@ -225,7 +173,7 @@ export class VisitorService {
         )
       );
   }
-
+  
   checkAccess(plate: string, action: string): Observable<Boolean> {
     const params = new HttpParams()
       .set('carPlate', plate)

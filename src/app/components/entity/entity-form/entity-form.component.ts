@@ -1,4 +1,4 @@
-import {Component, Inject, inject, OnInit} from '@angular/core';
+import {Component, EventEmitter, Inject, inject, Input, OnInit, Output} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {AuthService} from "../../../services/auth.service";
 import {LoginService} from "../../../services/login.service";
@@ -25,17 +25,19 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrl: './entity-form.component.css'
 })
 export class EntityFormComponent implements OnInit {
+
   entityForm: FormGroup = {} as FormGroup;
   url = inject(ActivatedRoute);
-  isEditMode = false;
-  visitorId: string | null = null;
   private toastService = inject(ToastService);
   activeModal = inject(NgbActiveModal);
   isUpdate : boolean = false
 
+  @Input() visitorId? : number 
+  @Output() entitySaved = new EventEmitter<boolean>();
+
   // Método para habilitar el modo edición
   activateEditMode() {
-    this.isEditMode = true;
+    this.isUpdate = true;
   }
 
   constructor(private fb: FormBuilder, private authService: AuthService, private loginService: LoginService, private router: Router, private visitorService: VisitorService, private route: ActivatedRoute) {
@@ -43,6 +45,13 @@ export class EntityFormComponent implements OnInit {
 
 
   ngOnInit(): void {
+
+    if(this.visitorId){
+      console.log('entra en edición');
+      this.activateEditMode(); 
+      this.loadData(this.visitorId);  
+    }
+
     this.entityForm = this.fb.group({
       name: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -50,14 +59,7 @@ export class EntityFormComponent implements OnInit {
       docNumber: [null, Validators.required],
       birthDate: [null]
     });
-
-    /*this.route.paramMap.subscribe(params => {
-      this.visitorId = params.get('visitorId');
-      if (this.visitorId) {
-        this.isEditMode = true;
-        this.loadVisitorData(this.visitorId); // Carga los datos para editar
-      }
-    });*/
+   
   }
 
 
@@ -69,26 +71,43 @@ export class EntityFormComponent implements OnInit {
 
 
   onSubmit(): void {
+
     if (this.entityForm.valid) {
       const formData = this.entityForm.value;
-      if(formData.birthDate){
+  
+      if (formData.birthDate) {
         formData.birthDate = formatFormDate(formData.birthDate);
       }
-      this.visitorService.upsertVisitor(formData,this.loginService.getLogin().id).subscribe((response) => {
-        console.log(response)
-        this.toastService.sendSuccess("Registro exitoso!");
-        this.ngOnInit();
-      },
-        (error) => {
+      
+
+      this.visitorService.upsertVisitor(formData, this.loginService.getLogin().id, this.visitorId).subscribe({
+        next: (response) => {
+       
+          if (this.isUpdate) {
+            this.toastService.sendSuccess("Actualización exitosa!");
+
+          } else {
+            this.toastService.sendSuccess("Registro exitoso!");
+            this.entitySaved.emit(true);
+          }
+        // Emitir el evento para informar al componente principal que se realizó la operación
+          this.entitySaved.emit(true);
+    
+          // Cierro el modal despues de mostrar el toast
+          setTimeout(() => { this.activeModal.close() , this.isUpdate = false} , 1500); 
+        
+        },
+        error: (error) => {
+          console.log(error);
           if (error.status === 400) {
             this.toastService.sendError("Error, Documento ya registrado.");
           } else {
             this.toastService.sendError("Ocurrió un error inesperado. Intente de nuevo más tarde.");
           }
         }
-      );
+      });
     } else {
-      this.markAllAsTouched()
+      this.markAllAsTouched();
     }
   }
 
@@ -98,6 +117,34 @@ export class EntityFormComponent implements OnInit {
       control.markAsTouched();
     })
   };
+
+
+  loadData(id : number){
+
+    this.visitorService.getVisitorById(id).subscribe({
+      next : (data)=>{
+
+        let birthDate = null;
+        if(data.body?.birthDate){
+
+          const [day , month , year] = data.body.birthDate.split('-');
+          birthDate = `${year}-${month}-${day}`
+        }
+
+        this.entityForm.patchValue({
+          name: data.body?.name,
+          lastName : data.body?.lastName,
+          docType : data.body?.docType,
+          docNumber: data.body?.docNumber,
+          birthDate : birthDate
+        })
+      },
+      error : (error)=>{
+        this.toastService.sendError("Ocurrió un error inesperado, intente mas tarde...")
+      }
+    })
+
+  }
 
 }
 

@@ -75,8 +75,10 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   filteredList: Visitor[] = [];
   lastPage: boolean | undefined;
   totalItems: number = 0;
+
   visitorFilter : VisitorFilter ={
-    active: true
+    active: true,
+    textFilter: ''
   }
   //#endregion
   heads: string[] = ['Nombre', 'Documento', 'Tipos'];
@@ -161,7 +163,7 @@ export class EntityListComponent implements OnInit, AfterViewInit {
     if (this.searchParams['visitorTypes']?.length > 0) {
       this.filterByVisitorType(this.searchParams['visitorTypes']);
     } else {
-      this.getAll(); // Si no hay tipos seleccionados, mostrar todos
+      this.getAll();
     }
   }
   //#endregion
@@ -169,6 +171,7 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   //#region NgOnInit | BUSCAR
   ngOnInit() {
     this.confirmFilter();
+    this.getAll()
   }
 
   ngAfterViewInit(): void {
@@ -186,7 +189,7 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   //#region GET_ALL
   getAll() {
     this.visitorService
-      .getAllPaginated(this.currentPage-1, this.pageSize , this.visitorFilter)
+      .getAllPaginated(this.currentPage-1, this.pageSize)
       .subscribe({
         next: (data) => {
           this.completeList = this.transformListToTableData(data.items);
@@ -201,6 +204,7 @@ export class EntityListComponent implements OnInit, AfterViewInit {
           this.filteredList = [...this.list];
           this.lastPage = response.last;
           this.totalItems = data.totalElements;
+          console.log(this.totalItems)
         },
         error: (error) => {
           console.error('Error getting visitors:', error);
@@ -209,10 +213,15 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   }
 
   getAllFiltered(filter: string) {
-    this.visitorService
-      .getAll(this.currentPage - 1, this.pageSize, this.retrieveByActive)
+    //this.visitorService.getAllPaginated(this.currentPage, this.pageSize, {active : undefined , textFilter : filter})
+    this.visitorService.getAllFiltered(filter)
       .subscribe({
         next: (data) => {
+  
+          if(filter === '' || filter=== null){
+            this.getAll();
+          }
+
           const filteredItems = data.items.filter(
             (x) =>
               x.name.toLowerCase().includes(filter.toLowerCase()) ||
@@ -284,49 +293,6 @@ export class EntityListComponent implements OnInit, AfterViewInit {
       });
   }
 
-  filterByAction(action: string) {
-    /*this.visitorService.getByAction(this.currentPage, this.pageSize, action, this.retrieveByActive).subscribe(data => {
-        let response = this.transformResponseService.transformAction(data,this.currentPage, this.pageSize, action, this.retrieveByActive)
-        response.content.forEach(data => {
-          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
-        })
-
-        this.list = response.content;
-        this.filteredList = [...this.list]
-        this.lastPage = response.last
-        this.totalItems = response.totalElements;
-      },
-      error => {
-        console.error('Error getting:', error);
-      }
-    );*/
-  }
-
-  //#endregion
-
-
-
-  //#region DELETE
-  /*  assignPlotToDelete(plot: Plot) {
-      //TODO: Este modal se va a modificar por otro mas especifico de Eliminar.
-      const modalRef = this.modalService.open(ConfirmAlertComponent)
-      modalRef.componentInstance.alertTitle = 'Confirmacion';
-      modalRef.componentInstance.alertMessage = `Estas seguro que desea eliminar el lote nro ${plot.plotNumber} de la manzana ${plot.blockNumber}?`;
-
-      modalRef.result.then((result) => {
-        if (result) {
-
-          this.plotService.deletePlot(plot.id, 1).subscribe(
-            response => {
-              this.toastService.sendSuccess('Lote eliminado correctamente.')
-              this.confirmFilter();
-            }, error => {
-              this.toastService.sendError('Error al eliminar lote.')
-            }
-          );
-        }
-      })
-    }*/
 
   //#endregion
 
@@ -371,7 +337,7 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   //#region FUNCIONES PARA PAGINADO
 
   confirmFilter(): void {
-    this.visitorService.getAllPaginated(this.currentPage - 1, this.pageSize, { active: true }).subscribe(response => {
+    this.visitorService.getAllPaginated(this.currentPage - 1, this.pageSize, { active: true , textFilter: undefined}).subscribe(response => {
       this.filteredList = response.items;
       this.list = response.items
       this.totalItems = response.totalElements;
@@ -413,8 +379,15 @@ export class EntityListComponent implements OnInit, AfterViewInit {
     this.modalService.open(this.infoModal, { centered: true, size: 'lg' });
   }
 
-  edit(docNumber: any) {
-
+  edit(id: any) {
+    const modalRef = this.modalService.open(EntityFormComponent, { centered: true, size: 'lg' });
+    modalRef.componentInstance.visitorId = id;
+    debugger
+  
+    // Suscribirse al evento 'entitySaved' del modal para recargar la lista
+    modalRef.componentInstance.entitySaved.subscribe(() => {
+      this.ngOnInit()
+    });
   }
 
   disable(visitorId: number) {

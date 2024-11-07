@@ -17,7 +17,6 @@
       [props]="props"
       [dictionaries]="dictionaries"
       [tableFilters]="filterConfig"
-      [formPath]="'entity/form'"
       [modalComponent]="EntityFormComponent"
       (filterValueChange)="onFilterValueChange($event)"
       objectName="ACCESOS"></app-cadastre-plot-filter-buttons>
@@ -64,7 +63,7 @@
                   }
                 </td>
                 <td>
-                  <button class="btn btn-warning"> <i class="bi bi-pencil" (click)="edit(item.docNumber)"></i></button>
+                  <button type="button" class="btn btn-warning"> <i class="bi bi-pencil" (click)="edit(item.visitorId)"></i></button>
                   @if (item.isActive) {
                     <button class="btn btn-danger ms-1" (click)="disable(item.visitorId)"><i class="bi bi-trash"></i></button>
                     }@else {
