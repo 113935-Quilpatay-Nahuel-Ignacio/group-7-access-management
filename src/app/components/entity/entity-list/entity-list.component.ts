@@ -330,21 +330,6 @@ export class EntityListComponent implements OnInit, AfterViewInit {
 
   //#endregion
 
-  //#region RUTEO
-  plotOwners(plotId: number) {
-    this.router.navigate(['/owners/plot/' + plotId]);
-  }
-
-  updatePlot(plotId: number) {
-    this.router.navigate(['/plot/form/', plotId]);
-  }
-
-  plotDetail(plotId: number) {
-    this.router.navigate([`/plot/detail/${plotId}`]);
-  }
-
-  //#endregion
-
   //#region USO DE DICCIONARIOS
   getKeys(dictionary: any) {
     return Object.keys(dictionary);
@@ -404,8 +389,6 @@ export class EntityListComponent implements OnInit, AfterViewInit {
 
   //#endregion
 
-  editVisitor(id: number) {}
-  deleteVisitor(id: number) {}
   transformListToTableData(list: any) {
     return list.map(
       (item: {
@@ -434,7 +417,7 @@ export class EntityListComponent implements OnInit, AfterViewInit {
 
   }
 
-    disable(visitorId: number) {
+  disable(visitorId: number) {
     this.visitorService.delete(visitorId,this.loginService.getLogin().id).subscribe(data => {
       this.getAll();
     })
