@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
 import { AccessService } from '../../../services/access.service';
@@ -19,8 +19,10 @@ import {
 export class AccessHourlyDashboardComponent implements AfterViewInit {
   @ViewChild(BaseChartDirective) chart!: BaseChartDirective;
 
-  dateFrom: string = '';
-  dateUntil: string = '';
+  @Input() dateFrom: Date = new Date();
+  @Input() dateTo: Date = new Date();
+  dateFromText:string = ""
+  dateToText:string = ""
   chartState: ChartState = {
     hasData: false,
     message: 'No hay información para esas fechas.',
@@ -69,19 +71,18 @@ export class AccessHourlyDashboardComponent implements AfterViewInit {
   }
 
   loadInitialData() {
-    const today = new Date();
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(today.getDate() - 30);
+    this.dateTo = new Date();
+    this.dateFrom = new Date(this.dateTo.getDate() - 30);
 
-    this.dateFrom = thirtyDaysAgo.toISOString().split('T')[0];
-    this.dateUntil = today.toISOString().split('T')[0];
     this.filterData();
   }
 
   filterData() {
-    if (this.dateFrom && this.dateUntil) {
+    this.dateFromText = new Date(this.dateFrom).toISOString().split('T')[0];
+    this.dateToText = new Date(this.dateTo).toISOString().split('T')[0];
+    if (this.dateFromText && this.dateToText) {
       this.dashboardService
-        .getHourlyAccesses(this.dateFrom, this.dateUntil)
+        .getHourlyAccesses(this.dateFromText, this.dateToText)
         .subscribe((data) => {
           this.updateChartData(data);
         });
