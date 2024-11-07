@@ -39,14 +39,14 @@ export class EntityFormComponent implements OnInit {
   ngOnInit(): void {
     this.entityForm = this.fb.group({
       name: ['', Validators.required],
-      last_name: ['', Validators.required],
-      doc_type: ['DNI', Validators.required],
-      doc_number: [null, Validators.required],
-      birth_date: [null, Validators.required]
+      lastName: ['', Validators.required],
+      docType: ['DNI', Validators.required],
+      docNumber: [null, Validators.required],
+      birthDate: [null, Validators.required]
     });
 
     /*this.route.paramMap.subscribe(params => {
-      this.visitorId = params.get('visitor_id');
+      this.visitorId = params.get('visitorId');
       if (this.visitorId) {
         this.isEditMode = true;
         this.loadVisitorData(this.visitorId); // Carga los datos para editar
@@ -64,7 +64,7 @@ export class EntityFormComponent implements OnInit {
   onSubmit(): void {
     if (this.entityForm.valid) {
       const formData = this.entityForm.value;
-      formData.birth_date = formatFormDate(formData.birth_date);
+      formData.birthDate = formatFormDate(formData.birthDate);
       this.visitorService.upsertVisitor(formData,this.loginService.getLogin().id).subscribe((response) => {
         console.log(response)
         Swal.fire('Registro exitoso...', "Se registró correctamente", 'success');

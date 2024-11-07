@@ -56,8 +56,8 @@
                   }
                 </select>
               } @else if (applyFilterWithDate === true) {
-                <label for="date_from" class="form-label m-0">Fecha desde</label> <input type="date" id="date_from" class="form-control ms-2" [(ngModel)]="date_from"/>
-                <label for="date_to" class="form-label m-0">Fecha hasta</label> <input type="date" id="date_to" class="form-control ms-2" [(ngModel)]="date_to"/>
+                <label for="dateFrom" class="form-label m-0">Fecha desde</label> <input type="date" id="dateFrom" class="form-control ms-2" [(ngModel)]="dateFrom"/>
+                <label for="dateTo" class="form-label m-0">Fecha hasta</label> <input type="date" id="dateTo" class="form-control ms-2" [(ngModel)]="dateTo"/>
               }
               <div class="ms-auto">
                 <button class="btn btn-dark" type="button" (click)="confirmFilter()">Buscar</button>
@@ -108,13 +108,13 @@
             <tr>
               <td>
                 <!--TODO icono-->
-                {{ item.first_name + ' ' + item.last_name }}
+                {{ item.firstName + ' ' + item.lastName }}
               </td>
               <td>
-                {{ getDocumentAbbreviation(item.doc_type) + ' ' + item.doc_number }}
+                {{ getDocumentAbbreviation(item.docType) + ' ' + item.docNumber }}
               </td>
               <td>
-                {{ translateTable(item.visitor_type, typeDictionary) }}
+                {{ translateTable(item.visitorType, typeDictionary) }}
               </td>
               <td>
                   @if (item.action === "ENTRY") {
@@ -124,17 +124,17 @@
                   }
               </td>
               <td>
-                {{ transformDate(item.action_date) }}
+                {{ transformDate(item.actionDate) }}
               </td>
               <td>
-                {{ item.vehicle_reg }}
+                {{ item.vehicleReg }}
               </td>
               <td>
                 {{ (item.comments === "" || item.comments == undefined) ? "N/A" : item.comments }}
               </td>
               <td>
                 <!--TODO icono-->
-                {{ item.authorizer?.auth_first_name + ' ' + item.authorizer?.auth_last_name }}
+                {{ item.authorizer?.authFirstName + ' ' + item.authorizer?.authLastName }}
               </td>
             </tr>
   

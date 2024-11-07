@@ -102,8 +102,8 @@ export class AccessReportDashboardComponent {
         console.log('Datos recibidos del servidor:', data);
 
         // Actualizar los datos del gráfico
-        this.chartData.datasets[0].data = [data.entry_count];
-        this.chartData.datasets[1].data = [data.exit_count];
+        this.chartData.datasets[0].data = [data.entryCount];
+        this.chartData.datasets[1].data = [data.exitCount];
         
         // Actualizar el título con el rango de fechas
         if (this.chartOptions && this.chartOptions.plugins && this.chartOptions.plugins.title) {

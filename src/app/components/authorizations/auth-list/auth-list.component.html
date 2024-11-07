@@ -85,21 +85,21 @@
   
             <tr>
               <td>
-                {{ item.plot_id ? item.plot_id : "No aplica" }}
+                {{ item.plotId ? item.plotId : "No aplica" }}
               </td>
               <td>
                 <!--TODO icono-->
-                {{ item.visitor.name + ' ' + (item.visitor.last_name ? item.visitor.last_name : '') }}
+                {{ item.visitor.name + ' ' + (item.visitor.lastName ? item.visitor.lastName : '') }}
               </td>
               <td>
-                  {{ getDocumentAbbreviation(item.visitor.doc_type) + ' ' + item.visitor.doc_number }}
+                  {{ getDocumentAbbreviation(item.visitor.docType) + ' ' + item.visitor.docNumber }}
               </td>
               <td>
-                {{ translateTable(item.visitor_type, typeDictionary) }}
+                {{ translateTable(item.visitorType, typeDictionary) }}
               </td>
               <td>
-                <div *ngFor="let authRange of item.auth_ranges">
-                    @if (authRange.is_active){
+                <div *ngFor="let authRange of item.authRanges">
+                    @if (authRange.isActive){
   
                   <div class="d-flex align-items-center mb-2">
                     <!-- Barra de días -->
@@ -119,18 +119,18 @@
   
                   <!-- Rango de horario -->
                   <div class="text-muted">
-                    {{ formatHour(authRange.hour_from) }} - {{ formatHour(authRange.hour_to) }}
+                    {{ formatHour(authRange.hourFrom) }} - {{ formatHour(authRange.hourTo) }}
                   </div>
                     }
                 </div>
               </td>
               <td>
                 <!--TODO icono-->
-                {{ item.authorizer?.auth_first_name + ' ' + item.authorizer?.auth_last_name }}
+                {{ item.authorizer?.authFirstName + ' ' + item.authorizer?.authLastName }}
               </td>
               @if (userType == "ADMIN" || userType == "OWNER") {
                 <td>
-                  @if (item.is_active) {
+                  @if (item.isActive) {
                     <p class="mb-0">
                       <i class="bi bi-check2-circle text-success" style="font-size: 1.5rem;"></i>
                     </p>
@@ -141,14 +141,14 @@
                   }
                 </td>
                 <td>
-                  <button class="btn btn-warning" (click)="edit(item.auth_id)"><i class="bi bi-pencil"></i></button>
-                  @if (item.is_active) {
-                  <button class="btn btn-danger ms-1" (click)="disable(item.auth_id)"><i class="bi bi-trash"></i></button>
+                  <button class="btn btn-warning" (click)="edit(item.authId)"><i class="bi bi-pencil"></i></button>
+                  @if (item.isActive) {
+                  <button class="btn btn-danger ms-1" (click)="disable(item.authId)"><i class="bi bi-trash"></i></button>
                   }@else {
-                  <button class="btn btn-success ms-1" (click)="enable(item.auth_id)"><i class="bi bi-check"></i></button>
+                  <button class="btn btn-success ms-1" (click)="enable(item.authId)"><i class="bi bi-check"></i></button>
                   }
                     @if (userType == "OWNER") {
-                        <button class="btn btn-info ms-1" (click)="qr(item.visitor.doc_number)"><i class="bi bi-qr-code"></i></button>
+                        <button class="btn btn-info ms-1" (click)="qr(item.visitor.docNumber)"><i class="bi bi-qr-code"></i></button>
                     }
                 </td>
               }

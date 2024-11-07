@@ -1,19 +1,34 @@
-import {AfterViewInit, Component, ElementRef, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {
-    CadastrePlotFilterButtonsComponent
-} from "../../accesses/cadastre-access-filter-buttons/cadastre-plot-filter-buttons.component";
-import {Filter, FilterConfigBuilder, MainContainerComponent, ToastService} from "ngx-dabd-grupo01";
-import {NgbModal, NgbPagination} from "@ng-bootstrap/ng-bootstrap";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {AccessActionDictionary, AccessFilters, AccessModel} from "../../../models/access.model";
-import {Router, RouterLink} from "@angular/router";
-import {AccessService} from "../../../services/access.service";
-import {TransformResponseService} from "../../../services/transform-response.service";
-import {AuthorizerCompleterService} from "../../../services/authorizer-completer.service";
-import {VisitorTypeAccessDictionary} from "../../../models/authorize.model";
-import {Visitor} from "../../../models/visitor.model";
-import {VisitorService} from "../../../services/visitor.service";
-import {UserTypeService} from "../../../services/userType.service";
+  AfterViewInit,
+  Component,
+  ElementRef,
+  inject,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import { CadastrePlotFilterButtonsComponent } from '../../accesses/cadastre-access-filter-buttons/cadastre-plot-filter-buttons.component';
+import {
+  Filter,
+  FilterConfigBuilder,
+  MainContainerComponent,
+  ToastService,
+} from 'ngx-dabd-grupo01';
+import { NgbModal, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  AccessActionDictionary,
+  AccessFilters,
+  AccessModel,
+} from '../../../models/access.model';
+import { Router, RouterLink } from '@angular/router';
+import { AccessService } from '../../../services/access.service';
+import { TransformResponseService } from '../../../services/transform-response.service';
+import { AuthorizerCompleterService } from '../../../services/authorizer-completer.service';
+import { VisitorTypeAccessDictionary } from '../../../models/authorize.model';
+import { Visitor } from '../../../models/visitor.model';
+import { VisitorService } from '../../../services/visitor.service';
+import { UserTypeService } from '../../../services/userType.service';
 
 @Component({
   selector: 'app-entity-list',
@@ -24,60 +39,60 @@ import {UserTypeService} from "../../../services/userType.service";
     NgbPagination,
     ReactiveFormsModule,
     FormsModule,
-    RouterLink
+    RouterLink,
   ],
   templateUrl: './entity-list.component.html',
-  styleUrl: './entity-list.component.css'
+  styleUrl: './entity-list.component.css',
 })
-export class EntityListComponent  implements OnInit, AfterViewInit {
-  
-  @ViewChild('filterComponent') filterComponent!: CadastrePlotFilterButtonsComponent<Visitor>;
-  @ViewChild('table', {static: true}) tableName!: ElementRef<HTMLTableElement>;
+export class EntityListComponent implements OnInit, AfterViewInit {
+  @ViewChild('filterComponent')
+  filterComponent!: CadastrePlotFilterButtonsComponent<Visitor>;
+  @ViewChild('table', { static: true })
+  tableName!: ElementRef<HTMLTableElement>;
   @ViewChild('infoModal') infoModal!: TemplateRef<any>;
 
   //#region SERVICIOS
-  private router = inject(Router)
-  private visitorService = inject(VisitorService)
-  private transformResponseService = inject(TransformResponseService)
-  private authorizerCompleterService = inject(AuthorizerCompleterService)
-  private toastService = inject(ToastService)
-  private modalService = inject(NgbModal)
-  private userTypeService = inject(UserTypeService)
+  private router = inject(Router);
+  private visitorService = inject(VisitorService);
+  private transformResponseService = inject(TransformResponseService);
+  private authorizerCompleterService = inject(AuthorizerCompleterService);
+  private toastService = inject(ToastService);
+  private modalService = inject(NgbModal);
+  private userTypeService = inject(UserTypeService);
   //#endregion
 
   //#region ATT de PAGINADO
-  currentPage: number = 0
-  pageSize: number = 10
-  sizeOptions: number[] = [10, 25, 50]
+  currentPage: number = 0;
+  pageSize: number = 10;
+  sizeOptions: number[] = [10, 25, 50];
   list: Visitor[] = [];
   completeList: [] = [];
   filteredList: Visitor[] = [];
-  lastPage: boolean | undefined
+  lastPage: boolean | undefined;
   totalItems: number = 0;
   //#endregion
-  heads: string[] =["Nombre","Documento","Tipos"]
-  props: string[] =["Nombre","Documento","Tipos"]
+  heads: string[] = ['Nombre', 'Documento', 'Tipos'];
+  props: string[] = ['Nombre', 'Documento', 'Tipos'];
 
   //#region ATT de ACTIVE
   retrieveByActive: boolean | undefined = true;
-  userType: string = "ADMIN";
+  userType: string = 'ADMIN';
   //#endregion
 
   //#region ATT de FILTROS
   applyFilterWithNumber: boolean = false;
   applyFilterWithCombo: boolean = false;
-  contentForFilterCombo: string[] = []
+  contentForFilterCombo: string[] = [];
   actualFilter: string | undefined = AccessFilters.NOTHING;
   filterTypes = AccessFilters;
-  filterInput: string = "";
+  filterInput: string = '';
   //#endregion
 
   //#region ATT de DICCIONARIOS
   typeDictionary = VisitorTypeAccessDictionary;
   actionDictionary = AccessActionDictionary;
-  dictionaries = [this.typeDictionary, this.actionDictionary]
+  dictionaries = [this.typeDictionary, this.actionDictionary];
   //#endregion
-
 
   //#region FILTRADO
 
@@ -95,38 +110,42 @@ export class EntityListComponent  implements OnInit, AfterViewInit {
 
   applyFilters(): void {
     if (this.filterType === 'Tipo Visitante') {
-      this.searchParams = { visitorTypes: [this.type] }
-     }
-}
-
-  clearFilters(): void {
- // Restablece todos los filtros a su valor inicial.
-  this.filterType = '';
-  this.startDate = '';
-  this.endDate = '';
-  this.type = '';
-  this.searchParams = {};
-
-  // Reinicia la página actual a la primera
-  this.currentPage = 0;
-  
-  // Llama a getAll para cargar todos los registros sin filtros
-  this.getAll();
+      this.searchParams = { visitorTypes: [this.type] };
+    }
   }
 
+  clearFilters(): void {
+    // Restablece todos los filtros a su valor inicial.
+    this.filterType = '';
+    this.startDate = '';
+    this.endDate = '';
+    this.type = '';
+    this.searchParams = {};
+
+    // Reinicia la página actual a la primera
+    this.currentPage = 0;
+
+    // Llama a getAll para cargar todos los registros sin filtros
+    this.getAll();
+  }
 
   filterConfig: Filter[] = new FilterConfigBuilder()
-  .selectFilter('Tipo Visitante', 'visitorTypes', 'Seleccione el tipo de visitante', [
-    { value: 'VISITOR', label: 'Visitante' },
-    { value: 'WORKER', label: 'Trabajador' },
-    { value: 'OWNER', label: 'Propietario' },
-    { value: 'PROVIDER', label: 'Proveedor' },
-    { value: 'EMPLOYEE', label: 'Empleado' },
-    { value: 'COHABITANT', label: 'Conviviente' },
-    { value: 'EMERGENCY', label: 'Emergencia' },
-    { value: 'PROVIDER_ORGANIZATION', label: 'Entidad' },
-  ])
-  /*.dateFilter(
+    .selectFilter(
+      'Tipo Visitante',
+      'visitorTypes',
+      'Seleccione el tipo de visitante',
+      [
+        { value: 'VISITOR', label: 'Visitante' },
+        { value: 'WORKER', label: 'Trabajador' },
+        { value: 'OWNER', label: 'Propietario' },
+        { value: 'PROVIDER', label: 'Proveedor' },
+        { value: 'EMPLOYEE', label: 'Empleado' },
+        { value: 'COHABITANT', label: 'Conviviente' },
+        { value: 'EMERGENCY', label: 'Emergencia' },
+        { value: 'PROVIDER_ORGANIZATION', label: 'Entidad' },
+      ]
+    )
+    /*.dateFilter(
     'Fecha desde',
     'startDate',
     'Placeholder',
@@ -138,10 +157,9 @@ export class EntityListComponent  implements OnInit, AfterViewInit {
     'Placeholder',
     "yyyy-MM-dd'T'HH:mm:ss"
   )*/
-  .build();
+    .build();
 
-
-onFilterValueChange(filters: Record<string, any>) {
+  /*onFilterValueChange(filters: Record<string, any>) {
     this.searchParams = {
       ...filters,
     };
@@ -149,12 +167,22 @@ onFilterValueChange(filters: Record<string, any>) {
     this.currentPage = 1;
     console.log(this.searchParams);
 
-    if(this.searchParams['visitorTypes']){
+    if (this.searchParams['visitorTypes']) {
       this.filterByVisitorType(this.searchParams['visitorTypes']);
-    }else{
-     this.getAll();
+    } else {
+      this.getAll();
     }
-  
+  }*/
+  onFilterValueChange(filters: Record<string, any>) {
+    this.searchParams = {
+      ...filters,
+    };
+
+    if (this.searchParams['visitorTypes']?.length > 0) {
+      this.filterByVisitorType(this.searchParams['visitorTypes']);
+    } else {
+      this.getAll(); // Si no hay tipos seleccionados, mostrar todos
+    }
   }
   //#endregion
 
@@ -164,12 +192,12 @@ onFilterValueChange(filters: Record<string, any>) {
   }
 
   ngAfterViewInit(): void {
-   this.filterComponent.filter$.subscribe((filter: string) => {
-     this.getAllFiltered(filter)
+    this.filterComponent.filter$.subscribe((filter: string) => {
+      this.getAllFiltered(filter);
     });
-    this.userType = this.userTypeService.getType()
+    this.userType = this.userTypeService.getType();
     this.userTypeService.userType$.subscribe((userType: string) => {
-      this.userType = userType
+      this.userType = userType;
     });
   }
 
@@ -177,70 +205,110 @@ onFilterValueChange(filters: Record<string, any>) {
 
   //#region GET_ALL
   getAll() {
-    this.visitorService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-        debugger
-        this.completeList = this.transformListToTableData(data.items)
-        console.log(this.completeList)
-        let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
+    this.visitorService
+      .getAll(this.currentPage, this.pageSize, this.retrieveByActive)
+      .subscribe({
+        next: (data) => {
+          this.completeList = this.transformListToTableData(data.items);
+          let response = this.transformResponseService.transformResponse(
+            data.items,
+            this.currentPage,
+            this.pageSize,
+            this.retrieveByActive
+          );
 
-
-        this.list = response.content;
-        this.filteredList = [...this.list]
-        this.lastPage = response.last
-        this.totalItems = response.totalElements;
-      },
-      error => {
-        console.error('Error getting:', error);
-      }
-    );
+          this.list = response.content;
+          this.filteredList = [...this.list];
+          this.lastPage = response.last;
+          this.totalItems = data.items.length;
+        },
+        error: (error) => {
+          console.error('Error getting visitors:', error);
+        },
+      });
   }
 
-  getAllFiltered(filter:string) {
-    this.visitorService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-        data.items = data.items.filter(x => (x.name.toLowerCase().includes(filter) || x.last_name.toLowerCase().includes(filter) || x.doc_number.toString().includes(filter)))
-        let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
-        response.content.forEach(data => {
-          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
-        })
+  getAllFiltered(filter: string) {
+    this.visitorService
+      .getAll(this.currentPage - 1, this.pageSize, this.retrieveByActive)
+      .subscribe({
+        next: (data) => {
+          const filteredItems = data.items.filter(
+            (x) =>
+              x.name.toLowerCase().includes(filter.toLowerCase()) ||
+              (x.lastName &&
+                x.lastName.toLowerCase().includes(filter.toLowerCase())) ||
+              x.docNumber.toString().includes(filter)
+          );
 
-        this.list = response.content;
-        this.filteredList = [...this.list]
-        this.lastPage = response.last
-        this.totalItems = response.totalElements;
-      },
-      error => {
-        console.error('Error getting:', error);
-      }
-    );
+          let response = this.transformResponseService.transformResponse(
+            filteredItems,
+            this.currentPage,
+            this.pageSize,
+            this.retrieveByActive
+          );
+
+          this.completeList = this.transformListToTableData(filteredItems);
+          this.list = response.content;
+          this.filteredList = [...this.list];
+          this.lastPage = response.last;
+          this.totalItems = filteredItems.length;
+        },
+        error: (error) => {
+          console.error('Error getting visitors:', error);
+        },
+      });
   }
 
+  getDocumentAbbreviation(docType: string): string {
+    const abbreviations: { [key: string]: string } = {
+      DNI: 'D -',
+      PASSPORT: 'P -',
+      CUIL: 'CL -',
+      CUIT: 'CT -',
+    };
+
+    return abbreviations[docType] || docType; // Devuelve la abreviatura o el tipo original si no está en el mapeo
+  }
   //#endregion
 
   //#region FILTROS
-  filterByVisitorType(type: string) {
-   this.visitorService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-       data.items = data.items.filter(x => (x.visitor_types.includes(type)))
-        let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
-        response.content.forEach(data => {
-          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
-        })
+  filterByVisitorType(type: string[]) {
+    this.visitorService
+      .getAll(this.currentPage - 1, this.pageSize, this.retrieveByActive)
+      .subscribe({
+        next: (data) => {
+          // Filtrar los items que contienen al menos uno de los tipos seleccionados
+          const filteredItems = data.items.filter((x) =>
+            x.visitorTypes.some((visitorType: string) =>
+              type.includes(visitorType)
+            )
+          );
 
-        this.list = response.content;
-        this.filteredList = [...this.list]
-        this.lastPage = response.last
-        this.totalItems = response.totalElements;
-      },
-      error => {
-        console.error('Error getting:', error);
-      }
-    );
+          let response = this.transformResponseService.transformResponse(
+            filteredItems,
+            this.currentPage,
+            this.pageSize,
+            this.retrieveByActive
+          );
+
+          this.completeList = this.transformListToTableData(filteredItems);
+          this.list = response.content;
+          this.filteredList = [...this.list];
+          this.lastPage = response.last;
+          this.totalItems = filteredItems.length;
+        },
+        error: (error) => {
+          console.error('Error getting visitors:', error);
+        },
+      });
   }
 
   filterByAction(action: string) {
     /*this.visitorService.getByAction(this.currentPage, this.pageSize, action, this.retrieveByActive).subscribe(data => {
         let response = this.transformResponseService.transformAction(data,this.currentPage, this.pageSize, action, this.retrieveByActive)
         response.content.forEach(data => {
-          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
+          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
         })
 
         this.list = response.content;
@@ -258,15 +326,14 @@ onFilterValueChange(filters: Record<string, any>) {
 
   //#region APLICACION DE FILTROS
   changeActiveFilter(isActive?: boolean) {
-    this.retrieveByActive = isActive
+    this.retrieveByActive = isActive;
     this.confirmFilter();
   }
-
 
   changeFilterMode(mode: AccessFilters) {
     switch (mode) {
       case AccessFilters.NOTHING:
-        this.actualFilter = AccessFilters.NOTHING
+        this.actualFilter = AccessFilters.NOTHING;
         this.applyFilterWithNumber = false;
         this.applyFilterWithCombo = false;
         this.filterComponent.clearFilter();
@@ -274,15 +341,15 @@ onFilterValueChange(filters: Record<string, any>) {
         break;
 
       case AccessFilters.ACTION:
-        this.actualFilter = AccessFilters.ACTION
-        this.contentForFilterCombo = this.getKeys(this.actionDictionary)
+        this.actualFilter = AccessFilters.ACTION;
+        this.contentForFilterCombo = this.getKeys(this.actionDictionary);
         this.applyFilterWithNumber = false;
         this.applyFilterWithCombo = true;
         break;
 
       case AccessFilters.VISITOR_TYPE:
-        this.actualFilter = AccessFilters.VISITOR_TYPE
-        this.contentForFilterCombo = this.getKeys(this.typeDictionary)
+        this.actualFilter = AccessFilters.VISITOR_TYPE;
+        this.contentForFilterCombo = this.getKeys(this.typeDictionary);
         this.applyFilterWithNumber = false;
         this.applyFilterWithCombo = true;
         break;
@@ -294,16 +361,20 @@ onFilterValueChange(filters: Record<string, any>) {
 
   confirmFilter() {
     switch (this.actualFilter) {
-      case "NOTHING":
-        this.getAll()
+      case 'NOTHING':
+        this.getAll();
         break;
 
-      case "ACTION":
-        this.filterByAction(this.translateCombo(this.filterInput, this.actionDictionary));
+      case 'ACTION':
+        this.filterByAction(
+          this.translateCombo(this.filterInput, this.actionDictionary)
+        );
         break;
 
-      case "VISITOR_TYPE":
-        this.filterByVisitorType(this.translateCombo(this.filterInput, this.typeDictionary));
+      case 'VISITOR_TYPE':
+        this.filterByVisitorType(
+          this.translateCombo(this.filterInput, this.typeDictionary)
+        );
         break;
 
       default:
@@ -339,15 +410,15 @@ onFilterValueChange(filters: Record<string, any>) {
 
   //#region RUTEO
   plotOwners(plotId: number) {
-    this.router.navigate(["/owners/plot/" + plotId])
+    this.router.navigate(['/owners/plot/' + plotId]);
   }
 
   updatePlot(plotId: number) {
-    this.router.navigate(["/plot/form/", plotId])
+    this.router.navigate(['/plot/form/', plotId]);
   }
 
   plotDetail(plotId: number) {
-    this.router.navigate([`/plot/detail/${plotId}`])
+    this.router.navigate([`/plot/detail/${plotId}`]);
   }
 
   //#endregion
@@ -361,7 +432,7 @@ onFilterValueChange(filters: Record<string, any>) {
     if (value !== undefined && value !== null) {
       return dictionary[value];
     }
-    console.log("Algo salio mal.")
+    console.log('Algo salio mal.');
     return;
   }
 
@@ -373,7 +444,7 @@ onFilterValueChange(filters: Record<string, any>) {
         }
       }
     }
-    console.log("Algo salio mal.");
+    console.log('Algo salio mal.');
     return;
   }
 
@@ -402,32 +473,31 @@ onFilterValueChange(filters: Record<string, any>) {
 
   //#endregion
 
-  editVisitor(id:number){
-
-  }
-  deleteVisitor(id:number){
-
-  }
+  editVisitor(id: number) {}
+  deleteVisitor(id: number) {}
   transformListToTableData(list: any) {
-    return list.map((item: {
-      name: any;
-      last_name: any;
-      doc_type: any;
-      doc_number: any;
-      visitor_types: any[]; // Suponiendo que visitor_types es un array
-    }) => ({
-      Nombre: `${item.name} ${item.last_name}`,
-      Documento: `${item.doc_type === "PASSPORT" ? "PASAPORTE" : item.doc_type} ${item.doc_number}`,
-      Tipos: item.visitor_types?.map(type => this.translateTable(type, this.typeDictionary)).join(', '), // Traducir cada tipo y unirlos en una cadena
-    }));
+    return list.map(
+      (item: {
+        name: any;
+        lastName: any;
+        docType: any;
+        docNumber: any;
+        visitorTypes: any[]; // Suponiendo que visitorTypes es un array
+      }) => ({
+        Nombre: `${item.name} ${item.lastName}`,
+        Documento: `${
+          item.docType === 'PASSPORT' ? 'PASAPORTE' : item.docType
+        } ${item.docNumber}`,
+        Tipos: item.visitorTypes
+          ?.map((type) => this.translateTable(type, this.typeDictionary))
+          .join(', '), // Traducir cada tipo y unirlos en una cadena
+      })
+    );
   }
-
 
   onInfoButtonClick() {
-    this.modalService.open(this.infoModal, {centered: true, size: 'lg'});
-    }
-
-  edit(doc_number: any) {
-
+    this.modalService.open(this.infoModal, { centered: true, size: 'lg' });
   }
+
+  edit(docNumber: any) {}
 }

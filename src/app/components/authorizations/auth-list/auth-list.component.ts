@@ -186,13 +186,13 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
   getAll() {
     this.authService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
             if(this.userType === "OWNER"){
-                data = data.filter(x => x.plot_id == 2)
+                data = data.filter(x => x.plotId == 2)
             }
             if(this.userType === "GUARD"){
-                data = data.filter(x => x.is_active)
+                data = data.filter(x => x.isActive)
             }
         data.forEach(date => {
-          date.authorizer = this.authorizerCompleterService.completeAuthorizer(date.authorizer_id)
+          date.authorizer = this.authorizerCompleterService.completeAuthorizer(date.authorizerId)
           if (date.authorizer === undefined){
             date.authorizer = this.authorizerCompleterService.completeAuthorizer(1)
           }
@@ -215,10 +215,11 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
 
   getAllFiltered(filter: string) {
     this.authService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-        data = data.filter(x => (x.visitor.name.toLowerCase().includes(filter) || x.visitor.last_name?.toLowerCase().includes(filter) || x.visitor.doc_number.toString().includes(filter)))
+        data = data.filter(x => (x.visitor.name.toLowerCase().includes(filter) || x.visitor.lastName?.toLowerCase().includes(filter) 
+        || x.visitor.docNumber.toString().includes(filter)))
         let response = this.transformResponseService.transformResponse(data,this.currentPage, this.pageSize, this.retrieveByActive)
         response.content.forEach(data => {
-          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
+          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
         })
 
         this.list = response.content;
@@ -238,10 +239,10 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
   //#region FILTROS
   filterByVisitorType(type: string) {
     this.authService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-      data = data.filter(x => x.visitor_type == type)
+      data = data.filter(x => x.visitorType == type)
         let response = this.transformResponseService.transformResponse(data,this.currentPage, this.pageSize, this.retrieveByActive)
         response.content.forEach(data => {
-          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
+          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
         })
 
         this.list = response.content;
@@ -257,10 +258,10 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
 
   filterByPlot(plot: number) {
     this.authService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-        data = data.filter(x => x.plot_id == plot)
+        data = data.filter(x => x.plotId == plot)
         let response = this.transformResponseService.transformResponse(data,this.currentPage, this.pageSize, this.retrieveByActive)
         response.content.forEach(data => {
-          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
+          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
         })
 
         this.list = response.content;
@@ -398,12 +399,12 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
   transformAuthRanges(ranges : AuthRange[]): string{
     let res = ""
     for (let authRange of ranges) {
-      if (!authRange.is_active){
+      if (!authRange.isActive){
         continue
       }
       let temp = ""
-      temp += authRange.date_from.replaceAll('-','/') + ' - ' + authRange.date_to.replaceAll('-','/') + ' | '
-      for (let day of authRange.days_of_week) {
+      temp += authRange.dateFrom.replaceAll('-','/') + ' - ' + authRange.dateTo.replaceAll('-','/') + ' | '
+      for (let day of authRange.daysOfWeek) {
         switch (day) {
           case "MONDAY":
             temp += "L"; // Lunes
@@ -433,7 +434,7 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
       }
       temp = temp.slice(0,temp.length-1)
 
-      temp+= ' | ' + authRange.hour_from.slice(0,5) + ' a ' + authRange.hour_to.slice(0,5)
+      temp+= ' | ' + authRange.hourFrom.slice(0,5) + ' a ' + authRange.hourTo.slice(0,5)
 
       res += temp + ' y '
     }
@@ -473,13 +474,13 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
 
   //#endregion
   transformLotListToTableData(list: any) {
-    return list.map((item: { plot_id: any; visitor: { name: any; last_name: any; doc_type: any; doc_number: any; }; visitor_type: any; auth_ranges: AuthRange[]; auth_first_name: any; auth_last_name: any  }) => ({
-      'Nro de Lote': item.plot_id || 'No aplica', // Manejo de 'No aplica' para plot_id
-      Visitante: `${item.visitor.name} ${item.visitor.last_name || ''}`, // Combina el nombre y el apellido
-      Documento: `${(item.visitor.doc_type === "PASSPORT" ? "PASAPORTE" : item.visitor.doc_type)} ${item.visitor.doc_number}`, // Combina el tipo de documento y el número
-      Tipo: this.translateTable(item.visitor_type, this.typeDictionary), // Traduce el tipo de visitante
-      Horarios: this.transformAuthRanges(item.auth_ranges), // Aplica la función para transformar los rangos de autorización
-      Autorizador: `${item.auth_first_name} ${item.auth_last_name}` // Combina el nombre y apellido del autorizador
+    return list.map((item: { plotId: any; visitor: { name: any; lastName: any; docType: any; docNumber: any; }; visitorType: any; authRanges: AuthRange[]; authFirstName: any; authLastName: any  }) => ({
+      'Nro de Lote': item.plotId || 'No aplica', // Manejo de 'No aplica' para plotId
+      Visitante: `${item.visitor.name} ${item.visitor.lastName || ''}`, // Combina el nombre y el apellido
+      Documento: `${(item.visitor.docType === "PASSPORT" ? "PASAPORTE" : item.visitor.docType)} ${item.visitor.docNumber}`, // Combina el tipo de documento y el número
+      Tipo: this.translateTable(item.visitorType, this.typeDictionary), // Traduce el tipo de visitante
+      Horarios: this.transformAuthRanges(item.authRanges), // Aplica la función para transformar los rangos de autorización
+      Autorizador: `${item.authFirstName} ${item.authLastName}` // Combina el nombre y apellido del autorizador
     }));
   }
 
@@ -497,7 +498,7 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
   ];
 
   isDayActive(authRange: AuthRange, day: DaysOfWeek): boolean {
-    return authRange.days_of_week.includes(day) && authRange.is_active;
+    return authRange.daysOfWeek.includes(day) && authRange.isActive;
   }
 
   // Obtener inicial de cada día
@@ -530,12 +531,12 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
     return hour.substring(0, 5); // Para obtener el formato HH:mm
   }
 
-  edit(doc_number: number) {
-    this.router.navigate(['/auth/form'], { queryParams: { auth_id: doc_number } });
+  edit(docNumber: number) {
+    this.router.navigate(['/auth/form'], { queryParams: { authId: docNumber } });
   }
 
-  disable(auth_id: number) {
-  this.authService.delete(auth_id,this.loginService.getLogin().id).subscribe(data => {
+  disable(authId: number) {
+  this.authService.delete(authId,this.loginService.getLogin().id).subscribe(data => {
     this.confirmFilter();
   })
   }
@@ -543,8 +544,8 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
     const modalRef = this.modalService.open(QrComponent, {size: 's'});
     modalRef.componentInstance.docNumber = doc
   }
-  enable(auth_id: number) {
-    this.authService.enable(auth_id,this.loginService.getLogin().id).subscribe(data => {
+  enable(authId: number) {
+    this.authService.enable(authId,this.loginService.getLogin().id).subscribe(data => {
       this.confirmFilter();
     })
   }

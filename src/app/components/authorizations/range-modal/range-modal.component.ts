@@ -46,14 +46,14 @@ export class RangeModalComponent implements OnInit{
   addRange(){
     this.ranges.push(
       {
-        auth_range_id: 0,
+        authRangeId: 0,
         comment: "",
-        date_from: formatDate(),
-        date_to: formatDate(),
-        days_of_week: [],
-        hour_from: formatTime(),
-        hour_to: formatTime(),
-        is_active: true
+        dateFrom: formatDate(),
+        dateTo: formatDate(),
+        daysOfWeek: [],
+        hourFrom: formatTime(),
+        hourTo: formatTime(),
+        isActive: true
       })
 
     this.selectedRange = this.ranges.length-1
@@ -67,7 +67,7 @@ export class RangeModalComponent implements OnInit{
   }
 
   containsDay(day:string){
-    let days: string[] = this.rangeForm.get('days_of_week')?.value
+    let days: string[] = this.rangeForm.get('daysOfWeek')?.value
     return days.includes(day)
   }
 
@@ -77,33 +77,33 @@ export class RangeModalComponent implements OnInit{
 
   createForm(): FormGroup {
     return this.fb.group({
-      auth_range_id: [0],
-      date_from: [formatDate(), Validators.required],
-      date_to: [formatDate(), Validators.required],
-      hour_from: [formatTime(), Validators.required],
-      hour_to: [formatTime(), Validators.required],
-      days_of_week: [[], Validators.required],
+      authRangeId: [0],
+      dateFrom: [formatDate(), Validators.required],
+      dateTo: [formatDate(), Validators.required],
+      hourFrom: [formatTime(), Validators.required],
+      hourTo: [formatTime(), Validators.required],
+      daysOfWeek: [[], Validators.required],
       comment: [""],
-      is_active: [true],
+      isActive: [true],
     });
   }
 
   loadForm(authRange: AuthRange) {
     this.rangeForm = this.fb.group({
-      auth_range_id: [authRange.auth_range_id],
-      date_from: [authRange.date_from, Validators.required],
-      date_to: [authRange.date_to, Validators.required],
-      hour_from: [authRange.hour_from, Validators.required],
-      hour_to: [authRange.hour_to, Validators.required],
-      days_of_week: [authRange.days_of_week, Validators.required],
+      authRangeId: [authRange.authRangeId],
+      dateFrom: [authRange.dateFrom, Validators.required],
+      dateTo: [authRange.dateTo, Validators.required],
+      hourFrom: [authRange.hourFrom, Validators.required],
+      hourTo: [authRange.hourTo, Validators.required],
+      daysOfWeek: [authRange.daysOfWeek, Validators.required],
       comment: [authRange.comment],
-      is_active: [authRange.is_active],
+      isActive: [authRange.isActive],
     });
   }
 
   toggleDay(day: string, event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
-    const daysArray = this.rangeForm.get('days_of_week')?.value as string[];
+    const daysArray = this.rangeForm.get('daysOfWeek')?.value as string[];
 
     if (checked) {
       // Agregar el día si está marcado
@@ -119,7 +119,7 @@ export class RangeModalComponent implements OnInit{
     }
 
     // Actualizar el control del formulario
-    this.rangeForm.get('days_of_week')?.setValue(daysArray);
+    this.rangeForm.get('daysOfWeek')?.setValue(daysArray);
   }
 }
 function formatDate() {

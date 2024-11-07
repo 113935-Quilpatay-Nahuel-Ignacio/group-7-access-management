@@ -69,27 +69,27 @@ export class AccessFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.accessForm = this.fb.group({
-      first_name: ['', Validators.required],
-      last_name: ['', Validators.required],
-      plot_id: ['', Validators.required],
-      doc_number: [null, Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      plotId: ['', Validators.required],
+      docNumber: [null, Validators.required],
       action: ['ENTRY', Validators.required], // Nueva acción (ENTRY/SALIDA)
-      vehicle_type: ['CAR', Validators.required], // Tipo de vehículo (CAR/MOTORBIKE/etc.)
-      vehicle_reg: [''], // Matrícula del vehículo
-      vehicle_description: [''], // Descripción detallada del vehículo
+      vehicleType: ['CAR', Validators.required], // Tipo de vehículo (CAR/MOTORBIKE/etc.)
+      vehicleReg: [''], // Matrícula del vehículo
+      vehicleDescription: [''], // Descripción detallada del vehículo
       comments: [''], // Comentarios adicionales
     });
-    this.accessForm.get('last_name')?.disable();
-    this.accessForm.get('first_name')?.disable();
-    this.accessForm.get('plot_id')?.disable();
+    this.accessForm.get('lastName')?.disable();
+    this.accessForm.get('firstName')?.disable();
+    this.accessForm.get('plotId')?.disable();
 
     const lote = this.url.snapshot.queryParamMap.get('lote');
-    const doc_number = this.url.snapshot.queryParamMap.get('doc_number');
+    const docNumber = this.url.snapshot.queryParamMap.get('docNumber');
 
-    if (lote && doc_number) {
-      this.accessForm.get('doc_number')?.patchValue(doc_number);
-      this.accessForm.get('plot_id')?.patchValue(lote);
-      this.autocompleteFields(Number(doc_number), lote);
+    if (lote && docNumber) {
+      this.accessForm.get('docNumber')?.patchValue(docNumber);
+      this.accessForm.get('plotId')?.patchValue(lote);
+      this.autocompleteFields(Number(docNumber), lote);
     }
   }
 
@@ -102,7 +102,7 @@ export class AccessFormComponent implements OnInit {
   onSubmit() {
     if (this.accessForm.valid) {
       const formData = this.accessForm.value;
-      let plate = this.accessForm.get('vehicle_reg')?.value;
+      let plate = this.accessForm.get('vehicleReg')?.value;
       if (plate != null) {
         this.visitorService
           .checkAccess(plate, this.accessForm.get('action')?.value)
@@ -173,7 +173,7 @@ export class AccessFormComponent implements OnInit {
   }
 
   onDocNumberChange(event: any) {
-    let document = this.accessForm.get('doc_number')?.value;
+    let document = this.accessForm.get('docNumber')?.value;
     if (document != null) {
       this.checkButtonDisabled = false;
     } else {
@@ -183,21 +183,21 @@ export class AccessFormComponent implements OnInit {
     this.visitorService.getVisitor(document).subscribe((data) => {
       switch (data.body) {
         case null:
-          this.accessForm.get('last_name')?.setValue('');
-          this.accessForm.get('first_name')?.setValue('');
-          this.accessForm.get('doc_number')?.setErrors({ unauthorized: true });
+          this.accessForm.get('lastName')?.setValue('');
+          this.accessForm.get('firstName')?.setValue('');
+          this.accessForm.get('docNumber')?.setErrors({ unauthorized: true });
           break;
         default:
-          this.accessForm.get('last_name')?.setValue(data.body.last_name);
-          this.accessForm.get('first_name')?.setValue(data.body.name);
-          this.accessForm.get('doc_number')?.setErrors(null);
+          this.accessForm.get('lastName')?.setValue(data.body.lastName);
+          this.accessForm.get('firstName')?.setValue(data.body.name);
+          this.accessForm.get('docNumber')?.setErrors(null);
           let plots = '';
           this.authService.getValidAuths(document).subscribe((data) => {
             data.forEach((auth) => {
-              plots += auth.plot_id?.toString() + ', ';
+              plots += auth.plotId?.toString() + ', ';
             });
             plots = plots.slice(0, plots.length - 2);
-            this.accessForm.get('plot_id')?.setValue(plots);
+            this.accessForm.get('plotId')?.setValue(plots);
           });
       }
     });
@@ -211,8 +211,8 @@ export class AccessFormComponent implements OnInit {
   }
 
   isAuthorized() {
-    let document = this.accessForm.get('doc_number')?.value;
-    if (this.accessForm.get('doc_number')?.hasError('unauthorized')) {
+    let document = this.accessForm.get('docNumber')?.value;
+    if (this.accessForm.get('docNumber')?.hasError('unauthorized')) {
       Swal.fire({
         title: 'No registrado',
         text: 'Consulte al propietario si autoriza su entrada',
@@ -227,7 +227,7 @@ export class AccessFormComponent implements OnInit {
       }).then((result) => {
         if (result.isDismissed) {
           this.router.navigate(['/auth/form'], {
-            queryParams: { doc_number: document },
+            queryParams: { docNumber: document },
           });
         }
       });
@@ -264,7 +264,7 @@ export class AccessFormComponent implements OnInit {
       this.modalService.dismissAll();
       console.log(e[0].value)
       console.log(Number(this.getDocumentNumberFromString(e[0].value)))
-      this.accessForm.get('doc_number')?.patchValue(Number(this.getDocumentNumberFromString(e[0].value)));
+      this.accessForm.get('docNumber')?.patchValue(Number(this.getDocumentNumberFromString(e[0].value)));
       this.autocompleteFields(Number(this.getDocumentNumberFromString(e[0].value)));
     }
   }
@@ -297,22 +297,22 @@ export class AccessFormComponent implements OnInit {
     this.visitorService.getVisitor(document).subscribe((data) => {
       switch (data.body) {
         case null:
-          this.accessForm.get('last_name')?.setValue('');
-          this.accessForm.get('first_name')?.setValue('');
-          this.accessForm.get('doc_number')?.setErrors({ unauthorized: true });
+          this.accessForm.get('lastName')?.setValue('');
+          this.accessForm.get('firstName')?.setValue('');
+          this.accessForm.get('docNumber')?.setErrors({ unauthorized: true });
           break;
         default:
-          this.accessForm.get('last_name')?.setValue(data.body.last_name);
-          this.accessForm.get('first_name')?.setValue(data.body.name);
-          this.accessForm.get('plot_id')?.setValue(lote);
-          this.accessForm.get('doc_number')?.setErrors(null);
+          this.accessForm.get('lastName')?.setValue(data.body.lastName);
+          this.accessForm.get('firstName')?.setValue(data.body.name);
+          this.accessForm.get('plotId')?.setValue(lote);
+          this.accessForm.get('docNumber')?.setErrors(null);
           let plots = '';
           this.authService.getValidAuths(document).subscribe((data) => {
             data.forEach((auth) => {
-              plots += auth.plot_id?.toString() + ', ';
+              plots += auth.plotId?.toString() + ', ';
             });
             plots = plots.slice(0, plots.length - 2);
-            this.accessForm.get('plot_id')?.setValue(plots);
+            this.accessForm.get('plotId')?.setValue(plots);
           });
       }
     });

@@ -42,7 +42,7 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   private accessService = inject(AccessService)
   private transformResponseService = inject(TransformResponseService)
   private authorizerCompleterService = inject(AuthorizerCompleterService)
- // private toastService = inject(ToastService)
+  //private toastService = inject(ToastService)
   private modalService = inject(NgbModal)
   //#endregion
 
@@ -72,8 +72,8 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   actualFilter: string | undefined = AccessFilters.NOTHING;
   filterTypes = AccessFilters;
   filterInput: string = "";
-  date_from: Date = new Date();
-  date_to: Date = new Date();
+  dateFrom: Date = new Date();
+  dateTo: Date = new Date();
   //#endregion
 
   //#region ATT de DICCIONARIOS
@@ -183,9 +183,9 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   getAll() {
     this.accessService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
         data.items.forEach(date => {
-          if (date.authorizer_id != undefined){
+          if (date.authorizerId != undefined){
 
-          date.authorizer = this.authorizerCompleterService.completeAuthorizer(date.authorizer_id)
+          date.authorizer = this.authorizerCompleterService.completeAuthorizer(date.authorizerId)
           }
         })
       this.completeList = this.transformListToTableData(data.items);
@@ -205,10 +205,11 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   //#region GET_ALL
   getAllFiltered(filter: string) {
     this.accessService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-      data.items = data.items.filter(x => (x.first_name?.toLowerCase().includes(filter) || x.last_name?.toLowerCase().includes(filter) || x.doc_number?.toString().includes(filter) || x.vehicle_reg?.toLowerCase().includes(filter)))
+      data.items = data.items.filter(x => (x.firstName?.toLowerCase().includes(filter) 
+      || x.lastName?.toLowerCase().includes(filter) || x.docNumber?.toString().includes(filter) || x.vehicleReg?.toLowerCase().includes(filter)))
         let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
         response.content.forEach(data => {
-          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
+          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
         })
 
         this.list = response.content;
@@ -229,7 +230,7 @@ export class AccessListComponent implements OnInit, AfterViewInit {
     this.accessService.getByType(this.currentPage, this.pageSize, type, this.retrieveByActive).subscribe(data => {
         let response = this.transformResponseService.transformType(data.items,this.currentPage, this.pageSize, type, this.retrieveByActive)
         response.content.forEach(data => {
-          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
+          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
         })
 
         this.list = response.content;
@@ -242,17 +243,21 @@ export class AccessListComponent implements OnInit, AfterViewInit {
       }
     );
   }
-  filterByDate(date_from: Date, date_to: Date) {
-    console.log(date_from , date_to)
-    if((new Date(new Date(date_from+"T00:00:00"))) > (new Date(new Date(date_to+"T00:00:00")))){
+  filterByDate(dateFrom: Date, dateTo: Date) {
+    console.log(dateFrom , dateTo)
+    if((new Date(new Date(dateFrom+"T00:00:00"))) > (new Date(new Date(dateTo+"T00:00:00")))){
       alert("aa")
       return
     }
     this.accessService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-        data.items = data.items.filter(x => (new Date(new Date(x.action_date).setHours(0,0,0,0)) >= new Date(new Date(date_from+"T00:00:00").setHours(0,0,0,0)) && new Date(new Date(x.action_date).setHours(0,0,0,0)) <= new Date(new Date(date_to+"T00:00:00").setHours(0,0,0,0))))
+        data.items = data.items.filter(x => 
+          (new Date(new Date(x.actionDate).setHours(0,0,0,0)) 
+          >= new Date(new Date(dateFrom+"T00:00:00").setHours(0,0,0,0)) 
+          && new Date(new Date(x.actionDate).setHours(0,0,0,0)) 
+          <= new Date(new Date(dateTo+"T00:00:00").setHours(0,0,0,0))))
         let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
         response.content.forEach(data => {
-          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
+          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
         })
 
         this.list = response.content;
@@ -270,7 +275,7 @@ export class AccessListComponent implements OnInit, AfterViewInit {
     this.accessService.getByAction(this.currentPage, this.pageSize, action, this.retrieveByActive).subscribe(data => {
       let response = this.transformResponseService.transformAction(data.items,this.currentPage, this.pageSize, action, this.retrieveByActive)
         response.content.forEach(data => {
-          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizer_id)
+          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
         })
 
         this.list = response.content;
@@ -347,7 +352,7 @@ export class AccessListComponent implements OnInit, AfterViewInit {
         break;
 
       case "DATE":
-        this.filterByDate(this.date_from, this.date_to);
+        this.filterByDate(this.dateFrom, this.dateTo);
         break;
 
       default:
@@ -483,15 +488,15 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   protected readonly oninput = oninput;
 
   transformListToTableData(list :any) {
-    return list.map((item: { first_name: any; last_name: any; doc_type: any; doc_number: any; visitor_type: any; action: any; action_date: any; vehicle_reg: any; comments: any; authorizer: { name: any; last_name: any; }; }) => ({
-      Visitante: `${item.first_name} ${item.last_name}`,
-      Documento: `${(item.doc_type === "PASSPORT" ? "PASAPORTE" : item.doc_type)} ${item.doc_number}`,
-      Tipo: this.translateTable(item.visitor_type, this.typeDictionary),
+    return list.map((item: { firstName: any; lastName: any; docType: any; docNumber: any; visitorType: any; action: any; actionDate: any; vehicleReg: any; comments: any; authorizer: { name: any; lastName: any; }; }) => ({
+      Visitante: `${item.firstName} ${item.lastName}`,
+      Documento: `${(item.docType === "PASSPORT" ? "PASAPORTE" : item.docType)} ${item.docNumber}`,
+      Tipo: this.translateTable(item.visitorType, this.typeDictionary),
       Accion: this.translateTable(item.action, this.actionDictionary),
-      Hora: this.transformDate(item.action_date),
-      Vehículo: item.vehicle_reg || 'N/A',  // 'N/A' si no hay registro de vehículo
+      Hora: this.transformDate(item.actionDate),
+      Vehículo: item.vehicleReg || 'N/A',  // 'N/A' si no hay registro de vehículo
       Comentario: item.comments || 'N/A',
-      Autorizador: `${item.authorizer?.name || ''} ${item.authorizer?.last_name || ''}`
+      Autorizador: `${item.authorizer?.name || ''} ${item.authorizer?.lastName || ''}`
     }));
   }
 

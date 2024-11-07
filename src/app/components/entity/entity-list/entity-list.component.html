@@ -21,61 +21,6 @@
       (filterValueChange)="onFilterValueChange($event)"
       objectName="ACCESOS"></app-cadastre-plot-filter-buttons>
 
-   <!-- <div class="d-flex justify-content-between align-items-center mb-3">
-      <div class="btn-group me-5" role="group">
-        <div class="d-flex align-items-center">
-          <div class="btn-group me-2">
-            <button type="button" class="btn btn-outline-danger" (click)="changeFilterMode(filterTypes.NOTHING)">
-              <i class="bi bi-trash-fill"></i> Limpiar filtros
-            </button>
-
-            <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-funnel-fill"></i> Filtros
-            </button>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" (click)="changeFilterMode(filterTypes.VISITOR_TYPE)">Tipo de visitante</a></li>
-            </ul>
-          </div>
-
-          @if (applyFilterWithNumber === true || applyFilterWithCombo === true) {
-            <div class="d-flex">
-              @if (applyFilterWithNumber === true) {
-                <input type="number" class="form-control me-2" id="filter-number" [(ngModel)]="filterInput" name="ngModel" placeholder="Número">
-              } @else if (applyFilterWithCombo === true) {
-                <select id="content-filter" class="form-select me-2" [(ngModel)]="filterInput" name="ngModel">
-                  <option disabled selected>Selecciona un filtro</option>
-                  @for (content of contentForFilterCombo; track content) {
-                    <option value="{{content}}">{{content}}</option>
-                  }
-                </select>
-              }
-              <div class="ms-auto">
-                <button class="btn btn-dark" type="button" (click)="confirmFilter()">Buscar</button>
-              </div>
-            </div>
-          }
-        </div>
-      </div>
-
-
-          <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-              <input type="radio" class="btn-check"
-                     name="btnradio" id="btnradio1"
-                     autocomplete="off" (change)="changeActiveFilter(true)" checked>
-              <label class="btn btn-outline-primary" for="btnradio1">Lotes Activos</label>
-
-              <input type="radio" class="btn-check"
-                     name="btnradio" id="btnradio2"
-                     autocomplete="off" (change)="changeActiveFilter(false)">
-              <label class="btn btn-outline-primary" for="btnradio2">Lotes Inactivos</label>
-
-              <input type="radio" class="btn-check"
-                     name="btnradio" id="btnradio3"
-                     autocomplete="off" (change)="changeActiveFilter()">
-              <label class="btn btn-outline-primary" for="btnradio3">Todos</label>
-            </div>
-    </div> -->
-
     <div class="table-container">
       <table class="table table-striped fixed-table" style="border: 1px solid rgba(0, 0, 0, 0.150); border-collapse: collapse;" #table>
         <thead>
@@ -95,19 +40,19 @@
             <tr>
               <td>
                 <!--TODO icono-->
-                {{ item.name + ' ' + (item.last_name == null ? '' : item.last_name) }}
+                {{ item.name + ' ' + (item.lastName == null ? '' : item.lastName) }}
               </td>
               <td>
-                {{ (item.doc_type === "PASSPORT" ? "PASAPORTE" : item.doc_type) + ' ' + item.doc_number }}
+                {{ getDocumentAbbreviation(item.docType) + ' ' + item.docNumber }}
               </td>
               <td>
-                @for (type of item.visitor_types; track $index){
+                @for (type of item.visitorTypes; track $index){
                   {{ translateTable(type, typeDictionary) }}
                 }
               </td>
               @if (userType == "ADMIN" || userType == "OWNER"){
                 <td>
-                  @if (item.is_active) {
+                  @if (item.isActive) {
                     <p class="mb-0">
                       <i class="bi bi-check2-circle text-success" style="font-size: 1.5rem;"></i>
                     </p>
@@ -118,17 +63,17 @@
                   }
                 </td>
                 <td>
-                  <button class="btn btn-warning"> <i class="bi bi-pencil" (click)="edit(item.doc_number)"></i></button>
+                  <button class="btn btn-warning"> <i class="bi bi-pencil" (click)="edit(item.docNumber)"></i></button>
                   <button class="btn btn-danger ms-1"> <i class="bi bi-trash"></i></button>
                 </td>
               }
               <!--<td>
                   &lt;!&ndash; Botones visibles en pantallas medianas y grandes &ndash;&gt;
                   <div class="d-none d-md-flex">
-                    <button class="btn btn-warning btn-sm me-2" (click)="editVisitor(item.visitor_id)">
+                    <button class="btn btn-warning btn-sm me-2" (click)="editVisitor(item.visitorId)">
                       Editar
                     </button>
-                    <button class="btn btn-danger btn-sm" (click)="deleteVisitor(item.visitor_id)">
+                    <button class="btn btn-danger btn-sm" (click)="deleteVisitor(item.visitorId)">
                       Eliminar
                     </button>
                   </div>
@@ -140,10 +85,10 @@
                     </button>
 
                     <div ngbDropdownMenu class="dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                      <button class="dropdown-item" (click)="editVisitor(item.visitor_id)">
+                      <button class="dropdown-item" (click)="editVisitor(item.visitorId)">
                         Editar
                       </button>
-                      <button class="dropdown-item text-white" (click)="deleteVisitor(item.visitor_id)">
+                      <button class="dropdown-item text-white" (click)="deleteVisitor(item.visitorId)">
                         Eliminar
                       </button>
                     </div>

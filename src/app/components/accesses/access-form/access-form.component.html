@@ -4,19 +4,19 @@
   <!-- Número de Documento -->
   <div class="col-md-6 mt-3">
     <div class="d-flex align-items-center flex-row">
-      <label for="doc_number" class="form-label m-0">
+      <label for="docNumber" class="form-label m-0">
         Número de Documento<label class="text-danger">*</label>
       </label>
       <input
         type="number"
-        id="doc_number"
+        id="docNumber"
         class="form-control"
-        formControlName="doc_number"
+        formControlName="docNumber"
         [ngClass]="{
           'is-invalid':
-            (accessForm.get('doc_number')?.invalid &&
-              accessForm.get('doc_number')?.touched) ||
-            accessForm.get('doc_number')?.hasError('unauthorized')
+            (accessForm.get('docNumber')?.invalid &&
+              accessForm.get('docNumber')?.touched) ||
+            accessForm.get('docNumber')?.hasError('unauthorized')
         }"
         (input)="onDocNumberChange($event)"
       />
@@ -25,16 +25,16 @@
       <small
         class="text-danger ms-5 ps-4"
         *ngIf="
-          accessForm.get('doc_number')?.invalid &&
-          accessForm.get('doc_number')?.touched &&
-          !accessForm.get('doc_number')?.hasError('unauthorized')
+          accessForm.get('docNumber')?.invalid &&
+          accessForm.get('docNumber')?.touched &&
+          !accessForm.get('docNumber')?.hasError('unauthorized')
         "
       >
         Por favor, ingrese el número de documento del visitante
       </small>
       <small
         class="text-danger ms-5 ps-4"
-        *ngIf="accessForm.get('doc_number')?.hasError('unauthorized')"
+        *ngIf="accessForm.get('docNumber')?.hasError('unauthorized')"
       >
         Por favor, ingrese un número de documento registrado
       </small>
@@ -64,20 +64,20 @@
   <!-- Nombre -->
   <div class="col-md-6 mt-3">
     <div class="d-flex align-items-center flex-row">
-      <label for="first_name" class="form-label m-0">Nombre</label>
+      <label for="firstName" class="form-label m-0">Nombre</label>
       <input
         type="text"
-        id="first_name"
+        id="firstName"
         class="form-control ms-3"
-        formControlName="first_name"
+        formControlName="firstName"
       />
     </div>
     <div>
       <small
         class="text-danger ms-2"
         *ngIf="
-          accessForm.get('first_name')?.invalid &&
-          accessForm.get('first_name')?.touched
+          accessForm.get('firstName')?.invalid &&
+          accessForm.get('firstName')?.touched
         "
       >
         requerido
@@ -88,20 +88,20 @@
   <!-- Apellido -->
   <div class="col-md-6 mt-3">
     <div class="d-flex align-items-center flex-row">
-      <label for="last_name" class="form-label m-0">Apellido</label>
+      <label for="lastName" class="form-label m-0">Apellido</label>
       <input
         type="text"
-        id="last_name"
+        id="lastName"
         class="form-control ms-3"
-        formControlName="last_name"
+        formControlName="lastName"
       />
     </div>
     <div>
       <small
         class="text-danger ms-2"
         *ngIf="
-          accessForm.get('last_name')?.invalid &&
-          accessForm.get('last_name')?.touched
+          accessForm.get('lastName')?.invalid &&
+          accessForm.get('lastName')?.touched
         "
       >
         requerido
@@ -115,14 +115,14 @@
   <!-- Destino -->
   <div class="col-md-6 mt-3">
     <div class="d-flex align-items-center flex-row">
-      <label for="first_name" class="form-label m-0"
+      <label for="firstName" class="form-label m-0"
         >Nro de Lote de Destino</label
       >
       <input
         type="text"
-        id="plot_id"
+        id="plotId"
         class="form-control ms-3"
-        formControlName="plot_id"
+        formControlName="plotId"
       />
     </div>
   </div>
@@ -161,13 +161,13 @@
   <!-- Tipo de Vehículo -->
   <div class="col-md-6 mt-3">
     <div class="d-flex align-items-center flex-row">
-      <label for="vehicle_type" class="form-label m-0"
+      <label for="vehicleType" class="form-label m-0"
         >Tipo de Vehículo<label class="text-danger">*</label></label
       >
       <select
-        id="vehicle_type"
+        id="vehicleType"
         class="form-select"
-        formControlName="vehicle_type"
+        formControlName="vehicleType"
       >
         <option value="CAR">Automóvil</option>
         <option value="PICKUP">Camioneta</option>
@@ -181,16 +181,16 @@
   <!-- Matrícula del Vehículo -->
   <div class="col-md-6 mt-3">
     <div class="d-flex align-items-center flex-row">
-      <label for="vehicle_reg" class="form-label m-0">Patente</label>
+      <label for="vehicleReg" class="form-label m-0">Patente</label>
       <input
         type="text"
-        id="vehicle_reg"
+        id="vehicleReg"
         class="form-control ms-3"
-        formControlName="vehicle_reg"
+        formControlName="vehicleReg"
         [ngClass]="{
           'is-invalid':
-            accessForm.get('vehicle_reg')?.invalid &&
-            accessForm.get('vehicle_reg')?.touched
+            accessForm.get('vehicleReg')?.invalid &&
+            accessForm.get('vehicleReg')?.touched
         }"
       />
     </div>
@@ -198,8 +198,8 @@
       <small
         class="text-danger ms-4 ps-1"
         *ngIf="
-          accessForm.get('vehicle_reg')?.invalid &&
-          accessForm.get('vehicle_reg')?.touched
+          accessForm.get('vehicleReg')?.invalid &&
+          accessForm.get('vehicleReg')?.touched
         "
       >
         Por favor, ingrese la matrícula del vehículo
@@ -210,13 +210,13 @@
   <!-- Descripción Detallada del Vehículo -->
   <div class="col-md-12 mt-3">
     <div class="d-flex align-items-center flex-row">
-      <label for="vehicle_description" class="form-label m-0"
+      <label for="vehicleDescription" class="form-label m-0"
         >Descripción del Vehículo</label
       >
       <textarea
-        id="vehicle_description"
+        id="vehicleDescription"
         class="form-control"
-        formControlName="vehicle_description"
+        formControlName="vehicleDescription"
       ></textarea>
     </div>
   </div>
