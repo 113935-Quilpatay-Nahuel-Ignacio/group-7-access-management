@@ -22,6 +22,7 @@ import {
   ScannerQRCodeConfig,
   ScannerQRCodeResult,
 } from 'ngx-scanner-qrcode';
+import { ToastsContainer, ToastService } from "ngx-dabd-grupo01";
 
 @Component({
   selector: 'app-access-form',
@@ -32,6 +33,7 @@ import {
     NgClass,
     QrComponent,
     NgxScannerQrcodeModule,
+    ToastsContainer
   ],
   templateUrl: './access-form.component.html',
   styleUrl: './access-form.component.css',
@@ -43,6 +45,7 @@ export class AccessFormComponent implements OnInit {
   private url = inject(ActivatedRoute);
   @ViewChild('scannerModal') scannerModal: any;
   @ViewChild('action') action!: NgxScannerQrcodeComponent;
+  private toastService = inject(ToastService);
 
   public qrValue: string | null = null;
 
@@ -137,11 +140,7 @@ export class AccessFormComponent implements OnInit {
                       this.loginService.getLogin().id.toString()
                     )
                     .subscribe((data) => {
-                      Swal.fire(
-                        'Registro exitoso...',
-                        'Se registró correctamente',
-                        'success'
-                      );
+                      this.toastService.sendSuccess("Registro exitoso!")
                       this.ngOnInit();
                     });
                 }
@@ -153,11 +152,7 @@ export class AccessFormComponent implements OnInit {
                   this.loginService.getLogin().id.toString()
                 )
                 .subscribe((data) => {
-                  Swal.fire(
-                    'Registro exitoso...',
-                    'Se registró correctamente',
-                    'success'
-                  );
+                  this.toastService.sendSuccess("Registro exitoso!")
                   this.ngOnInit();
                 });
             }
@@ -213,46 +208,14 @@ export class AccessFormComponent implements OnInit {
   isAuthorized() {
     let document = this.accessForm.get('docNumber')?.value;
     if (this.accessForm.get('docNumber')?.hasError('unauthorized')) {
-      Swal.fire({
-        title: 'No registrado',
-        text: 'Consulte al propietario si autoriza su entrada',
-        icon: 'error',
-        showCancelButton: true,
-        confirmButtonText: 'Cerrar',
-        cancelButtonText: 'Ir a registrar',
-        customClass: {
-          confirmButton: 'btn btn-danger',
-          cancelButton: 'btn btn-primary',
-        },
-      }).then((result) => {
-        if (result.isDismissed) {
-          this.router.navigate(['/auth/form'], {
-            queryParams: { docNumber: document },
-          });
-        }
-      });
+      this.toastService.sendError("No registrado, consulte al propietario si autoriza su entrada.");
       return;
     }
     this.authService.getValid(document).subscribe((data) => {
       if (data) {
-        Swal.fire('Autorizado', 'Tiene permitido el ingreso', 'success');
+        this.toastService.sendSuccess("Autorizado, tiene permiso para el ingreso.");
       } else {
-        Swal.fire({
-          title: 'No Autorizado',
-          text: 'Consulte al propietario si autoriza su entrada',
-          icon: 'error',
-          showCancelButton: true,
-          confirmButtonText: 'Cerrar',
-          cancelButtonText: 'Ir a registrar',
-          customClass: {
-            confirmButton: 'btn btn-danger',
-            cancelButton: 'btn btn-primary',
-          },
-        }).then((result) => {
-          if (result.isDismissed) {
-            this.router.navigate(['/auth/form']);
-          }
-        });
+        this.toastService.sendError("No registrado, consulte al propietario si autoriza su entrada.")
       }
     });
   }

@@ -8,6 +8,7 @@ import {NgClass, NgIf} from "@angular/common";
 import moment from "moment";
 import {SendVisitor} from "../../../old/visitor/models/visitor.model";
 import {VisitorService} from "../../../services/visitor.service";
+import { ToastsContainer, ToastService } from "ngx-dabd-grupo01";
 
 @Component({
   selector: 'app-entity-form',
@@ -16,7 +17,8 @@ import {VisitorService} from "../../../services/visitor.service";
     ReactiveFormsModule,
     NgIf,
     FormsModule,
-    NgClass
+    NgClass,
+    ToastsContainer
   ],
   templateUrl: './entity-form.component.html',
   styleUrl: './entity-form.component.css'
@@ -26,6 +28,7 @@ export class EntityFormComponent implements OnInit {
   url = inject(ActivatedRoute);
   isEditMode = false;
   visitorId: string | null = null;
+  private toastService = inject(ToastService);
 
   // Método para habilitar el modo edición
   activateEditMode() {
@@ -69,14 +72,14 @@ export class EntityFormComponent implements OnInit {
       }
       this.visitorService.upsertVisitor(formData,this.loginService.getLogin().id).subscribe((response) => {
         console.log(response)
-        Swal.fire('Registro exitoso...', "Se registró correctamente", 'success');
+        this.toastService.sendSuccess("Registro exitoso!");
         this.ngOnInit();
       },
         (error) => {
           if (error.status === 400) {
-            Swal.fire('Error de registro', 'Documento ya registrado.', 'error');
+            this.toastService.sendError("Error, Documento ya registrado.");
           } else {
-            Swal.fire('Error inesperado', 'Ocurrió un error inesperado. Intente de nuevo más tarde.', 'error');
+            this.toastService.sendError("Ocurrió un error inesperado. Intente de nuevo más tarde.");
           }
         }
       );

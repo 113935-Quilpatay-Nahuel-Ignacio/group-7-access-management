@@ -11,6 +11,7 @@ import {UserTypeService} from "../../../services/userType.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {RangeModalComponent} from "../range-modal/range-modal.component";
 import {NgSelectComponent} from "@ng-select/ng-select";
+import { ToastsContainer, ToastService } from "ngx-dabd-grupo01";
 
 @Component({
   selector: 'app-auth-form',
@@ -19,7 +20,8 @@ import {NgSelectComponent} from "@ng-select/ng-select";
     ReactiveFormsModule,
     NgIf,
     NgClass,
-    NgSelectComponent
+    NgSelectComponent,
+    ToastsContainer
   ],
   templateUrl: './auth-form.component.html',
   styleUrl: './auth-form.component.css'
@@ -31,6 +33,7 @@ export class AuthFormComponent implements OnInit {
   isUpdate = false
   paramRoutes = inject(ActivatedRoute);
   modalService = inject(NgbModal);
+  private toastService = inject(ToastService);
   userType: string = "ADMIN"
 
   constructor(private fb: FormBuilder, private authService: AuthService, private loginService: LoginService, private router: Router, private userTypeService: UserTypeService, private route: ActivatedRoute) {
@@ -208,58 +211,12 @@ export class AuthFormComponent implements OnInit {
 
       if (!this.isUpdate) {
         this.authService.createAuth(formData, this.loginService.getLogin().id.toString()).subscribe(data => {
-          if(this.userType === "OWNER"){
-            Swal.fire({
-              title: 'Registro exitoso!',
-              icon: 'success',
-              showCancelButton: true,
-              confirmButtonText: 'Cerrar',
-              cancelButtonText: 'Ir a autorizaciones',
-              customClass: {
-                confirmButton: 'btn btn-danger',
-                cancelButton: 'btn btn-primary'
-              }}).then((result) => {
-              if (result.isDismissed) {
-                this.router.navigate(['/auth/list']);
-              }
-            });
-          } else {
-          Swal.fire({
-            title: 'Registro exitoso!',
-            text: 'Proceda a registrar el acceso',
-            icon: 'success',
-            showCancelButton: true,
-            confirmButtonText: 'Cerrar',
-            cancelButtonText: 'Ir a nuevo acceso',
-            customClass: {
-              confirmButton: 'btn btn-danger',
-              cancelButton: 'btn btn-primary'
-            }
-          }).then((result) => {
-            if (result.isDismissed) {
-              this.router.navigate(['/access/form']);
-            }
-          });
-          }
+          this.toastService.sendSuccess("Registro exitoso.");
         });
-      } else {
+      }
+      else {
         this.authService.updateAuth(formData, this.loginService.getLogin().id.toString()).subscribe(data => {
-          Swal.fire({
-            title: 'Actualización exitosa!',
-            text: '',
-            icon: 'success',
-            showCancelButton: true,
-            confirmButtonText: 'Cerrar',
-            cancelButtonText: 'Ir a autorizaciones',
-            customClass: {
-              confirmButton: 'btn btn-danger',
-              cancelButton: 'btn btn-primary'
-            }
-          }).then((result) => {
-            if (result.isDismissed) {
-              this.router.navigate(['/auth/list']);
-            }
-          });
+          this.toastService.sendSuccess("Autorización exitosa.");
         });
       }
     } else {
