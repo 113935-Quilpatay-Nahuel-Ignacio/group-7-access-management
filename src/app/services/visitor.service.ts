@@ -235,4 +235,25 @@ export class VisitorService {
       params,
     });
   }
+  
+  
+  enable(visitorId: number, userId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'x-user-id': userId.toString()
+    });
+
+    return this.http
+      .put<any>(`${this.apiUrl}/${visitorId}/activate`, null, { headers })
+      .pipe(map((response) => this.caseTransformer.toCamelCase(response)));
+  }
+
+  delete(visitorId: number, userId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'x-user-id': userId.toString()
+    });
+
+    return this.http
+      .delete<any>(`${this.apiUrl}/${visitorId}`, { headers })
+      .pipe(map((response) => response));
+  }
 }
