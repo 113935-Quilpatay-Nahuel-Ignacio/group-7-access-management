@@ -134,15 +134,11 @@ export class AuthService {
   getValid(document: number): Observable<Auth[]> {
     return this.http
       .get<Auth[]>(`${this.apiUrl}/authorization/${document}`)
-      .pipe(
-        map((response) =>
-          response.map((item) => this.caseTransformer.toCamelCase(item))
-        )
-      );
+
   }
 
   getValidAuths(document: number): Observable<Auth[]> {
-    const params = this.caseTransformer.toSnakeCase({ docNumber: document });
+    const params = { docNumber: document };
 
     return this.http
       .get<Auth[]>(`${this.apiUrl}/valid`, {
@@ -191,7 +187,7 @@ export class AuthService {
 
     return this.http
       .delete<any>(`${this.apiUrl}/authorization`, { headers })
-      .pipe(map((response) => this.caseTransformer.toCamelCase(response)));
+      .pipe(map((response) => response));
   }
 
   enable(authId: number, userId: number): Observable<any> {
