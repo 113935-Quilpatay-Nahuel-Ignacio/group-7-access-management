@@ -1,19 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, inject, Input, OnInit} from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QrService, sendQRByEmailRequest } from '../../services/qr.service';
-import { ConfirmAlertComponent } from 'ngx-dabd-grupo01';
+import { ConfirmAlertComponent , ToastsContainer, ToastService } from 'ngx-dabd-grupo01';
 
 @Component({
   selector: 'app-qr',
   standalone: true,
-  imports: [FormsModule, CommonModule , ReactiveFormsModule , ConfirmAlertComponent],
+  imports: [FormsModule, CommonModule , ReactiveFormsModule , ConfirmAlertComponent , ToastsContainer],
   templateUrl: './qr.component.html',
 })
 export class QrComponent implements OnInit{
 
-  alertComponent: ConfirmAlertComponent = new ConfirmAlertComponent();
+  toastService = inject(ToastService);
 
   form: FormGroup = new FormGroup({
     email: new FormControl('' , [Validators.required, Validators.email]),
@@ -37,14 +37,12 @@ sendQRByEmail() {
     this.qrService.sendQRByEmail(request , 1).subscribe({
       next:(data)=>{
         console.log(data)
-        this.alertComponent.alertType = 'success';
-          this.alertComponent.alertTitle = 'QR enviado';
-          this.alertComponent.alertMessage = data.message ;
-          this.showAlert = true;
+        this.toastService.sendSuccess("El qr Ha sido enviado con exito")
        
       },
       error:(error)=>{
         console.log(error)
+       this.toastService.sendError("Fallo al enviar QR, intente nuevamente...")
       }
     })
   }

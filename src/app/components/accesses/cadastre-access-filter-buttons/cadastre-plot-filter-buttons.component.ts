@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
+import {Component, EventEmitter, inject, Input, Output, Type} from '@angular/core';
 import {Subject} from 'rxjs';
 import {CadastreExcelService} from '../../../services/cadastre-excel.service';
 import {Router} from '@angular/router';
@@ -6,6 +6,7 @@ import {AccessService} from "../../../services/access.service";
 import {TransformResponseService} from "../../../services/transform-response.service";
 import {FormsModule} from "@angular/forms";
 import { Filter, TableComponent, TableFiltersComponent } from 'ngx-dabd-grupo01';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-cadastre-plot-filter-buttons',
@@ -31,6 +32,7 @@ export class CadastrePlotFilterButtonsComponent<T extends Record<string, any>> {
   private transformResponseService = inject(TransformResponseService)
   // Reemplazen con su servicio para el getAll.
   private service = inject(AccessService)
+  private modalService = inject(NgbModal);
   // Inject the Excel service for export functionality
   private excelService = inject(CadastreExcelService);
 
@@ -52,7 +54,7 @@ export class CadastrePlotFilterButtonsComponent<T extends Record<string, any>> {
   @Input() dictionaries: Array<{ [key: string]: any }> = [];
   
   @Input() tableFilters: Filter[] = [];
-
+  
   // Subject to emit filtered results
   private filterSubject = new Subject<string>();
   // Observable that emits filtered owner list

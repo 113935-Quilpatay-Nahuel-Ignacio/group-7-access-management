@@ -8,16 +8,16 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { SendVisitor, Visitor } from '../models/visitor.model';
-import { PaginatedResponse } from '../models/PaginatedResponse';
 import { CaseTransformerService } from './case-transformer.service';
 
 export interface VisitorFilter {
-  textFilter?: string;
-  documentType?: string; // Usa el tipo adecuado si tienes un enum de DocumentType
-  visitorType?: string; // Usa el tipo adecuado si tienes un enum de VisitorType
-  active?: boolean;
+  active : boolean
 }
 
+export interface PaginatedResponse<T>{
+  items: T[] ;
+  totalElements: number
+}
 @Injectable({
   providedIn: 'root',
 })
@@ -121,28 +121,25 @@ export class VisitorService {
   getAllPaginated(
     page: number,
     size: number,
-    filter?: VisitorFilter
+    filter: VisitorFilter
   ): Observable<PaginatedResponse<Visitor>> {
     let snakeCaseParams = this.caseTransformer.toSnakeCase({
       page: page.toString(),
       size: size.toString(),
-      textFilter: filter?.textFilter,
-      documentType: filter?.documentType,
-      visitorType: filter?.visitorType,
-      active: filter?.active?.toString(),
+      filter,
     });
-
-    return this.http
-      .get<PaginatedResponse<Visitor>>(this.apiUrl, {
-        params: snakeCaseParams as any,
-      })
+  
+    return this.http.get<{ items: Visitor[], total_elements: number }>(this.apiUrl, {params: snakeCaseParams as any,})
       .pipe(
-        map((response) => ({
-          items: response.items.map((item) =>
-            this.caseTransformer.toCamelCase(item)
-          ),
-          totalElements: response.totalElements,
-        }))
+        map((response) => {
+          console.log(response); 
+          return {
+            items: response.items.map((item) =>
+              this.caseTransformer.toCamelCase(item)
+            ),
+            totalElements: response.total_elements, 
+          };
+        })
       );
   }
 

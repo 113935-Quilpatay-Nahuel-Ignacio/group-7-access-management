@@ -42,7 +42,7 @@ export class EntityFormComponent implements OnInit {
       lastName: ['', Validators.required],
       docType: ['DNI', Validators.required],
       docNumber: [null, Validators.required],
-      birthDate: [null, Validators.required]
+      birthDate: [null]
     });
 
     /*this.route.paramMap.subscribe(params => {
@@ -64,7 +64,9 @@ export class EntityFormComponent implements OnInit {
   onSubmit(): void {
     if (this.entityForm.valid) {
       const formData = this.entityForm.value;
-      formData.birthDate = formatFormDate(formData.birthDate);
+      if(formData.birthDate){
+        formData.birthDate = formatFormDate(formData.birthDate);
+      }
       this.visitorService.upsertVisitor(formData,this.loginService.getLogin().id).subscribe((response) => {
         console.log(response)
         Swal.fire('Registro exitoso...', "Se registró correctamente", 'success');
