@@ -29,6 +29,7 @@ import { VisitorTypeAccessDictionary } from '../../../models/authorize.model';
 import { Visitor } from '../../../models/visitor.model';
 import { VisitorService } from '../../../services/visitor.service';
 import { UserTypeService } from '../../../services/userType.service';
+import { LoginService } from '../../../services/login.service';
 
 @Component({
   selector: 'app-entity-list',
@@ -59,6 +60,8 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   private toastService = inject(ToastService);
   private modalService = inject(NgbModal);
   private userTypeService = inject(UserTypeService);
+  private loginService = inject(LoginService);
+
   //#endregion
 
   //#region ATT de PAGINADO
@@ -500,4 +503,17 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   }
 
   edit(docNumber: any) {}
+
+    disable(visitorId: number) {
+    this.visitorService.delete(visitorId,this.loginService.getLogin().id).subscribe(data => {
+      this.getAll();
+    })
+  }
+
+  enable(visitorId: number) {
+    this.visitorService.enable(visitorId,this.loginService.getLogin().id).subscribe(data => {
+      this.getAll();
+    })
+  }
+
 }
