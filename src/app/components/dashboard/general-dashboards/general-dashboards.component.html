@@ -44,3 +44,70 @@
 
 
 </app-main-container>
+
+
+<ng-template #infoModal let-modal>
+  <div class="modal-header fs-6 py-1">
+    <h4 class="modal-title">Información de la Pantalla de Reportes</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body fs-6 py-2">
+    <div class="container-fluid">
+      <!-- Introducción -->
+      <div class="alert alert-info mb-2 py-2">
+        <h5 class="alert-heading">¿Qué es esta pantalla?</h5>
+        <p class="mb-0 small">Esta pantalla permite visualizar reportes de accesos que incluyen datos de entradas y salidas, y distribuciones de accesos por tipo de visitante y horarios. Es una herramienta clave para analizar y gestionar el flujo de visitantes de manera eficiente.</p>
+      </div>
+
+      <!-- Descripción de los Campos Principales -->
+      <div class="card mb-2">
+        <div class="card-header py-1">
+          <h5 class="mb-0">Datos Visualizados</h5>
+        </div>
+        <div class="card-body py-2">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item py-1">
+              <strong>Filtros de Fecha:</strong> Permiten seleccionar un rango de fechas "Desde" y "Hasta" para acotar el periodo de análisis.
+            </li>
+            <li class="list-group-item py-1">
+              <strong>Resumen de Accesos:</strong> Muestra el total de entradas y salidas registradas durante el periodo seleccionado.
+            </li>
+            <li class="list-group-item py-1">
+              <strong>Gráficos:</strong> Incluye un gráfico semanal de accesos y un gráfico de distribución por tipo de visitante, además de un gráfico que muestra los accesos por hora.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Acciones Disponibles -->
+      <div class="card mb-2">
+        <div class="card-header py-1">
+          <h5 class="mb-0">Acciones Disponibles</h5>
+        </div>
+        <div class="card-body py-2">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item py-1">
+              <strong>Filtrar:</strong> Aplica los filtros seleccionados para actualizar los reportes.
+            </li>
+            <li class="list-group-item py-1">
+              <strong>Limpiar Filtros:</strong> Resetea los filtros aplicados para mostrar la información completa sin restricciones.
+            </li>
+            <li class="list-group-item py-1">
+              <strong>Ver Detalles:</strong> Los gráficos y tablas proporcionan una vista más detallada de los datos de accesos.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Nota -->
+      <div class="alert alert-warning py-2 mb-0">
+        <h5 class="alert-heading">Nota:</h5>
+        <p class="mb-0 small">Asegúrate de elegir correctamente los rangos de fechas y los filtros antes de aplicar los cambios para obtener datos precisos.</p>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer py-2">
+    <button type="button" class="btn btn-primary" (click)="modal.close()">Entendido</button>
+  </div>
+</ng-template>
+

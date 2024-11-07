@@ -31,6 +31,7 @@ import { Visitor } from '../../../models/visitor.model';
 import { VisitorFilter, VisitorService } from '../../../services/visitor.service';
 import { UserTypeService } from '../../../services/userType.service';
 import { LoginService } from '../../../services/login.service';
+import { EntityFormComponent } from '../entity-form/entity-form.component';
 
 @Component({
   selector: 'app-entity-list',
@@ -108,7 +109,7 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   // Filtro dinámico
   filterType: string = '';
   type: string = '';
-  EntityFormComponent!: Type<any>;
+  EntityFormComponent: Type<any> = EntityFormComponent;
 
   setFilterType(type: string): void {
     this.filterType = type;

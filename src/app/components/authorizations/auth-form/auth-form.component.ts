@@ -155,7 +155,7 @@ export class AuthFormComponent implements OnInit {
         lastName: ['', Validators.required],
         docType: ['DNI', Validators.required],
         docNumber: [null, Validators.required],
-        birthDate: [null, Validators.required],
+        birthDate: [null],
       }),
       authRangeRequest: [[]]
     });
@@ -170,7 +170,10 @@ export class AuthFormComponent implements OnInit {
         this.authForm.value.plotId = 2
       }
       const formData = this.authForm.value;
-      formData.visitorRequest.birthDate = formatFormDate(formData.visitorRequest.birthDate);
+
+      if(formData.birthDate){
+        formData.visitorRequest.birthDate = formatFormDate(formData.visitorRequest.birthDate);
+      }
 
       const now = new Date();
 

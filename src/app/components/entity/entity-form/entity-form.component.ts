@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, Inject, inject, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {AuthService} from "../../../services/auth.service";
 import {LoginService} from "../../../services/login.service";
@@ -9,6 +9,7 @@ import moment from "moment";
 import {SendVisitor} from "../../../old/visitor/models/visitor.model";
 import {VisitorService} from "../../../services/visitor.service";
 import { ToastsContainer, ToastService } from "ngx-dabd-grupo01";
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-entity-form',
@@ -29,6 +30,8 @@ export class EntityFormComponent implements OnInit {
   isEditMode = false;
   visitorId: string | null = null;
   private toastService = inject(ToastService);
+  activeModal = inject(NgbActiveModal);
+  isUpdate : boolean = false
 
   // Método para habilitar el modo edición
   activateEditMode() {
@@ -61,6 +64,7 @@ export class EntityFormComponent implements OnInit {
 
   onCancel() {
     this.router.navigate(['/entity/list']);
+    this.activeModal.dismiss(); // Cierra el modal
   }
 
 

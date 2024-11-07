@@ -1,4 +1,4 @@
-<h1 class="mt-2 p-2">Nueva Autorización</h1>
+<h1 class="mt-2 p-2">{{isUpdate? 'Actualizar':'Nueva'}} Autorización</h1>
 <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="row g-3 m-2">
     <!--Terreno-->
     <div class="col-md-6 d-flex flex-column align-items-center justify-content-center">
@@ -112,7 +112,7 @@
 
     <div class="col-md-6 mt-3">
       <div class="d-flex align-items-center flex-row">
-        <label for="birth-date" class="form-label m-0">Fecha de Nacimiento<label class="text-danger">*</label></label>
+        <label for="birth-date" class="form-label m-0">Fecha de Nacimiento</label>
         <input type="date" id="birth-date" class="form-control ms-1" formControlName="birthDate"
                [ngClass]="{
         'is-invalid': authForm.get('visitorRequest.birthDate')?.invalid && authForm.get('visitorRequest.birthDate')?.touched

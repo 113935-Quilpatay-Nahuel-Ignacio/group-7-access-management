@@ -1,10 +1,11 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import { AccessHourlyDashboardComponent } from '../../accesses/access-hourly-dashboard/access-hourly-dashboard.component';
 import { AccessWeeklyDashboardComponent } from '../../accesses/access-weekly-dashboard/access-weekly-dashboard.component';
 import { AccessPieDashboardComponent } from '../../accesses/access-pie-dashboard/access-pie-dashboard.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MainContainerComponent} from "ngx-dabd-grupo01";
 import {AccessService} from "../../../services/access.service";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-general-dashboards',
@@ -19,18 +20,20 @@ export class GeneralDashboardsComponent implements OnInit{
   visitorType: string = "";
   exitCount: number = 0;
   entryCount: number = 0;
+  modalService = inject(NgbModal);
 
 
   @ViewChild(AccessWeeklyDashboardComponent) weekly!: AccessWeeklyDashboardComponent;
   @ViewChild(AccessPieDashboardComponent) pie!: AccessPieDashboardComponent;
   @ViewChild(AccessHourlyDashboardComponent) hourly!: AccessHourlyDashboardComponent;
+  @ViewChild('infoModal') infoModal!: TemplateRef<any>
 
   constructor(
     private accessService: AccessService) {
   }
 
   onInfoButtonClick() {
-  //  this.modalService.open(this.infoModal, { size: 'lg' });
+   this.modalService.open(this.infoModal, { size: 'lg' });
   }
 
   resetFilters(){

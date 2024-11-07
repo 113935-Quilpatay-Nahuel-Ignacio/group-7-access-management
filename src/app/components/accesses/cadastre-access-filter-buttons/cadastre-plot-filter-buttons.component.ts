@@ -7,6 +7,7 @@ import {TransformResponseService} from "../../../services/transform-response.ser
 import {FormsModule} from "@angular/forms";
 import { Filter, TableComponent, TableFiltersComponent } from 'ngx-dabd-grupo01';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { EntityFormComponent } from '../../entity/entity-form/entity-form.component';
 
 @Component({
   selector: 'app-cadastre-plot-filter-buttons',
@@ -32,7 +33,6 @@ export class CadastrePlotFilterButtonsComponent<T extends Record<string, any>> {
   private transformResponseService = inject(TransformResponseService)
   // Reemplazen con su servicio para el getAll.
   private service = inject(AccessService)
-  private modalService = inject(NgbModal);
   // Inject the Excel service for export functionality
   private excelService = inject(CadastreExcelService);
 
@@ -54,6 +54,19 @@ export class CadastrePlotFilterButtonsComponent<T extends Record<string, any>> {
   @Input() dictionaries: Array<{ [key: string]: any }> = [];
   
   @Input() tableFilters: Filter[] = [];
+
+  @Input() modalComponent! : Type<any>
+  modalService = inject(NgbModal);
+
+  openModal(route: any): void {
+    if (this.modalComponent) {
+      // Abre el modal y pasa el `formPath` como input al componente modal
+      const modalRef = this.modalService.open(this.modalComponent);
+      modalRef.componentInstance.route = route; // Pasa el formPath al componente modal
+    } else {
+      console.error('No se ha especificado un componente para el modal');
+    }
+  }
   
   // Subject to emit filtered results
   private filterSubject = new Subject<string>();
@@ -135,6 +148,16 @@ export class CadastrePlotFilterButtonsComponent<T extends Record<string, any>> {
     this.router.navigate([this.formPath]);
   }
 
+
+  handleAction(){
+   console.log(this.modalComponent)
+
+    if(this.modalComponent){
+      this.openModal(this.modalComponent)
+    }else{
+      this.redirectToForm()
+    }
+  }
   clearFilter() {
     this.filterText = ""
   }
