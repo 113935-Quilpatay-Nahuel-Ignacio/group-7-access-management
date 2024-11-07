@@ -159,7 +159,7 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   )*/
     .build();
 
-  onFilterValueChange(filters: Record<string, any>) {
+  /*onFilterValueChange(filters: Record<string, any>) {
     this.searchParams = {
       ...filters,
     };
@@ -171,6 +171,17 @@ export class EntityListComponent implements OnInit, AfterViewInit {
       this.filterByVisitorType(this.searchParams['visitorTypes']);
     } else {
       this.getAll();
+    }
+  }*/
+  onFilterValueChange(filters: Record<string, any>) {
+    this.searchParams = {
+      ...filters,
+    };
+
+    if (this.searchParams['visitorTypes']?.length > 0) {
+      this.filterByVisitorType(this.searchParams['visitorTypes']);
+    } else {
+      this.getAll(); // Si no hay tipos seleccionados, mostrar todos
     }
   }
   //#endregion
@@ -193,7 +204,7 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   //#endregion
 
   //#region GET_ALL
-  getAll() {
+  /*getAll() {
     this.visitorService
       .getAll(this.currentPage, this.pageSize, this.retrieveByActive)
       .subscribe(
@@ -216,9 +227,33 @@ export class EntityListComponent implements OnInit, AfterViewInit {
           console.error('Error getting:', error);
         }
       );
+  }*/
+
+  getAll() {
+    this.visitorService
+      .getAll(this.currentPage, this.pageSize, this.retrieveByActive)
+      .subscribe({
+        next: (data) => {
+          this.completeList = this.transformListToTableData(data.items);
+          let response = this.transformResponseService.transformResponse(
+            data.items,
+            this.currentPage,
+            this.pageSize,
+            this.retrieveByActive
+          );
+
+          this.list = response.content;
+          this.filteredList = [...this.list];
+          this.lastPage = response.last;
+          this.totalItems = data.items.length;
+        },
+        error: (error) => {
+          console.error('Error getting visitors:', error);
+        },
+      });
   }
 
-  getAllFiltered(filter: string) {
+  /*getAllFiltered(filter: string) {
     this.visitorService
       .getAll(this.currentPage, this.pageSize, this.retrieveByActive)
       .subscribe(
@@ -251,6 +286,38 @@ export class EntityListComponent implements OnInit, AfterViewInit {
           console.error('Error getting:', error);
         }
       );
+  }*/
+
+  getAllFiltered(filter: string) {
+    this.visitorService
+      .getAll(this.currentPage - 1, this.pageSize, this.retrieveByActive)
+      .subscribe({
+        next: (data) => {
+          const filteredItems = data.items.filter(
+            (x) =>
+              x.name.toLowerCase().includes(filter.toLowerCase()) ||
+              (x.lastName &&
+                x.lastName.toLowerCase().includes(filter.toLowerCase())) ||
+              x.docNumber.toString().includes(filter)
+          );
+
+          let response = this.transformResponseService.transformResponse(
+            filteredItems,
+            this.currentPage,
+            this.pageSize,
+            this.retrieveByActive
+          );
+
+          this.completeList = this.transformListToTableData(filteredItems);
+          this.list = response.content;
+          this.filteredList = [...this.list];
+          this.lastPage = response.last;
+          this.totalItems = filteredItems.length;
+        },
+        error: (error) => {
+          console.error('Error getting visitors:', error);
+        },
+      });
   }
 
   getDocumentAbbreviation(docType: string): string {
@@ -266,7 +333,7 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   //#endregion
 
   //#region FILTROS
-  filterByVisitorType(type: string) {
+  /*filterByVisitorType(type: string) {
     this.visitorService
       .getAll(this.currentPage, this.pageSize, this.retrieveByActive)
       .subscribe(
@@ -294,6 +361,37 @@ export class EntityListComponent implements OnInit, AfterViewInit {
           console.error('Error getting:', error);
         }
       );
+  }*/
+
+  filterByVisitorType(type: string[]) {
+    this.visitorService
+      .getAll(this.currentPage - 1, this.pageSize, this.retrieveByActive)
+      .subscribe({
+        next: (data) => {
+          // Filtrar los items que contienen al menos uno de los tipos seleccionados
+          const filteredItems = data.items.filter((x) =>
+            x.visitorTypes.some((visitorType: string) =>
+              type.includes(visitorType)
+            )
+          );
+
+          let response = this.transformResponseService.transformResponse(
+            filteredItems,
+            this.currentPage,
+            this.pageSize,
+            this.retrieveByActive
+          );
+
+          this.completeList = this.transformListToTableData(filteredItems);
+          this.list = response.content;
+          this.filteredList = [...this.list];
+          this.lastPage = response.last;
+          this.totalItems = filteredItems.length;
+        },
+        error: (error) => {
+          console.error('Error getting visitors:', error);
+        },
+      });
   }
 
   filterByAction(action: string) {
