@@ -67,36 +67,9 @@
                     <button class="btn btn-danger ms-1" (click)="disable(item.visitorId)"><i class="bi bi-trash"></i></button>
                     }@else {
                     <button class="btn btn-success ms-1" (click)="enable(item.visitorId)"><i class="bi bi-check"></i></button>
-                    }                
+                    }
                   </td>
               }
-              <!--<td>
-                  &lt;!&ndash; Botones visibles en pantallas medianas y grandes &ndash;&gt;
-                  <div class="d-none d-md-flex">
-                    <button class="btn btn-warning btn-sm me-2" (click)="editVisitor(item.visitorId)">
-                      Editar
-                    </button>
-                    <button class="btn btn-danger btn-sm" (click)="deleteVisitor(item.visitorId)">
-                      Eliminar
-                    </button>
-                  </div>
-
-                  &lt;!&ndash; Botones visibles solo en pantallas pequeñas &ndash;&gt;
-                  <div class="d-md-none" ngbDropdown>
-                    <button class="btn" type="button" id="dropdownMenuButton2"  aria-expanded="false">
-                      <i class="bi bi-three-dots-vertical" ngbDropdownToggle aria-expanded="false"></i> &lt;!&ndash; Mantenemos solo el ícono &ndash;&gt;
-                    </button>
-
-                    <div ngbDropdownMenu class="dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                      <button class="dropdown-item" (click)="editVisitor(item.visitorId)">
-                        Editar
-                      </button>
-                      <button class="dropdown-item text-white" (click)="deleteVisitor(item.visitorId)">
-                        Eliminar
-                      </button>
-                    </div>
-                  </div>
-              </td>-->
             </tr>
 
           }
@@ -205,4 +178,4 @@
 
 </app-main-container>
 
- 
+

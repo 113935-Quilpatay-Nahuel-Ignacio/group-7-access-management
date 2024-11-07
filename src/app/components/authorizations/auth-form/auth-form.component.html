@@ -99,7 +99,7 @@
         <label for="doc-number" class="form-label m-0">Número de Documento<label class="text-danger">*</label></label>
         <input type="number" id="doc-number" class="form-control ms-2" formControlName="docNumber"
                [ngClass]="{
-        'is-invalid': authForm.get('visitorRequest')!.get('docNumber')?.invalid && authForm.get('visitorRequest')!.get('docNumber')?.touched
+        'is-invalid': authForm.get('visitorRequest.docNumber')?.invalid && authForm.get('visitorRequest.docNumber')?.touched
       }"/>
       </div>
       <div class="ms-5">

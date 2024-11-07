@@ -160,7 +160,6 @@ export class EntityListComponent implements OnInit, AfterViewInit {
     if (this.searchParams['visitorTypes']?.length > 0) {
       this.filterByVisitorType(this.searchParams['visitorTypes']);
     } else {
-      debugger
       this.getAll(); // Si no hay tipos seleccionados, mostrar todos
     }
   }
@@ -430,7 +429,9 @@ export class EntityListComponent implements OnInit, AfterViewInit {
     this.modalService.open(this.infoModal, { centered: true, size: 'lg' });
   }
 
-  edit(docNumber: any) {}
+  edit(docNumber: any) {
+
+  }
 
     disable(visitorId: number) {
     this.visitorService.delete(visitorId,this.loginService.getLogin().id).subscribe(data => {

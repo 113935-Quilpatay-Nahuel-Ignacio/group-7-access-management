@@ -80,7 +80,7 @@ export class AuthFormComponent implements OnInit {
 
       const documentParam = this.paramRoutes.snapshot.queryParamMap.get('docNumber');
      console.log(documentParam)
-     
+
       if (documentParam) {
       this.authForm.get('visitorRequest.docNumber')?.patchValue(documentParam);
     }
@@ -93,7 +93,7 @@ export class AuthFormComponent implements OnInit {
       this.authService.getById(parseInt(documentParam, 10)).subscribe(datas => {
         let data = datas[0]
         // Completa el formulario
-        
+
         this.authForm.patchValue({
           authId: data.authId,
           isActive:data.isActive,
@@ -104,7 +104,7 @@ export class AuthFormComponent implements OnInit {
             lastName: data.visitor.lastName,
             docType: data.visitor.docType,
             docNumber: data.visitor.docNumber,
-            
+
             birthDate: this.formatDate(data.visitor.birthDate), // Asegúrate de formatear la fecha si es necesario
           }
         });
@@ -123,6 +123,15 @@ export class AuthFormComponent implements OnInit {
 
         this.authForm.patchValue({authRangeRequest: authRanges});
       });
+      if (this.isUpdate){
+
+        this.authForm.get('visitorType')?.disable()
+        this.authForm.get('visitorRequest.name')?.disable()
+        this.authForm.get('visitorRequest.lastName')?.disable()
+        this.authForm.get('visitorRequest.docNumber')?.disable()
+        this.authForm.get('visitorRequest.docType')?.disable()
+        this.authForm.get('visitorRequest.birthDate')?.disable()
+      }
     }
   }
 
