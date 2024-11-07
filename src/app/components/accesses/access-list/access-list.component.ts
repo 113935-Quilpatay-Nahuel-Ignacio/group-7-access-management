@@ -478,11 +478,6 @@ export class AccessListComponent implements OnInit, AfterViewInit {
 
   //#endregion
 
-  //#region SHOW INFO | TODO
-  showInfo() {
-    // TODO: En un futuro agregar un modal que mostrara informacion de cada componente
-  }
-
   //#endregion
 
   protected readonly oninput = oninput;

@@ -64,11 +64,8 @@
 
   <div class="col-md-6 mt-3">
     <div class="d-flex align-items-center flex-row">
-      <label for="birth-date" class="form-label m-0">Fecha de Nacimiento<label class="text-danger">*</label></label>
-      <input type="date" id="birth-date" class="form-control ms-2" formControlName="birthDate"
-             [ngClass]="{
-        'is-invalid': entityForm.get('birthDate')?.invalid && entityForm.get('birthDate')?.touched
-      }"/>
+      <label for="birth-date" class="form-label m-0">Fecha de Nacimiento</label>
+      <input type="date" id="birth-date" class="form-control ms-2" formControlName="birthDate"/>
     </div>
     <div>
       <small class="text-danger ms-2"

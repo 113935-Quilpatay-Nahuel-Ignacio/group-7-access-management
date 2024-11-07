@@ -5,6 +5,7 @@ import {
   inject,
   OnInit,
   TemplateRef,
+  Type,
   ViewChild,
 } from '@angular/core';
 import { CadastrePlotFilterButtonsComponent } from '../../accesses/cadastre-access-filter-buttons/cadastre-plot-filter-buttons.component';
@@ -27,7 +28,7 @@ import { TransformResponseService } from '../../../services/transform-response.s
 import { AuthorizerCompleterService } from '../../../services/authorizer-completer.service';
 import { VisitorTypeAccessDictionary } from '../../../models/authorize.model';
 import { Visitor } from '../../../models/visitor.model';
-import { VisitorService } from '../../../services/visitor.service';
+import { VisitorFilter, VisitorService } from '../../../services/visitor.service';
 import { UserTypeService } from '../../../services/userType.service';
 
 @Component({
@@ -62,7 +63,7 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   //#endregion
 
   //#region ATT de PAGINADO
-  currentPage: number = 0;
+  currentPage: number = 1;
   pageSize: number = 10;
   sizeOptions: number[] = [10, 25, 50];
   list: Visitor[] = [];
@@ -70,6 +71,9 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   filteredList: Visitor[] = [];
   lastPage: boolean | undefined;
   totalItems: number = 0;
+  visitorFilter : VisitorFilter ={
+    active: true
+  }
   //#endregion
   heads: string[] = ['Nombre', 'Documento', 'Tipos'];
   props: string[] = ['Nombre', 'Documento', 'Tipos'];
@@ -100,9 +104,8 @@ export class EntityListComponent implements OnInit, AfterViewInit {
 
   // Filtro dinámico
   filterType: string = '';
-  startDate: string = '';
-  endDate: string = '';
   type: string = '';
+  EntityFormComponent!: Type<any>;
 
   setFilterType(type: string): void {
     this.filterType = type;
@@ -117,8 +120,6 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   clearFilters(): void {
     // Restablece todos los filtros a su valor inicial.
     this.filterType = '';
-    this.startDate = '';
-    this.endDate = '';
     this.type = '';
     this.searchParams = {};
 
@@ -145,34 +146,9 @@ export class EntityListComponent implements OnInit, AfterViewInit {
         { value: 'PROVIDER_ORGANIZATION', label: 'Entidad' },
       ]
     )
-    /*.dateFilter(
-    'Fecha desde',
-    'startDate',
-    'Placeholder',
-    "yyyy-MM-dd'T'HH:mm:ss"
-  )
-  .dateFilter(
-    'Fecha hasta',
-    'endDate',
-    'Placeholder',
-    "yyyy-MM-dd'T'HH:mm:ss"
-  )*/
     .build();
 
-  /*onFilterValueChange(filters: Record<string, any>) {
-    this.searchParams = {
-      ...filters,
-    };
 
-    this.currentPage = 1;
-    console.log(this.searchParams);
-
-    if (this.searchParams['visitorTypes']) {
-      this.filterByVisitorType(this.searchParams['visitorTypes']);
-    } else {
-      this.getAll();
-    }
-  }*/
   onFilterValueChange(filters: Record<string, any>) {
     this.searchParams = {
       ...filters,
@@ -181,6 +157,7 @@ export class EntityListComponent implements OnInit, AfterViewInit {
     if (this.searchParams['visitorTypes']?.length > 0) {
       this.filterByVisitorType(this.searchParams['visitorTypes']);
     } else {
+      debugger
       this.getAll(); // Si no hay tipos seleccionados, mostrar todos
     }
   }
@@ -206,7 +183,7 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   //#region GET_ALL
   getAll() {
     this.visitorService
-      .getAll(this.currentPage, this.pageSize, this.retrieveByActive)
+      .getAllPaginated(this.currentPage-1, this.pageSize , this.visitorFilter)
       .subscribe({
         next: (data) => {
           this.completeList = this.transformListToTableData(data.items);
@@ -216,11 +193,11 @@ export class EntityListComponent implements OnInit, AfterViewInit {
             this.pageSize,
             this.retrieveByActive
           );
-
+          console.log(data)
           this.list = response.content;
           this.filteredList = [...this.list];
           this.lastPage = response.last;
-          this.totalItems = data.items.length;
+          this.totalItems = data.totalElements;
         },
         error: (error) => {
           console.error('Error getting visitors:', error);
@@ -324,65 +301,7 @@ export class EntityListComponent implements OnInit, AfterViewInit {
 
   //#endregion
 
-  //#region APLICACION DE FILTROS
-  changeActiveFilter(isActive?: boolean) {
-    this.retrieveByActive = isActive;
-    this.confirmFilter();
-  }
 
-  changeFilterMode(mode: AccessFilters) {
-    switch (mode) {
-      case AccessFilters.NOTHING:
-        this.actualFilter = AccessFilters.NOTHING;
-        this.applyFilterWithNumber = false;
-        this.applyFilterWithCombo = false;
-        this.filterComponent.clearFilter();
-        this.confirmFilter();
-        break;
-
-      case AccessFilters.ACTION:
-        this.actualFilter = AccessFilters.ACTION;
-        this.contentForFilterCombo = this.getKeys(this.actionDictionary);
-        this.applyFilterWithNumber = false;
-        this.applyFilterWithCombo = true;
-        break;
-
-      case AccessFilters.VISITOR_TYPE:
-        this.actualFilter = AccessFilters.VISITOR_TYPE;
-        this.contentForFilterCombo = this.getKeys(this.typeDictionary);
-        this.applyFilterWithNumber = false;
-        this.applyFilterWithCombo = true;
-        break;
-
-      default:
-        break;
-    }
-  }
-
-  confirmFilter() {
-    switch (this.actualFilter) {
-      case 'NOTHING':
-        this.getAll();
-        break;
-
-      case 'ACTION':
-        this.filterByAction(
-          this.translateCombo(this.filterInput, this.actionDictionary)
-        );
-        break;
-
-      case 'VISITOR_TYPE':
-        this.filterByVisitorType(
-          this.translateCombo(this.filterInput, this.typeDictionary)
-        );
-        break;
-
-      default:
-        break;
-    }
-  }
-
-  //#endregion
 
   //#region DELETE
   /*  assignPlotToDelete(plot: Plot) {
@@ -462,6 +381,15 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   //#endregion
 
   //#region FUNCIONES PARA PAGINADO
+
+  confirmFilter(): void {
+    this.visitorService.getAllPaginated(this.currentPage - 1, this.pageSize, { active: true }).subscribe(response => {
+      this.filteredList = response.items;
+      this.list = response.items
+      this.totalItems = response.totalElements;
+    });
+  }
+
   onItemsPerPageChange() {
     this.confirmFilter();
   }
