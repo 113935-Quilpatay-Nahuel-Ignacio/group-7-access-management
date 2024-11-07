@@ -204,31 +204,6 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   //#endregion
 
   //#region GET_ALL
-  /*getAll() {
-    this.visitorService
-      .getAll(this.currentPage, this.pageSize, this.retrieveByActive)
-      .subscribe(
-        (data) => {
-          this.completeList = this.transformListToTableData(data.items);
-          console.log(this.completeList);
-          let response = this.transformResponseService.transformResponse(
-            data.items,
-            this.currentPage,
-            this.pageSize,
-            this.retrieveByActive
-          );
-
-          this.list = response.content;
-          this.filteredList = [...this.list];
-          this.lastPage = response.last;
-          this.totalItems = response.totalElements;
-        },
-        (error) => {
-          console.error('Error getting:', error);
-        }
-      );
-  }*/
-
   getAll() {
     this.visitorService
       .getAll(this.currentPage, this.pageSize, this.retrieveByActive)
@@ -252,41 +227,6 @@ export class EntityListComponent implements OnInit, AfterViewInit {
         },
       });
   }
-
-  /*getAllFiltered(filter: string) {
-    this.visitorService
-      .getAll(this.currentPage, this.pageSize, this.retrieveByActive)
-      .subscribe(
-        (data) => {
-          data.items = data.items.filter(
-            (x) =>
-              x.name.toLowerCase().includes(filter) ||
-              x.lastName.toLowerCase().includes(filter) ||
-              x.docNumber.toString().includes(filter)
-          );
-          let response = this.transformResponseService.transformResponse(
-            data.items,
-            this.currentPage,
-            this.pageSize,
-            this.retrieveByActive
-          );
-          response.content.forEach((data) => {
-            data.authorizer =
-              this.authorizerCompleterService.completeAuthorizer(
-                data.authorizerId
-              );
-          });
-
-          this.list = response.content;
-          this.filteredList = [...this.list];
-          this.lastPage = response.last;
-          this.totalItems = response.totalElements;
-        },
-        (error) => {
-          console.error('Error getting:', error);
-        }
-      );
-  }*/
 
   getAllFiltered(filter: string) {
     this.visitorService
@@ -333,36 +273,6 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   //#endregion
 
   //#region FILTROS
-  /*filterByVisitorType(type: string) {
-    this.visitorService
-      .getAll(this.currentPage, this.pageSize, this.retrieveByActive)
-      .subscribe(
-        (data) => {
-          data.items = data.items.filter((x) => x.visitorTypes.includes(type));
-          let response = this.transformResponseService.transformResponse(
-            data.items,
-            this.currentPage,
-            this.pageSize,
-            this.retrieveByActive
-          );
-          response.content.forEach((data) => {
-            data.authorizer =
-              this.authorizerCompleterService.completeAuthorizer(
-                data.authorizerId
-              );
-          });
-
-          this.list = response.content;
-          this.filteredList = [...this.list];
-          this.lastPage = response.last;
-          this.totalItems = response.totalElements;
-        },
-        (error) => {
-          console.error('Error getting:', error);
-        }
-      );
-  }*/
-
   filterByVisitorType(type: string[]) {
     this.visitorService
       .getAll(this.currentPage - 1, this.pageSize, this.retrieveByActive)
