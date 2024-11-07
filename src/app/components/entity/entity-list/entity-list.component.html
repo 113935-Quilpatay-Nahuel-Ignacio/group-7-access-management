@@ -18,6 +18,7 @@
       [dictionaries]="dictionaries"
       [tableFilters]="filterConfig"
       [modalComponent]="EntityFormComponent"
+      (entityCreatedInModal)="updateEntityList()"
       (filterValueChange)="onFilterValueChange($event)"
       objectName="ACCESOS"></app-cadastre-plot-filter-buttons>
 

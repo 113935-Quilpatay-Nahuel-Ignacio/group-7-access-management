@@ -34,6 +34,7 @@ export class EntityFormComponent implements OnInit {
 
   @Input() visitorId? : number 
   @Output() entitySaved = new EventEmitter<boolean>();
+  @Output() entityCreated = new EventEmitter<void>();
 
   // Método para habilitar el modo edición
   activateEditMode() {
@@ -88,7 +89,7 @@ export class EntityFormComponent implements OnInit {
 
           } else {
             this.toastService.sendSuccess("Registro exitoso!");
-            this.entitySaved.emit(true);
+            this.entityCreated.emit();
           }
         // Emitir el evento para informar al componente principal que se realizó la operación
           this.entitySaved.emit(true);

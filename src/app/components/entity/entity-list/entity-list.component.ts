@@ -48,6 +48,7 @@ import { EntityFormComponent } from '../entity-form/entity-form.component';
   styleUrl: './entity-list.component.css',
 })
 export class EntityListComponent implements OnInit, AfterViewInit {
+
   @ViewChild('filterComponent')
   filterComponent!: CadastrePlotFilterButtonsComponent<Visitor>;
   @ViewChild('table', { static: true })
@@ -322,18 +323,6 @@ export class EntityListComponent implements OnInit, AfterViewInit {
   }
 
   //#endregion
-
-  //#region REACTIVAR
-  /*  reactivatePlot(plotId: number) {
-      this.plotService.reactivatePlot(plotId, 1).subscribe(
-        response => {
-          location.reload();
-        }
-      );
-    }*/
-
-  //#endregion
-
   //#region FUNCIONES PARA PAGINADO
 
   confirmFilter(): void {
@@ -388,6 +377,10 @@ export class EntityListComponent implements OnInit, AfterViewInit {
     modalRef.componentInstance.entitySaved.subscribe(() => {
       this.ngOnInit()
     });
+  }
+  // aca escucho el evento de que una entidad fue creada en el modal y actualizo la lista
+  updateEntityList() {
+    this.ngOnInit()
   }
 
   disable(visitorId: number) {

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, Output, Type} from '@angular/core';
+import {Component, EventEmitter, inject, Input, model, Output, Type} from '@angular/core';
 import {Subject} from 'rxjs';
 import {CadastreExcelService} from '../../../services/cadastre-excel.service';
 import {Router} from '@angular/router';
@@ -57,12 +57,20 @@ export class CadastrePlotFilterButtonsComponent<T extends Record<string, any>> {
 
   @Input() modalComponent! : Type<any>
   modalService = inject(NgbModal);
+  @Output() entityCreatedInModal = new EventEmitter<void>(); // Emitir hacia el padre
+
 
   openModal(route: any): void {
     if (this.modalComponent) {
-      // Abre el modal y pasa el `formPath` como input al componente modal
       const modalRef = this.modalService.open(this.modalComponent);
-      modalRef.componentInstance.route = route; // Pasa el formPath al componente modal
+      modalRef.componentInstance.route = route;
+
+      // Escuchar el evento de que una entidad fue creada en el modal
+      modalRef.componentInstance.entityCreated.subscribe(() => {
+        console.log('Una nueva entidad ha sido creada en el modal');
+        this.entityCreatedInModal.emit(); // Emitir evento hacia el componente padre
+      });
+      
     } else {
       console.error('No se ha especificado un componente para el modal');
     }
