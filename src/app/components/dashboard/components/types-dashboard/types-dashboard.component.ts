@@ -16,9 +16,10 @@ import {PiechartComponent} from "../../commons/piechart/piechart.component";
   templateUrl: './types-dashboard.component.html',
   styleUrl: './types-dashboard.component.css'
 })
-export class TypesDashboardComponent implements AfterViewInit{
+export class TypesDashboardComponent implements AfterViewInit {
   @Input() filters: DashBoardFilters = {} as DashBoardFilters;
   @Output() notifyParent: EventEmitter<string> = new EventEmitter<string>();
+  title: string = ""
 
   //vars
   kpi1: kpiModel = {} as kpiModel
@@ -27,16 +28,14 @@ export class TypesDashboardComponent implements AfterViewInit{
 
   graph1: graphModel = {} as graphModel
 
-  title:string = ""
-
   ngAfterViewInit(): void {
     this.getData()
   }
 
   constructor(private dashBoardService: DashboardService) {
-    this.kpi1 = {title: " en el periodo", desc: "", value: "0"}
-    this.kpi2 = {title: "Más frecuente", desc: "", value: "0"}
-    this.kpi3 = {title: "Periodo más concurrido", desc: "", value: "0"}
+    this.kpi1 = {title: " en el periodo", desc: "", value: "0", icon: "", color: ""}
+    this.kpi2 = {title: "Más frecuente", desc: "", value: "0", icon: "", color: ""}
+    this.kpi3 = {title: "Periodo más concurrido", desc: "", value: "0", icon: "", color: ""}
 
     this.graph1 = {title: "Tipos de ingresos", subtitle: "Totales por perdiodo seleccionado", data: [], options: null}
   }
@@ -52,7 +51,7 @@ export class TypesDashboardComponent implements AfterViewInit{
       // Buscar el objeto con el valor más alto
       let maxValueResponse = data[0];
 
-      if (this.filters.action == "EXIT"){
+      if (this.filters.action == "EXIT") {
         for (let i = 1; i < data.length; i++) {
           data[i].value = data[i].secondary_value
         }
@@ -102,7 +101,7 @@ export class TypesDashboardComponent implements AfterViewInit{
 
 }
 
-function mapColumnData(array:dashResponse[]) : any{
+function mapColumnData(array: dashResponse[]): any {
   return array.map(data => [
     data.key,
     data.value || 0

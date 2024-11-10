@@ -25,6 +25,7 @@ export class MainDashboardComponent implements AfterViewInit{
   kpi1: kpiModel = {} as kpiModel
   kpi2: kpiModel = {} as kpiModel
   kpi3: kpiModel = {} as kpiModel
+  kpi4: kpiModel = {} as kpiModel
 
   graph1: graphModel = {} as graphModel
   graph2: graphModel = {} as graphModel
@@ -33,9 +34,10 @@ export class MainDashboardComponent implements AfterViewInit{
 
   //init
   constructor(private dashBoardService: DashboardService) {
-    this.kpi1 = {title: " en el periodo", desc: " en el periodo", value: "0"}
-    this.kpi2 = {title: "Tipo de ", desc: " en el periodo anterior", value: "0"}
-    this.kpi3 = {title: "Tendencia", desc: "Diferencias con respecto al periodo anterior", value: "0%"}
+    this.kpi1 = {title: " en el periodo", desc: " en el periodo", value: "0", icon: "", color: "bg-success"}
+    this.kpi2 = {title: "Tendencia", desc: "Diferencias con respecto al periodo anterior", value: "0%", icon: "bi bi-graph-up", color: "bg-info"}
+    this.kpi3 = {title: "Tipo de ", desc: " en el periodo anterior", value: "0", icon: "bi bi-person-circle", color: "bg-warning"}
+    this.kpi4 = {title: "Totales de inconsistencias", desc: " en el periodo", value: "0", icon: "bi-exclamation-circle", color: "bg-danger"}
 
     this.graph1 = {title: "Ingresos/egresos", subtitle: "Totales por perdiodo seleccionado", data: [], options: null}
     this.graph2 = {title: "Trabajadores con egreso tardío", subtitle: "", data: [], options: null}
@@ -47,13 +49,18 @@ export class MainDashboardComponent implements AfterViewInit{
   getData() {
     console.log(this.filters)
     let action = this.filters.action == "ENTRY" ? "Ingresos" : "Egresos"
+    this.kpi1.icon = this.filters.action == "ENTRY" ? "bi bi-arrow-up-circle" : "bi bi-arrow-down-circle"
+    this.kpi1.color = this.filters.action == "ENTRY" ? "bg-success" : "bg-danger"
     this.kpi1.title = action + " en el periodo vs el periodo anterior"
-    this.kpi2.title = "Tipo de " + action.toLowerCase() + " más frecuente"
     this.kpi1.desc ="Total de " + action.toLowerCase() + " en el periodo vs el periodo anterior"
-    this.kpi2.desc ="Tipo de " + action.toLowerCase() + " más frecuente en el periodo"
+    this.kpi4.title ="Total de " + action.toLowerCase() + " inconsistentes"
+    this.kpi4.desc ="Total de " + action.toLowerCase() + " inconsistencias en el periodo"
+    this.kpi3.desc ="Tipo de " + action.toLowerCase() + " más frecuente en el periodo"
+    this.kpi3.title = "Tipo de " + action.toLowerCase() + " más recurrente"
     this.graph1.title = action + " totales"
     this.graph3.title = "Tipos de " + action.toLowerCase()
     this.graph3.subtitle = "Distribucion de tipos de " + action.toLowerCase()
+    this.graph4.title = "Inconsistencias en " + action.toLowerCase()
 
     //obtener filtro
     this.dashBoardService.getPeriod(this.filters).subscribe(data => {
@@ -73,7 +80,9 @@ export class MainDashboardComponent implements AfterViewInit{
         });
 
         this.kpi1.value = totalValue1.toString() + " vs " + totalValue.toString();
-        this.kpi3.value = ((totalValue - totalValue1 )/ totalValue1).toFixed(2) + "%";
+        let kpi2value = ((totalValue - totalValue1 )/ totalValue1)
+        this.kpi2.value = kpi2value.toFixed(2) + "%";
+        this.kpi2.icon = kpi2value > 0 ? "bi bi-graph-up" : "bi bi-graph-down"
       })
     })
     //obtener tipos
@@ -97,8 +106,12 @@ export class MainDashboardComponent implements AfterViewInit{
         }
       }
 
-      this.kpi2.value = maxValueResponse.key;
+      this.kpi3.value = maxValueResponse.key;
       this.graph3.data = mapColumnData(data)
+    })
+
+    this.dashBoardService.getOldInconsistencies(this.filters).subscribe(data => {
+      this.kpi4.value = data.toString()
     })
 
   }

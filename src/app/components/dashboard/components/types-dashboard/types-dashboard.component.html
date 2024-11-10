@@ -8,23 +8,23 @@
     </svg>
   </div>
   <div>
-    <h5 class="card-title text-secondary mb-1">Reporte de tipos de </h5>
+    <h5 class="card-title text-secondary mb-1">Reporte de tipos de {{title}}</h5>
   </div>
   <p> </p>
 </div>
 <div class="row">
-  <div class="col-8 ">
-    <app-piechart [graphModel]="graph1" ></app-piechart>
-  </div>
   <div class="col-4">
-    <div class="">
+    <div class="mb-3">
       <app-kpi [kpi]="kpi1" ></app-kpi>
     </div>
-    <div class="">
+    <div class="mb-3">
       <app-kpi [kpi]="kpi2"></app-kpi>
     </div>
-    <div class="">
+    <div class="mb-3">
       <app-kpi [kpi]="kpi3" ></app-kpi>
     </div>
+  </div>
+  <div class="col-8 ">
+    <app-piechart [graphModel]="graph1" ></app-piechart>
   </div>
 </div>

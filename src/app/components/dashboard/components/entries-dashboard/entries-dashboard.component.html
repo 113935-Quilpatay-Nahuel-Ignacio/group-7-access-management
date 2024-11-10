@@ -8,7 +8,7 @@
     </svg>
   </div>
   <div>
-    <h5 class="card-title text-secondary mb-1">Reporte de ingresos</h5>
+    <h5 class="card-title text-secondary mb-1">Reporte de {{title}}</h5>
   </div>
   <p> </p>
 </div>
@@ -17,10 +17,10 @@
     <app-barchart [graphModel]="graph1" ></app-barchart>
   </div>
   <div class="col-4">
-    <div class="">
+    <div class="mb-3">
       <app-kpi [kpi]="kpi1" ></app-kpi>
     </div>
-    <div class="">
+    <div class="mb-3">
       <app-kpi [kpi]="kpi2"></app-kpi>
     </div>
     <div class="">

@@ -18,11 +18,11 @@ export class PiechartComponent {
   pieChartOptions = {
     backgroundColor: 'transparent',
     legend: {
-      position: 'right',
+      position: 'right-center',
       textStyle: { color: '#6c757d', fontSize: 17 }
     },
     chartArea: { width: '100%', height: '100%' },
-    pieHole: 0.7,
+    pieHole: 0,
     height: '80%',
     slices: {
       0: { color: '#00BFFF' },  // MP siempre azul

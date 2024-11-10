@@ -43,4 +43,15 @@ export class DashboardService {
 
     return this.http.get<dashResponse[]>(url);
   }
+
+
+  getOldInconsistencies(dashBoardFilters: DashBoardFilters): Observable<number> {
+    let url = `${this.apiUrl}/inconsistent?from=${dashBoardFilters.dateFrom}&to=${dashBoardFilters.dateTo}`;
+
+    if (dashBoardFilters.type) {
+      url += `&visitorType=${dashBoardFilters.type}`;
+    }
+
+    return this.http.get<number>(url);
+  }
 }
