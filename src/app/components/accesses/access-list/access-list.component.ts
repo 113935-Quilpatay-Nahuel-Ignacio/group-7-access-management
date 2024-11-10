@@ -205,7 +205,7 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   //#region GET_ALL
   getAllFiltered(filter: string) {
     this.accessService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-      data.items = data.items.filter(x => (x.firstName?.toLowerCase().includes(filter) 
+      data.items = data.items.filter(x => (x.firstName?.toLowerCase().includes(filter)
       || x.lastName?.toLowerCase().includes(filter) || x.docNumber?.toString().includes(filter) || x.vehicleReg?.toLowerCase().includes(filter)))
         let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
         response.content.forEach(data => {
@@ -250,10 +250,10 @@ export class AccessListComponent implements OnInit, AfterViewInit {
       return
     }
     this.accessService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-        data.items = data.items.filter(x => 
-          (new Date(new Date(x.actionDate).setHours(0,0,0,0)) 
-          >= new Date(new Date(dateFrom+"T00:00:00").setHours(0,0,0,0)) 
-          && new Date(new Date(x.actionDate).setHours(0,0,0,0)) 
+        data.items = data.items.filter(x =>
+          (new Date(new Date(x.actionDate).setHours(0,0,0,0))
+          >= new Date(new Date(dateFrom+"T00:00:00").setHours(0,0,0,0))
+          && new Date(new Date(x.actionDate).setHours(0,0,0,0))
           <= new Date(new Date(dateTo+"T00:00:00").setHours(0,0,0,0))))
         let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
         response.content.forEach(data => {
@@ -448,6 +448,25 @@ export class AccessListComponent implements OnInit, AfterViewInit {
 
     return `${hours}:${minutes} ${day}-${month}-${year}`;
 }
+
+transformDateTable(dateString: string): string{
+  const date = new Date(dateString);
+
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+
+  return `${day}-${month}-${year}`;
+}
+
+  transformHourTable(dateString: string): string{
+    const date = new Date(dateString);
+
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+
+    return `${hours}:${minutes}`;
+  }
 
   //#endregion
 

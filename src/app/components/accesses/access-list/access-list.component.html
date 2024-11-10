@@ -1,4 +1,3 @@
-
 <app-main-container [title]="'Lista de Accesos'" (infoButtonClick)="onInfoButtonClick()">
   <div class="card-body">
     <!-- ESTE COMPONENTE LO VAN A TENER QUE MODIFICAR ES EL DEL BUSCAR, EXPORTAR, ETC -->
@@ -20,18 +19,18 @@
       (filterValueChange)="onFilterValueChange($event)"
       [dictionaries]="dictionaries"
       objectName="ACCESOS"></app-cadastre-plot-filter-buttons>
-  
+
     <!--filtros viejos
       <div class="d-flex justify-content-between align-items-center mb-3">
       <div class="btn-group me-5" role="group">
         <div class="d-flex align-items-center">
 
-        
+
           <div class="btn-group me-2">
             <button type="button" class="btn btn-outline-danger" (click)="changeFilterMode(filterTypes.NOTHING)">
               <i class="bi bi-trash-fill"></i> Limpiar filtros
             </button>
-  
+
             <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown"
                     aria-expanded="false">
               <i class="bi bi-funnel-fill"></i> Filtros
@@ -42,7 +41,7 @@
               <li><a class="dropdown-item" (click)="changeFilterMode(filterTypes.DATE)">Fecha</a></li>
             </ul>
           </div>
-  
+
           @if (applyFilterWithNumber === true || applyFilterWithCombo === true || applyFilterWithDate === true) {
             <div class="d-flex">
               @if (applyFilterWithNumber === true) {
@@ -65,117 +64,123 @@
             </div>
           }
         </div>
-        
+
       </div>-->
-  
-  
-      <!--      <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-              <input type="radio" class="btn-check"
-                     name="btnradio" id="btnradio1"
-                     autocomplete="off" (change)="changeActiveFilter(true)" checked>
-              <label class="btn btn-outline-primary" for="btnradio1">Lotes Activos</label>
-  
-              <input type="radio" class="btn-check"
-                     name="btnradio" id="btnradio2"
-                     autocomplete="off" (change)="changeActiveFilter(false)">
-              <label class="btn btn-outline-primary" for="btnradio2">Lotes Inactivos</label>
-  
-              <input type="radio" class="btn-check"
-                     name="btnradio" id="btnradio3"
-                     autocomplete="off" (change)="changeActiveFilter()">
-              <label class="btn btn-outline-primary" for="btnradio3">Todos</label>
-            </div>-->
+
+
+    <!--      <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check"
+                   name="btnradio" id="btnradio1"
+                   autocomplete="off" (change)="changeActiveFilter(true)" checked>
+            <label class="btn btn-outline-primary" for="btnradio1">Lotes Activos</label>
+
+            <input type="radio" class="btn-check"
+                   name="btnradio" id="btnradio2"
+                   autocomplete="off" (change)="changeActiveFilter(false)">
+            <label class="btn btn-outline-primary" for="btnradio2">Lotes Inactivos</label>
+
+            <input type="radio" class="btn-check"
+                   name="btnradio" id="btnradio3"
+                   autocomplete="off" (change)="changeActiveFilter()">
+            <label class="btn btn-outline-primary" for="btnradio3">Todos</label>
+          </div>-->
+  </div>
+
+  <div class="table-container">
+    <table class="table table-striped fixed-table"
+           style="border: 1px solid rgba(0, 0, 0, 0.150); border-collapse: collapse;" #table>
+      <thead>
+      <tr>
+        <th scope="col">Visitante</th>
+        <th scope="col">Documento</th>
+        <th scope="col">Tipo</th>
+        <th scope="col">Accion</th>
+        <th scope="col">Hora</th>
+        <th scope="col">Día</th>
+        <th scope="col">Vehículo</th>
+        <th scope="col">Comentario</th>
+        <th scope="col">Autorizador</th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (item of (filteredList.length ? filteredList : list); track item) {
+
+          <tr>
+            <td>
+              <!--TODO icono-->
+              {{ item.firstName + ' ' + item.lastName }}
+            </td>
+            <td>
+              {{ getDocumentAbbreviation(item.docType) + ' ' + item.docNumber }}
+            </td>
+            <td>
+              {{ translateTable(item.visitorType, typeDictionary) }}
+            </td>
+            <td>
+              @if (item.action === "ENTRY") {
+                <span
+                  class="badge badge-success badge-outlined">{{ translateTable(item.action, actionDictionary) }}</span>
+              } @else {
+                <span
+                  class="badge badge-danger badge-outlined">{{ translateTable(item.action, actionDictionary) }}</span>
+              }
+            </td>
+            <td>
+              {{ transformHourTable(item.actionDate) }}
+            </td>
+            <td>
+              {{ transformDateTable(item.actionDate) }}
+            </td>
+            <td>
+              {{ item.vehicleReg }}
+            </td>
+            <td>
+              {{ (item.comments === "" || item.comments == undefined) ? "N/A" : item.comments }}
+            </td>
+            <td>
+              <!--TODO icono-->
+              {{ item.authorizer?.authFirstName + ' ' + item.authorizer?.authLastName }}
+            </td>
+          </tr>
+
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <div class="form-group mb-3 me-2">
+      <select
+        id="itemsPerPage"
+        class="form-select"
+        [(ngModel)]="pageSize"
+        (change)="onItemsPerPageChange()"
+      >
+        @for (option of sizeOptions; track $index) {
+          <option [value]="option">{{ option }} Elementos</option>
+        }
+      </select>
     </div>
-  
-    <div class="table-container">
-      <table class="table table-striped fixed-table"
-             style="border: 1px solid rgba(0, 0, 0, 0.150); border-collapse: collapse;" #table>
-        <thead>
-        <tr>
-          <th scope="col">Visitante</th>
-          <th scope="col">Documento</th>
-          <th scope="col">Tipo</th>
-          <th scope="col">Accion</th>
-          <th scope="col">Hora</th>
-          <th scope="col">Vehículo</th>
-          <th scope="col">Comentario</th>
-          <th scope="col">Autorizador</th>
-        </tr>
-        </thead>
-        <tbody>
-          @for (item of (filteredList.length ? filteredList : list); track item) {
-  
-            <tr>
-              <td>
-                <!--TODO icono-->
-                {{ item.firstName + ' ' + item.lastName }}
-              </td>
-              <td>
-                {{ getDocumentAbbreviation(item.docType) + ' ' + item.docNumber }}
-              </td>
-              <td>
-                {{ translateTable(item.visitorType, typeDictionary) }}
-              </td>
-              <td>
-                  @if (item.action === "ENTRY") {
-                      <span class="badge badge-success badge-outlined">{{ translateTable(item.action, actionDictionary) }}</span>
-                  } @else {
-                      <span class="badge badge-danger badge-outlined">{{ translateTable(item.action, actionDictionary) }}</span>
-                  }
-              </td>
-              <td>
-                {{ transformDate(item.actionDate) }}
-              </td>
-              <td>
-                {{ item.vehicleReg }}
-              </td>
-              <td>
-                {{ (item.comments === "" || item.comments == undefined) ? "N/A" : item.comments }}
-              </td>
-              <td>
-                <!--TODO icono-->
-                {{ item.authorizer?.authFirstName + ' ' + item.authorizer?.authLastName }}
-              </td>
-            </tr>
-  
-          }
-        </tbody>
-      </table>
+
+    <div class="ms-auto">
     </div>
-  
-    <div class="d-flex justify-content-between align-items-center mt-3">
-      <div class="form-group mb-3 me-2">
-        <select
-          id="itemsPerPage"
-          class="form-select"
-          [(ngModel)]="pageSize"
-          (change)="onItemsPerPageChange()"
-        >
-          @for (option of sizeOptions; track $index) {
-            <option [value]="option">{{ option }} Elementos</option>
-          }
-        </select>
-      </div>
-  
-      <div class="ms-auto">
-      </div>
-  
-      <div class="d-flex">
-  
-        <ngb-pagination
-          [(page)]="currentPage"
-          [pageSize]="pageSize"
-          [collectionSize]="totalItems"
-          (pageChange)="onPageChange($event)"
-          [maxSize]="5"
-          [boundaryLinks]="false"
-        ></ngb-pagination>
-  
-      </div>
-  
-  
+
+    <div class="d-flex">
+
+      <ngb-pagination
+        [(page)]="currentPage"
+        [pageSize]="pageSize"
+        [collectionSize]="totalItems"
+        (pageChange)="onPageChange($event)"
+        [maxSize]="5"
+        [boundaryLinks]="false"
+      ></ngb-pagination>
+
     </div>
-  
+
+
+  </div>
+
   <ng-template #infoModal let-modal>
     <div class="modal-header fs-6 py-1">
       <h4 class="modal-title">Información de la Lista de Accesos</h4>
@@ -186,9 +191,10 @@
         <!-- Introducción -->
         <div class="alert alert-info mb-2 py-2">
           <h5 class="alert-heading">¿Qué es esta pantalla?</h5>
-          <p class="mb-0 small">Esta pantalla permite gestionar y visualizar los accesos de visitantes. Aquí puedes revisar los detalles de cada acceso, aplicar filtros personalizados, y exportar la información.</p>
+          <p class="mb-0 small">Esta pantalla permite gestionar y visualizar los accesos de visitantes. Aquí puedes
+            revisar los detalles de cada acceso, aplicar filtros personalizados, y exportar la información.</p>
         </div>
-  
+
         <!-- Campos Principales -->
         <div class="card mb-2">
           <div class="card-header py-1">
@@ -197,21 +203,24 @@
           <div class="card-body py-2">
             <ul class="list-group list-group-flush">
               <li class="list-group-item py-1">
-                <strong>Lista de Accesos:</strong> Muestra información sobre cada visitante, su documento, tipo, la acción realizada, hora de acceso, vehículo asociado, comentarios y el nombre del autorizador.
+                <strong>Lista de Accesos:</strong> Muestra información sobre cada visitante, su documento, tipo, la
+                acción realizada, hora de acceso, vehículo asociado, comentarios y el nombre del autorizador.
               </li>
               <li class="list-group-item py-1">
-                <strong>Filtros:</strong> Puedes aplicar filtros como "Tipo de visitante" o "Acción" para localizar accesos específicos rápidamente.
+                <strong>Filtros:</strong> Puedes aplicar filtros como "Tipo de visitante" o "Acción" para localizar
+                accesos específicos rápidamente.
               </li>
               <li class="list-group-item py-1">
                 <strong>Paginación:</strong> Navega entre varias páginas de accesos.
               </li>
               <li class="list-group-item py-1">
-                <strong>Exportar:</strong> Puedes exportar la lista de accesos en formato PDF o Excel para informes o respaldos.
+                <strong>Exportar:</strong> Puedes exportar la lista de accesos en formato PDF o Excel para informes o
+                respaldos.
               </li>
             </ul>
           </div>
         </div>
-  
+
         <!-- Acciones -->
         <div class="card mb-2">
           <div class="card-header py-1">
@@ -220,19 +229,22 @@
           <div class="card-body py-2">
             <ul class="list-group list-group-flush">
               <li class="list-group-item py-1">
-                <strong>Buscar:</strong> Usa campos de texto o selección para localizar registros de accesos específicos.
+                <strong>Buscar:</strong> Usa campos de texto o selección para localizar registros de accesos
+                específicos.
               </li>
               <li class="list-group-item py-1">
-                <strong>Limpiar Filtros:</strong> Restablece los filtros aplicados para ver todos los registros de accesos.
+                <strong>Limpiar Filtros:</strong> Restablece los filtros aplicados para ver todos los registros de
+                accesos.
               </li>
             </ul>
           </div>
         </div>
-  
+
         <!-- Nota (OPCIONAL) -->
         <div class="alert alert-warning py-2 mb-0">
           <h5 class="alert-heading">Nota:</h5>
-          <p class="mb-0 small">Asegúrate de verificar la precisión de la información antes de modificar o exportar datos. Revisa los detalles de los visitantes y el autorizador para garantizar su exactitud.</p>
+          <p class="mb-0 small">Asegúrate de verificar la precisión de la información antes de modificar o exportar
+            datos. Revisa los detalles de los visitantes y el autorizador para garantizar su exactitud.</p>
         </div>
       </div>
     </div>
