@@ -1,47 +1,84 @@
 <app-main-container title="Reportes" (infoButtonClick)="onInfoButtonClick()">
-  <div class="row">
+  <div class="row card shadow-lg mb-5 rounded-4">
     <div class="d-flex align-items-center gap-3 mb-3">
       <div class="d-flex align-items-center gap-2">
+        <span class="text-secondary">Periodo:</span>
+        <select id="period-type" class="form-select ms-2" [(ngModel)]="filters.group" (change)="filterData()">
+          <option value="DAY">Diario</option>
+          <option value="WEEK">Semanal</option>
+          <option value="MONTH">Mensual</option>
+          <option value="YEAR">Anual</option>
+        </select>
+      </div>
+      <div class="d-flex align-items-center gap-2">
         <span class="text-secondary">Desde:</span>
-        <input type="datetime-local" [(ngModel)]="dateFrom" class="form-control form-control-sm">
+        <input type="datetime-local" [(ngModel)]="filters.dateFrom" class="form-control form-control-sm"
+               (change)="filterData()">
       </div>
       <div class="d-flex align-items-center gap-2">
         <span class="text-secondary">Hasta:</span>
-        <input type="datetime-local" [(ngModel)]="dateTo" class="form-control form-control-sm">
+        <input type="datetime-local" [(ngModel)]="filters.dateTo" class="form-control form-control-sm"
+               (change)="filterData()">
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+        <span class="text-secondary">Tipo de Visitante:</span>
+        <select id="visitor-type" class="form-select ms-2" [(ngModel)]="filters.type" (change)="filterData()">
+          <option value="">Todos</option>
+          <option value="OWNER">Dueño</option>
+          <option value="WORKER">Trabajador</option>
+          <option value="VISITOR">Visitante</option>
+          <option value="EMPLOYEE">Empleado</option>
+          <option value="PROVIDER">Proveedor</option>
+          <option value="PROVIDER_ORGANIZATION">Organización Proveedora</option>
+          <option value="COHABITANT">Conviviente</option>
+          <option value="EMERGENCY">Emergencia</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <div class="filter-group">
+          <div class="btn-group w-100" role="group">
+            <input type="radio" class="btn-check" name="paymentStatus" id="approved"
+                   [(ngModel)]="filters.action" value="ENTRY" (ngModelChange)="filterData()">
+            <label class="btn btn-outline-primary" for="approved">
+              <i class="bi bi-arrow-down-circle me-1"></i>Ingresos
+            </label>
+
+            <input type="radio" class="btn-check" name="paymentStatus" id="rejected"
+                   [(ngModel)]="filters.action" value="EXIT" (ngModelChange)="filterData()">
+            <label class="btn btn-outline-primary" for="rejected">
+              <i class="bi bi-arrow-up-circle me-1"></i>Egresos
+            </label>
+          </div>
+        </div>
       </div>
       <div class="d-flex gap-1">
         <button class="btn btn-outline-danger btn-sm" (click)="resetFilters()">
           <i class="bi bi-trash-fill"></i>
         </button>
-        <button class="btn btn-outline-primary btn-sm" (click)="filterData()">
-          <i class="bi bi-search"></i>
-        </button>
       </div>
     </div>
   </div>
-  <div class="row mt-4 d-flex justify-content-around">
-    <div class="card col-3 d-flex align-items-center text-success">
-      <h1>{{ entryCount }}</h1>
-      <h5>Entradas <i class="bi bi-arrow-up"></i></h5>
-    </div>
-    <div class="card col-3 d-flex align-items-center text-danger">
-      <h1>{{ exitCount }}</h1>
-      <h5>Salidas <i class="bi bi-arrow-down"></i></h5>
-    </div>
-  </div>
-  <div class="row mt-4">
-    <div class="col-6 align-content-center">
-            <app-access-weekly-dashboard [dateFrom]="dateFrom" [dateTo]="dateTo"></app-access-weekly-dashboard>
-    </div>
-    <div class="col-6">
-          <app-access-pie-dashboard [dateFrom]="dateFrom" [dateTo]="dateTo"></app-access-pie-dashboard>
-    </div>
-  </div>
-  <!-- Fila del gráfico por hora -->
-  <div class="row mt-4">
-          <app-access-hourly-dashboard [dateFrom]="dateFrom" [dateTo]="dateTo"></app-access-hourly-dashboard>
-  </div>
 
+
+  <!-- Grilla del dashboard -->
+  <div class="row position-relative min-vh-75">
+    <div [ngClass]="{ 'd-none': status !== DashboardStatus.All }">
+      <app-main-dashboard [filters]="filters" (notifyParent)="changeMode($event)"></app-main-dashboard>
+    </div>
+    <div [ngClass]="{ 'd-none': status !== DashboardStatus.Entries }">
+      <app-entries-dashboard [filters]="filters" (notifyParent)="changeMode($event)"></app-entries-dashboard>
+    </div>
+    <div [ngClass]="{ 'd-none': status !== DashboardStatus.Late }">
+      <app-late-dashboard></app-late-dashboard>
+    </div>
+    <div [ngClass]="{ 'd-none': status !== DashboardStatus.Types }">
+      <app-types-dashboard [filters]="filters" (notifyParent)="changeMode($event)"></app-types-dashboard>
+    </div>
+    <div [ngClass]="{ 'd-none': status !== DashboardStatus.Inconsistencies }">
+      <app-inconsistencies-dashboard></app-inconsistencies-dashboard>
+    </div>
+  </div>
 
 </app-main-container>
 
@@ -56,7 +93,9 @@
       <!-- Introducción -->
       <div class="alert alert-info mb-2 py-2">
         <h5 class="alert-heading">¿Qué es esta pantalla?</h5>
-        <p class="mb-0 small">Esta pantalla permite visualizar reportes de accesos que incluyen datos de entradas y salidas, y distribuciones de accesos por tipo de visitante y horarios. Es una herramienta clave para analizar y gestionar el flujo de visitantes de manera eficiente.</p>
+        <p class="mb-0 small">Esta pantalla permite visualizar reportes de accesos que incluyen datos de ingresos y
+          egresos, y distribuciones de accesos por tipo de visitante y horarios. Es una herramienta clave para analizar
+          y gestionar el flujo de visitantes de manera eficiente.</p>
       </div>
 
       <!-- Descripción de los Campos Principales -->
@@ -67,13 +106,16 @@
         <div class="card-body py-2">
           <ul class="list-group list-group-flush">
             <li class="list-group-item py-1">
-              <strong>Filtros de Fecha:</strong> Permiten seleccionar un rango de fechas "Desde" y "Hasta" para acotar el periodo de análisis.
+              <strong>Filtros de Fecha:</strong> Permiten seleccionar un rango de fechas "Desde" y "Hasta" para acotar
+              el periodo de análisis.
             </li>
             <li class="list-group-item py-1">
-              <strong>Resumen de Accesos:</strong> Muestra el total de entradas y salidas registradas durante el periodo seleccionado.
+              <strong>Resumen de Accesos:</strong> Muestra el total de ingresos y egresos registradas durante el periodo
+              seleccionado.
             </li>
             <li class="list-group-item py-1">
-              <strong>Gráficos:</strong> Incluye un gráfico semanal de accesos y un gráfico de distribución por tipo de visitante, además de un gráfico que muestra los accesos por hora.
+              <strong>Gráficos:</strong> Incluye un gráfico semanal de accesos y un gráfico de distribución por tipo de
+              visitante, además de un gráfico que muestra los accesos por hora.
             </li>
           </ul>
         </div>
@@ -90,10 +132,12 @@
               <strong>Filtrar:</strong> Aplica los filtros seleccionados para actualizar los reportes.
             </li>
             <li class="list-group-item py-1">
-              <strong>Limpiar Filtros:</strong> Resetea los filtros aplicados para mostrar la información completa sin restricciones.
+              <strong>Limpiar Filtros:</strong> Resetea los filtros aplicados para mostrar la información completa sin
+              restricciones.
             </li>
             <li class="list-group-item py-1">
-              <strong>Ver Detalles:</strong> Los gráficos y tablas proporcionan una vista más detallada de los datos de accesos.
+              <strong>Ver Detalles:</strong> Los gráficos y tablas proporcionan una vista más detallada de los datos de
+              accesos.
             </li>
           </ul>
         </div>
@@ -102,7 +146,8 @@
       <!-- Nota -->
       <div class="alert alert-warning py-2 mb-0">
         <h5 class="alert-heading">Nota:</h5>
-        <p class="mb-0 small">Asegúrate de elegir correctamente los rangos de fechas y los filtros antes de aplicar los cambios para obtener datos precisos.</p>
+        <p class="mb-0 small">Asegúrate de elegir correctamente los rangos de fechas y los filtros antes de aplicar los
+          cambios para obtener datos precisos.</p>
       </div>
     </div>
   </div>

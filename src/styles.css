@@ -1,2 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 @import '@ng-select/ng-select/themes/default.theme.css';
+
+
+.hover-scale{
+  transition: all 0.3s ease;
+}
+.hover-scale:hover{
+  transform: scale(1.01);
+  cursor: pointer;
+}

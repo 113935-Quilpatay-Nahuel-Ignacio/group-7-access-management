@@ -1,35 +1,70 @@
-import {Component, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import { AccessHourlyDashboardComponent } from '../../accesses/access-hourly-dashboard/access-hourly-dashboard.component';
-import { AccessWeeklyDashboardComponent } from '../../accesses/access-weekly-dashboard/access-weekly-dashboard.component';
-import { AccessPieDashboardComponent } from '../../accesses/access-pie-dashboard/access-pie-dashboard.component';
+import {AfterViewInit, Component, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {AccessHourlyDashboardComponent} from '../../accesses/access-hourly-dashboard/access-hourly-dashboard.component';
+import {AccessWeeklyDashboardComponent} from '../../accesses/access-weekly-dashboard/access-weekly-dashboard.component';
+import {AccessPieDashboardComponent} from '../../accesses/access-pie-dashboard/access-pie-dashboard.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MainContainerComponent} from "ngx-dabd-grupo01";
 import {AccessService} from "../../../services/access.service";
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {GoogleChartsModule} from "angular-google-charts";
+import {KpiComponent} from "../commons/kpi/kpi.component";
+import {DashBoardFilters, DashboardStatus} from "../../../models/dashboard.model";
+import {MainDashboardComponent} from "../components/main-dashboard/main-dashboard.component";
+import {EntriesDashboardComponent} from "../components/entries-dashboard/entries-dashboard.component";
+import {LateDashboardComponent} from "../components/late-dashboard/late-dashboard.component";
+import {TypesDashboardComponent} from "../components/types-dashboard/types-dashboard.component";
+import {
+  InconsistenciesDashboardComponent
+} from "../components/inconsistencies-dashboard/inconsistencies-dashboard.component";
+import {BarchartComponent} from "../commons/barchart/barchart.component";
+import {NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-general-dashboards',
   standalone: true,
-  imports: [AccessHourlyDashboardComponent, AccessWeeklyDashboardComponent, AccessPieDashboardComponent, ReactiveFormsModule, FormsModule, MainContainerComponent],
+  imports: [AccessHourlyDashboardComponent, AccessWeeklyDashboardComponent, AccessPieDashboardComponent, ReactiveFormsModule, FormsModule, MainContainerComponent, GoogleChartsModule, KpiComponent, MainDashboardComponent, EntriesDashboardComponent, LateDashboardComponent, TypesDashboardComponent, InconsistenciesDashboardComponent, NgClass],
   templateUrl: './general-dashboards.component.html',
   styleUrl: './general-dashboards.component.css'
 })
-export class GeneralDashboardsComponent implements OnInit{
-  dateFrom: Date = new Date();
-  dateTo: Date = new Date();
-  visitorType: string = "";
-  exitCount: number = 0;
-  entryCount: number = 0;
+export class GeneralDashboardsComponent implements OnInit, AfterViewInit{
+  //filters
+  filters:DashBoardFilters = {} as DashBoardFilters
+
+  //dashboard settings
+  status: DashboardStatus = DashboardStatus.All;
+
+
+  //services
   modalService = inject(NgbModal);
 
 
-  @ViewChild(AccessWeeklyDashboardComponent) weekly!: AccessWeeklyDashboardComponent;
-  @ViewChild(AccessPieDashboardComponent) pie!: AccessPieDashboardComponent;
-  @ViewChild(AccessHourlyDashboardComponent) hourly!: AccessHourlyDashboardComponent;
+  //Childs
+  @ViewChild(MainDashboardComponent) main!: MainDashboardComponent;
+  @ViewChild(EntriesDashboardComponent) entries!: EntriesDashboardComponent;
+  @ViewChild(LateDashboardComponent) late!: LateDashboardComponent;
+  @ViewChild(TypesDashboardComponent) types!: TypesDashboardComponent;
+  @ViewChild(InconsistenciesDashboardComponent) inconsistencies!: InconsistenciesDashboardComponent;
+
+
+  @ViewChild(BarchartComponent) barchartComponent!: BarchartComponent;
+
   @ViewChild('infoModal') infoModal!: TemplateRef<any>
 
   constructor(
     private accessService: AccessService) {
+  }
+
+  initializeDefaultDates(){
+    this.filters.group = "DAY"
+    this.filters.type = ""
+    this.filters.action = "ENTRY"
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    this.filters.dateTo = now.toISOString().slice(0, 16);
+
+    now.setDate(now.getDate() - 30);
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    this.filters.dateFrom = now.toISOString().slice(0, 16);
   }
 
   onInfoButtonClick() {
@@ -37,37 +72,40 @@ export class GeneralDashboardsComponent implements OnInit{
   }
 
   resetFilters(){
-      this.weekly.ngAfterViewInit();
-    this.pie.ngAfterViewInit();
-    this.hourly.ngAfterViewInit();
-    this.dateFrom = new Date(new Date().getDate() - 30);
-    this.dateTo = new Date();
-    this.visitorType = "";
-    this.generateEntryAndExits();
+    this.initializeDefaultDates();
+    this.filters.type = "";
+    this.filters.group = "DAY"
+    this.filters.action = "ENTRY"
+    this.filterData()
   }
 
   filterData(){
-    this.weekly.filterData();
-    this.pie.filterData();
-    this.hourly.filterData();
-    this.generateEntryAndExits();
+    this.main.getData()
+    this.entries.getData()
+    this.types.getData()
   }
 
   ngOnInit(): void {
-    this.dateFrom = new Date(this.dateTo.getDate() - 30);
-    this.generateEntryAndExits();
   }
 
-  generateEntryAndExits(): void {
-    this.accessService.getAccessByDate(new Date(this.dateFrom), new Date(this.dateTo)).subscribe({
-      next: (data: any) => {
-        console.log('Datos recibidos del servidor:', data);
-        this.entryCount = data.entryCount;
-        this.exitCount = data.exitCount;
-      },
-      error: (error) => {
-        console.error('Error al obtener los datos:', error);
-      }
-    });
+  changeMode(event: any){
+    const statusKey = Object.keys(DashboardStatus).find(key => DashboardStatus[key as keyof typeof DashboardStatus] === event);
+
+    if (statusKey) {
+      this.status = DashboardStatus[statusKey as keyof typeof DashboardStatus];
+    } else {
+      console.error('Valor no válido para el enum');
+    }
+
+    this.types.getData()
+  }
+
+
+
+  protected readonly DashboardStatus = DashboardStatus;
+
+  ngAfterViewInit(): void {
+    this.initializeDefaultDates();
+    this.filterData()
   }
 }

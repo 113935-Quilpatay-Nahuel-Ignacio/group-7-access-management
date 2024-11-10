@@ -68,7 +68,7 @@ export class AccessService {
         }))
       );
       /*.pipe(
-        map((response) => 
+        map((response) =>
           this.caseTransformer.toCamelCase(response)
       ));*/
   }
@@ -125,10 +125,10 @@ export class AccessService {
       //.pipe(map((response) => this.caseTransformer.toCamelCase(response)));
   }
 
-  getAccessByDate(from: Date, to: Date): Observable<EntryReport> {
+  getAccessByDate(from: string, to: string): Observable<EntryReport> {
     const params = new HttpParams()
-      .set('from', from.toISOString().split('T')[0])
-      .set('to', to.toISOString().split('T')[0]);
+      .set('from', from)
+      .set('to', to);
 
     return this.http
       .get<EntryReport>(`${this.apiUrl}/getAccessCounts`, {
