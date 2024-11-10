@@ -61,12 +61,14 @@ export class MainDashboardComponent implements AfterViewInit{
     this.graph3.title = "Tipos de " + action.toLowerCase()
     this.graph3.subtitle = "Distribucion de tipos de " + action.toLowerCase()
     this.graph4.title = "Inconsistencias en " + action.toLowerCase()
+    this.graph4.subtitle = action + " inconsistentes"
 
     //obtener filtro
     this.dashBoardService.getPeriod(this.filters).subscribe(data => {
       this.graph1.data = mapColumnData(data)
       this.graph1.options = {...this.columnChartOptions,
         colors: [this.filters.action == 'ENTRY' ? '#40916c' : '#9d0208']}
+      this.graph1.options.height = 500
       let totalValue1 = 0;
       data.forEach(item => {
         totalValue1 += Number(item.value);
@@ -110,8 +112,21 @@ export class MainDashboardComponent implements AfterViewInit{
       this.graph3.data = mapColumnData(data)
     })
 
-    this.dashBoardService.getOldInconsistencies(this.filters).subscribe(data => {
-      this.kpi4.value = data.toString()
+    let inconsistenciesFilter = {...this.filters}
+    inconsistenciesFilter.dataType= "INCONSISTENCIES"
+    this.dashBoardService.getPeriod(this.filters).subscribe(data => {
+      let totalValue1 = 0;
+      data.forEach(item => {
+        totalValue1 += Number(item.value);
+      });
+      this.kpi4.value = totalValue1.toString()
+      this.graph2.data = mapColumnData(data)
+    })
+
+    inconsistenciesFilter.dataType= "LATE"
+    inconsistenciesFilter.action= ""
+    this.dashBoardService.getPeriod(this.filters).subscribe(data => {
+      this.graph4.data = mapColumnData(data)
     })
 
   }
@@ -166,7 +181,8 @@ function createPreviousFilter(filters: DashBoardFilters): DashBoardFilters {
     dateTo: newDateTo.toISOString(),
     action: filters.action,
     group: filters.group,
-    type: filters.type
+    type: filters.type,
+    dataType: "ALL"
   };
 }
 

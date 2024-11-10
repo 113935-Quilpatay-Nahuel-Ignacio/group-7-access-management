@@ -56,4 +56,5 @@ export interface DashBoardFilters{
   action: string;
   group: string;
   type: string;
+  dataType: string;
 }
