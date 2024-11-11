@@ -1,8 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 import {AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
-import {AuthRange} from "../../../models/authorize.model";
+import {AuthRange, Visitor} from "../../../models/authorize.model";
 import { ValidatorFecha } from '../../../validatorFecha';
+import { VisitorType } from '../../../old/authorization/models/authorized.model';
 
 @Component({
   selector: 'app-range-modal',
@@ -17,6 +18,7 @@ import { ValidatorFecha } from '../../../validatorFecha';
 export class RangeModalComponent implements OnInit{
   constructor(private activeModal: NgbActiveModal, private fb: FormBuilder) {}
   @Input() ranges: AuthRange[] = []
+  @Input() visitorType : VisitorType = VisitorType.VISITOR
   rangeForm: FormGroup = {} as FormGroup;
   previousRange: number = 0;
   selectedRange: number = 0;
@@ -92,6 +94,8 @@ export class RangeModalComponent implements OnInit{
   }
 
   loadForm(authRange: AuthRange) {
+    console.log(this.visitorType)
+
     this.rangeForm = this.fb.group({
       authRangeId: [authRange.authRangeId],
       dateFrom: [authRange.dateFrom, [Validators.required , ValidatorFecha.validarFecha]],
@@ -139,23 +143,32 @@ dateRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors |
   return null;
 };
 
-  // Validador personalizado para asegurar que hourFrom no sea mayor a hourTo
-  hourRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const hourFrom = control.get('hourFrom')?.value;
-    const hourTo = control.get('hourTo')?.value;
+hourRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const hourFrom = control.get('hourFrom')?.value;
+  const hourTo = control.get('hourTo')?.value;
 
-    if (hourFrom && hourTo && this.timeToMinutes(hourFrom) >= this.timeToMinutes(hourTo)) {
-      return { 'hourRangeInvalid': true }; // Si la hora de inicio es mayor o igual a la de fin, el validador falla
+  // Si es WORKER, validamos que hourTo no sea mayor a las 18:30
+  if (this.visitorType === VisitorType.WORKER) {
+    const maxHour = '18:30'; 
+    if (hourTo && this.timeToMinutes(hourTo) > this.timeToMinutes(maxHour)) {
+      return { 'hourTooLateForWorker': true };
     }
+  }
 
-    return null;
-  };
+  // Valida si hourFrom es mayor o igual a hourTo
+  if (hourFrom && hourTo && this.timeToMinutes(hourFrom) >= this.timeToMinutes(hourTo)) {
+    return { 'hourRangeInvalid': true }; // Si la hora de inicio es mayor o igual a la de fin, el validador falla
+  }
+
+  return null;
+};
 
   // Funcion para convertir el formato de hora HH:mm a minutos
   timeToMinutes(time: string): number {
     const [hours, minutes] = time.split(':').map(Number);
     return hours * 60 + minutes;
   }
+
 
 }
 

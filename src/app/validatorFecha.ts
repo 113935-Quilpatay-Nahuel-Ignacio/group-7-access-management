@@ -10,9 +10,6 @@ export class ValidatorFecha{
     fecha.setHours(0, 0, 0, 0);
     fechaHoy.setHours(0, 0, 0, 0);
   
-    console.log("Fecha ingresada: ", fecha.toLocaleString()); // Mostrar la fecha ingresada
-    console.log("Fecha actual: ", fechaHoy.toLocaleString()); // Mostrar la fecha actual
-  
     // Comparar solo las fechas (sin considerar la hora)
     if (fecha < fechaHoy) {
       return { errorFechaInicio: true }; 
