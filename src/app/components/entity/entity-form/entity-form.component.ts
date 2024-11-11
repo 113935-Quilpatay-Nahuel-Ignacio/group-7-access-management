@@ -36,11 +36,6 @@ export class EntityFormComponent implements OnInit {
   @Output() entitySaved = new EventEmitter<boolean>();
   @Output() entityCreated = new EventEmitter<void>();
 
-  // Método para habilitar el modo edición
-  activateEditMode() {
-    this.isUpdate = true;
-  }
-
   constructor(private fb: FormBuilder, private authService: AuthService, private loginService: LoginService, private router: Router, private visitorService: VisitorService, private route: ActivatedRoute) {
   }
 
@@ -48,8 +43,6 @@ export class EntityFormComponent implements OnInit {
   ngOnInit(): void {
 
     if(this.visitorId){
-      
-      this.activateEditMode(); 
       this.loadData(this.visitorId);  
     }
 
@@ -72,32 +65,30 @@ export class EntityFormComponent implements OnInit {
 
 
   onSubmit(): void {
-
     if (this.entityForm.valid) {
       const formData = this.entityForm.value;
   
       if (formData.birthDate) {
         formData.birthDate = formatFormDate(formData.birthDate);
       }
-      
-
+  
       this.visitorService.upsertVisitor(formData, this.loginService.getLogin().id, this.visitorId).subscribe({
         next: (response) => {
-       
           if (this.isUpdate) {
             this.toastService.sendSuccess("Actualización exitosa!");
-
           } else {
             this.toastService.sendSuccess("Registro exitoso!");
             this.entityCreated.emit();
           }
-
-        // Emitir el evento para informar al componente principal que se realizó la operación
+  
           this.entitySaved.emit(true);
-    
-          // Cierro el modal despues de mostrar el toast
-          setTimeout(() => { this.activeModal.close() , this.isUpdate = false} , 1500); 
-        
+  
+          // Aquí cerramos el modal después de mostrar el toast
+          setTimeout(() => {
+            this.activeModal.close();
+            this.toastService.remove(this.toastService.toasts[0]);  // Cierra el modal
+            this.isUpdate = false; 
+          }, 1500); 
         },
         error: (error) => {
           console.log(error);
@@ -112,6 +103,7 @@ export class EntityFormComponent implements OnInit {
       this.markAllAsTouched();
     }
   }
+  
 
 
   private markAllAsTouched(): void {
@@ -140,9 +132,10 @@ export class EntityFormComponent implements OnInit {
           docNumber: data.body?.docNumber,
           birthDate : birthDate
         })
+        this.isUpdate = true
       },
       error : (error)=>{
-        this.toastService.sendError("Ocurrió un error inesperado, intente mas tarde...")
+        console.error('Error getting visitors:', error);
       }
     })
 

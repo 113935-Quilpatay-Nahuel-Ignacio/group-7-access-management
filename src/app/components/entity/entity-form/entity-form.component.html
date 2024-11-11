@@ -1,6 +1,6 @@
 <p class="mt-2 p-4 h1">{{isUpdate ?  'Actualizar' : 'Nueva'}} Entidad</p>
 <form [formGroup]="entityForm" (ngSubmit)="onSubmit()" class="row g-3 m-2 mx-4 mb-3">
-
+ 
   <div class="col-md-6">
     <label for="name" class="form-label">Nombre <span class="text-danger">*</span></label>
     <input type="text" id="name" class="form-control" formControlName="name"
@@ -55,10 +55,10 @@
         Por favor, ingrese la fecha de nacimiento del visitante
     </small>
   </div>
-
+  
   <div class="col-12 d-flex justify-content-end mt-5">
     <button type="button" class="btn btn-danger me-2" (click)="onCancel()">Cancelar</button>
     <button type="submit" class="btn btn-primary">Guardar</button>
   </div>
+  <app-toasts></app-toasts>
 </form>
-<app-toasts></app-toasts>

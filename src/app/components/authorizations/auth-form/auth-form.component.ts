@@ -8,10 +8,10 @@ import Swal from 'sweetalert2';
 import {NgIf} from "@angular/common";
 import {ActivatedRoute, Router} from "@angular/router";
 import {UserTypeService} from "../../../services/userType.service";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {RangeModalComponent} from "../range-modal/range-modal.component";
 import {NgSelectComponent} from "@ng-select/ng-select";
 import { ToastsContainer, ToastService } from "ngx-dabd-grupo01";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-auth-form',
@@ -224,13 +224,20 @@ export class AuthFormComponent implements OnInit {
       if (!this.isUpdate) {
         this.authService.createAuth(formData, this.loginService.getLogin().id.toString()).subscribe(data => {
           this.toastService.sendSuccess("Registro exitoso.");
+          
         });
       }
       else {
         this.authService.updateAuth(formData, this.loginService.getLogin().id.toString()).subscribe(data => {
           this.toastService.sendSuccess("Autorización exitosa.");
+          
         });
       }
+      setTimeout(() => {
+        this.toastService.remove(this.toastService.toasts[0]);  // Cierra el modal
+        this.isUpdate = false; 
+      }, 1500); 
+
     } else {
       this.markAllAsTouched();
     }

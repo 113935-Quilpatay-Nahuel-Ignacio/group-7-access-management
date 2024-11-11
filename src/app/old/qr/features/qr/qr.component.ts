@@ -37,7 +37,7 @@ sendQRByEmail() {
     this.qrService.sendQRByEmail(request , 1).subscribe({
       next:(data)=>{
         console.log(data)
-        this.toastService.sendSuccess("El qr Ha sido enviado con exito")
+        this.toastService.sendSuccess("El QR ha sido enviado con exito")
        
       },
       error:(error)=>{

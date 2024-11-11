@@ -396,51 +396,62 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
     console.log("Algo salio mal.");
     return;
   }
-  transformAuthRanges(ranges : AuthRange[]): string{
-    let res = ""
+  transformAuthRanges(ranges: AuthRange[]): string {
+    let res = "";
     for (let authRange of ranges) {
-      if (!authRange.isActive){
-        continue
-      }
-      let temp = ""
-      temp += authRange.dateFrom.replaceAll('-','/') + ' - ' + authRange.dateTo.replaceAll('-','/') + ' | '
-      for (let day of authRange.daysOfWeek) {
-        switch (day) {
-          case "MONDAY":
-            temp += "L"; // Lunes
-            break;
-          case "TUESDAY":
-            temp += "M"; // Martes
-            break;
-          case "WEDNESDAY":
-            temp += "X"; // Miércoles
-            break;
-          case "THURSDAY":
-            temp += "J"; // Jueves
-            break;
-          case "FRIDAY":
-            temp += "V"; // Viernes
-            break;
-          case "SATURDAY":
-            temp += "S"; // Sábado
-            break;
-          case "SUNDAY":
-            temp += "D"; // Domingo
-            break;
-          default:
-            temp += day.charAt(0); // En caso de un valor inesperado
+        if (!authRange.isActive) {
+            continue;
         }
-        temp += ','
-      }
-      temp = temp.slice(0,temp.length-1)
 
-      temp+= ' | ' + authRange.hourFrom.slice(0,5) + ' a ' + authRange.hourTo.slice(0,5)
+        let temp = "";
+        temp += authRange.dateFrom.replaceAll('-', '/') + ' - ' + authRange.dateTo.replaceAll('-', '/') + ' | ';
 
-      res += temp + ' y '
+        // Verificar que daysOfWeek sea un array válido antes de iterar
+        if (Array.isArray(authRange.daysOfWeek)) {
+            for (let day of authRange.daysOfWeek) {
+                switch (day) {
+                    case "MONDAY":
+                        temp += "L"; // Lunes
+                        break;
+                    case "TUESDAY":
+                        temp += "M"; // Martes
+                        break;
+                    case "WEDNESDAY":
+                        temp += "X"; // Miércoles
+                        break;
+                    case "THURSDAY":
+                        temp += "J"; // Jueves
+                        break;
+                    case "FRIDAY":
+                        temp += "V"; // Viernes
+                        break;
+                    case "SATURDAY":
+                        temp += "S"; // Sábado
+                        break;
+                    case "SUNDAY":
+                        temp += "D"; // Domingo
+                        break;
+                    default:
+                        temp += day.charAt(0); // En caso de un valor inesperado
+                }
+                temp += ',';
+            }
+            // Eliminar la última coma
+            temp = temp.slice(0, temp.length - 1);
+        } else {
+            console.warn(`daysOfWeek no es un array en el rango:`, authRange);
+            temp += "Días no válidos";
+        }
+
+        temp += ' | ' + authRange.hourFrom.slice(0, 5) + ' a ' + authRange.hourTo.slice(0, 5);
+
+        res += temp + ' y ';
     }
-    res = res.slice(0,res.length-3)
-    return res
-  }
+    // Eliminar la última ' y '
+    res = res.slice(0, res.length - 3);
+    return res;
+}
+
 
   //#endregion
 

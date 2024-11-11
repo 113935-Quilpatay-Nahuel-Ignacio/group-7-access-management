@@ -1,7 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
 import {AuthRange} from "../../../models/authorize.model";
+import { ValidatorFecha } from '../../../validatorFecha';
 
 @Component({
   selector: 'app-range-modal',
@@ -78,26 +79,30 @@ export class RangeModalComponent implements OnInit{
   createForm(): FormGroup {
     return this.fb.group({
       authRangeId: [0],
-      dateFrom: [formatDate(), Validators.required],
+      dateFrom: [formatDate(), [Validators.required , ValidatorFecha.validarFecha]],
       dateTo: [formatDate(), Validators.required],
       hourFrom: [formatTime(), Validators.required],
       hourTo: [formatTime(), Validators.required],
       daysOfWeek: [[], Validators.required],
       comment: [""],
       isActive: [true],
+    }, {
+      validators: [this.dateRangeValidator , this.hourRangeValidator] // Se aplica el validador de rango de fechas
     });
   }
 
   loadForm(authRange: AuthRange) {
     this.rangeForm = this.fb.group({
       authRangeId: [authRange.authRangeId],
-      dateFrom: [authRange.dateFrom, Validators.required],
+      dateFrom: [authRange.dateFrom, [Validators.required , ValidatorFecha.validarFecha]],
       dateTo: [authRange.dateTo, Validators.required],
       hourFrom: [authRange.hourFrom, Validators.required],
       hourTo: [authRange.hourTo, Validators.required],
       daysOfWeek: [authRange.daysOfWeek, Validators.required],
       comment: [authRange.comment],
       isActive: [authRange.isActive],
+    }, {
+      validators: [this.dateRangeValidator , this.hourRangeValidator] // Se aplica el validador de rango de fechas
     });
   }
 
@@ -121,7 +126,39 @@ export class RangeModalComponent implements OnInit{
     // Actualizar el control del formulario
     this.rangeForm.get('daysOfWeek')?.setValue(daysArray);
   }
+
+// Validador personalizado para asegurar que dateFrom no sea mayor a dateTo
+dateRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const dateFrom = control.get('dateFrom')?.value;
+  const dateTo = control.get('dateTo')?.value;
+
+  if (dateFrom && dateTo && new Date(dateFrom) > new Date(dateTo)) {
+    return { 'dateRangeInvalid': true }; // Si la fecha de inicio es mayor que la fecha fin, el validador falla
+  }
+
+  return null;
+};
+
+  // Validador personalizado para asegurar que hourFrom no sea mayor a hourTo
+  hourRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const hourFrom = control.get('hourFrom')?.value;
+    const hourTo = control.get('hourTo')?.value;
+
+    if (hourFrom && hourTo && this.timeToMinutes(hourFrom) >= this.timeToMinutes(hourTo)) {
+      return { 'hourRangeInvalid': true }; // Si la hora de inicio es mayor o igual a la de fin, el validador falla
+    }
+
+    return null;
+  };
+
+  // Funcion para convertir el formato de hora HH:mm a minutos
+  timeToMinutes(time: string): number {
+    const [hours, minutes] = time.split(':').map(Number);
+    return hours * 60 + minutes;
+  }
+
 }
+
 function formatDate() {
   const today = new Date();
   return today.toISOString().split('T')[0]
