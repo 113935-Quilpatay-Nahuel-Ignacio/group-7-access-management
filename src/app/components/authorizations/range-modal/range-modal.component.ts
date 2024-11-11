@@ -3,7 +3,7 @@ import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 import {AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
 import {AuthRange, Visitor} from "../../../models/authorize.model";
 import { ValidatorFecha } from '../../../validatorFecha';
-import { VisitorType } from '../../../old/authorization/models/authorized.model';
+import { VisitorType } from '../../../models/authorizeRequest.model';
 
 @Component({
   selector: 'app-range-modal',

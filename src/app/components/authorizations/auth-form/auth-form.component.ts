@@ -236,7 +236,7 @@ export class AuthFormComponent implements OnInit {
       setTimeout(() => {
         this.toastService.remove(this.toastService.toasts[0]);  // Cierra el modal
         this.isUpdate = false; 
-      }, 1500); 
+      }, 1000); 
 
     } else {
       this.markAllAsTouched();
