@@ -4,6 +4,8 @@ import {KpiComponent} from "../../commons/kpi/kpi.component";
 import {DashboardService, dashResponse} from "../../../../services/dashboard.service";
 import {BarchartComponent} from "../../commons/barchart/barchart.component";
 import {PiechartComponent} from "../../commons/piechart/piechart.component";
+import {VisitorTypeAccessDictionary} from "../../../../models/authorize.model";
+import {ChartType} from "angular-google-charts";
 
 @Component({
   selector: 'app-main-dashboard',
@@ -20,6 +22,7 @@ export class MainDashboardComponent implements AfterViewInit{
   //inputs
   @Input() filters: DashBoardFilters = {} as DashBoardFilters;
   @Output() notifyParent: EventEmitter<string> = new EventEmitter<string>();
+  typeDictionary = VisitorTypeAccessDictionary;
 
   //vars
   kpi1: kpiModel = {} as kpiModel
@@ -37,7 +40,6 @@ export class MainDashboardComponent implements AfterViewInit{
   sendNotification(mode: string) {
     this.notifyParent.emit(mode);
   }
-
   //init
   constructor(private dashBoardService: DashboardService) {
     this.kpi1 = {title: " en el periodo", desc: " en el periodo", value: "0", icon: "", color: "bg-success"}
@@ -50,7 +52,6 @@ export class MainDashboardComponent implements AfterViewInit{
     this.graph3 = {title: "Tipos de ingresos/egresos", subtitle: "Distribucion de tipos de ingresos/egresos", data: [], options: null}
     this.graph4 = {title: "Inconsistencias en egresos", subtitle: "", data: [], options: null}
   }
-
   //getData
   getData() {
     console.log(this.filters)
@@ -77,6 +78,7 @@ export class MainDashboardComponent implements AfterViewInit{
     this.graph4.options.width = 900;
     this.graph4.options.height = 175;
 
+    this.graph3.options = this.pieChartOptions
 
     this.graph2.options = {...this.columnChartOptions,
       colors: ['#ffc107']}
@@ -128,8 +130,8 @@ export class MainDashboardComponent implements AfterViewInit{
         }
       }
 
-      this.kpi3.value = maxValueResponse.key;
-      this.graph3.data = mapColumnData(data)
+      this.kpi3.value = translateTable(maxValueResponse.key, this.typeDictionary)!.toString();
+      this.graph3.data = mapColumnDataT(data,this.typeDictionary)
     })
 
     let inconsistenciesFilter = {...this.filters}
@@ -177,6 +179,26 @@ export class MainDashboardComponent implements AfterViewInit{
     bar: {groupWidth: '70%'}
   };
 
+  pieChartOptions = {
+    backgroundColor: 'transparent',
+    legend: {
+      position: 'right-center',
+      textStyle: { color: '#6c757d', fontSize: 17 }
+    },
+    chartArea: { width: '100%', height: '100%' },
+    pieHole: 0,
+    height: '80%',
+    slices: {
+      0: { color: '#00BFFF' },  // MP siempre azul
+      1: { color: '#8A2BE2' },  // STRIPE siempre violeta
+      2: { color: '#ACE1AF' }   // EFECTIVO siempre verde
+    },
+    pieSliceTextStyle: {
+      color: 'black',
+      fontSize: 18
+    }
+  };
+
   ngAfterViewInit(): void {
     this.getData()
   }
@@ -205,6 +227,25 @@ function createPreviousFilter(filters: DashBoardFilters): DashBoardFilters {
 function mapColumnData(array:dashResponse[]) : any{
   return array.map(data => [
     data.key,
+    data.value || 0
+  ]);
+}
+
+function translateTable(value: any, dictionary: { [key: string]: any }) {
+  if (value !== undefined && value !== null) {
+    for (const key in dictionary) {
+      if (dictionary[key] === value) {
+        return key;
+      }
+    }
+  }
+  console.log("Algo salio mal.");
+  return;
+}
+
+function mapColumnDataT(array:dashResponse[], dictionary:any ) : any{
+  return array.map(data => [
+    translateTable(data.key, dictionary),
     data.value || 0
   ]);
 }
