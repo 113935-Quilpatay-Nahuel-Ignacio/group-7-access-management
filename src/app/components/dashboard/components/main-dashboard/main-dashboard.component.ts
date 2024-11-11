@@ -32,6 +32,12 @@ export class MainDashboardComponent implements AfterViewInit{
   graph3: graphModel = {} as graphModel
   graph4: graphModel = {} as graphModel
 
+
+  //redirect
+  sendNotification(mode: string) {
+    this.notifyParent.emit(mode);
+  }
+
   //init
   constructor(private dashBoardService: DashboardService) {
     this.kpi1 = {title: " en el periodo", desc: " en el periodo", value: "0", icon: "", color: "bg-success"}
@@ -52,6 +58,7 @@ export class MainDashboardComponent implements AfterViewInit{
     this.kpi1.icon = this.filters.action == "ENTRY" ? "bi bi-arrow-up-circle" : "bi bi-arrow-down-circle"
     this.kpi1.color = this.filters.action == "ENTRY" ? "bg-success" : "bg-danger"
     this.kpi1.title = action + " en el periodo vs el periodo anterior"
+    this.kpi2.title = "Tendencias de " + action.toLowerCase()
     this.kpi1.desc ="Total de " + action.toLowerCase() + " en el periodo vs el periodo anterior"
     this.kpi4.title ="Total de " + action.toLowerCase() + " inconsistentes"
     this.kpi4.desc ="Total de " + action.toLowerCase() + " inconsistencias en el periodo"
@@ -62,6 +69,19 @@ export class MainDashboardComponent implements AfterViewInit{
     this.graph3.subtitle = "Distribucion de tipos de " + action.toLowerCase()
     this.graph4.title = "Inconsistencias en " + action.toLowerCase()
     this.graph4.subtitle = action + " inconsistentes"
+
+
+    this.graph4.options = {...this.columnChartOptions,
+      colors: ['#ffc107']}
+    this.graph4.options.chartArea.width='95%';
+    this.graph4.options.width = 900;
+    this.graph4.options.height = 175;
+
+
+    this.graph2.options = {...this.columnChartOptions,
+      colors: ['#ffc107']}
+    this.graph2.options.width = null;
+    this.graph2.options.height = 225;
 
     //obtener filtro
     this.dashBoardService.getPeriod(this.filters).subscribe(data => {
@@ -82,7 +102,7 @@ export class MainDashboardComponent implements AfterViewInit{
         });
 
         this.kpi1.value = totalValue1.toString() + " vs " + totalValue.toString();
-        let kpi2value = ((totalValue - totalValue1 )/ totalValue1)
+        let kpi2value = ((totalValue - totalValue1 )/ totalValue1) * 100
         this.kpi2.value = kpi2value.toFixed(2) + "%";
         this.kpi2.icon = kpi2value > 0 ? "bi bi-graph-up" : "bi bi-graph-down"
       })
@@ -114,27 +134,23 @@ export class MainDashboardComponent implements AfterViewInit{
 
     let inconsistenciesFilter = {...this.filters}
     inconsistenciesFilter.dataType= "INCONSISTENCIES"
-    this.dashBoardService.getPeriod(this.filters).subscribe(data => {
+    this.dashBoardService.getPeriod(inconsistenciesFilter).subscribe(data => {
       let totalValue1 = 0;
       data.forEach(item => {
         totalValue1 += Number(item.value);
       });
       this.kpi4.value = totalValue1.toString()
-      this.graph2.data = mapColumnData(data)
+      this.graph4.data = mapColumnData(data)
     })
 
     inconsistenciesFilter.dataType= "LATE"
     inconsistenciesFilter.action= ""
-    this.dashBoardService.getPeriod(this.filters).subscribe(data => {
-      this.graph4.data = mapColumnData(data)
+    this.dashBoardService.getPeriod(inconsistenciesFilter).subscribe(data => {
+      this.graph2.data = mapColumnData(data)
     })
 
   }
 
-  //redirect
-  sendNotification(mode: string) {
-    this.notifyParent.emit(mode);
-  }
 
   columnChartOptions = {
     backgroundColor: 'transparent',

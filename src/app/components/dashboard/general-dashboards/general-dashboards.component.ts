@@ -62,7 +62,7 @@ export class GeneralDashboardsComponent implements OnInit, AfterViewInit{
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
     this.filters.dateTo = now.toISOString().slice(0, 16);
 
-    now.setDate(now.getDate() - 30);
+    now.setDate(now.getDate() - 14);
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
     this.filters.dateFrom = now.toISOString().slice(0, 16);
   }
@@ -83,6 +83,8 @@ export class GeneralDashboardsComponent implements OnInit, AfterViewInit{
     this.main.getData()
     this.entries.getData()
     this.types.getData()
+    this.inconsistencies.getData()
+    this.late.getData()
   }
 
   ngOnInit(): void {

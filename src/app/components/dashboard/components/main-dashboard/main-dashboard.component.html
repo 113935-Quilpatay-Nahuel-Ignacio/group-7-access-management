@@ -16,7 +16,7 @@
   </div>
   <div class="col-3 d-flex align-content-center flex-wrap justify-content-center">
     <div class="hover-scale">
-      <app-kpi [kpi]="kpi4" (click)="sendNotification('ENTRIES')"></app-kpi>
+      <app-kpi [kpi]="kpi4" (click)="sendNotification('INCONSISTENCIES')"></app-kpi>
     </div>
   </div>
 </div>
@@ -36,13 +36,13 @@
       </div>
       <div class="col-6">
         <div class="hover-scale">
-          <app-barchart [graphModel]="graph4" (click)="sendNotification('LATE')"></app-barchart>
+          <app-barchart [graphModel]="graph2" (click)="sendNotification('LATE')"></app-barchart>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="hover-scale">
-        <app-barchart [graphModel]="graph2" (click)="sendNotification('INCONSISTENCIES')"></app-barchart>
+        <app-barchart [graphModel]="graph4" (click)="sendNotification('INCONSISTENCIES')"></app-barchart>
       </div>
     </div>
   </div>

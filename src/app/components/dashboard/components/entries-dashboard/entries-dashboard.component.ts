@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, Output} from '@angular/core';
+import {AfterRenderRef, AfterViewInit, Component, EventEmitter, Input, Output} from '@angular/core';
 import {DashBoardFilters, graphModel, kpiModel} from "../../../../models/dashboard.model";
 import {BarchartComponent} from "../../commons/barchart/barchart.component";
 import {KpiComponent} from "../../commons/kpi/kpi.component";
@@ -87,6 +87,7 @@ export class EntriesDashboardComponent implements AfterViewInit {
     },
     hAxis: {
       textStyle: {color: '#6c757d'},
+      showTextEvery: 2
     },
     animation: {
       duration: 1000,

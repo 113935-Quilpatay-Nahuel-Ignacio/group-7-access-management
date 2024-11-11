@@ -70,13 +70,13 @@
       <app-entries-dashboard [filters]="filters" (notifyParent)="changeMode($event)"></app-entries-dashboard>
     </div>
     <div [ngClass]="{ 'd-none': status !== DashboardStatus.Late }">
-      <app-late-dashboard></app-late-dashboard>
+      <app-late-dashboard [filters]="filters" (notifyParent)="changeMode($event)"></app-late-dashboard>
     </div>
     <div [ngClass]="{ 'd-none': status !== DashboardStatus.Types }">
       <app-types-dashboard [filters]="filters" (notifyParent)="changeMode($event)"></app-types-dashboard>
     </div>
     <div [ngClass]="{ 'd-none': status !== DashboardStatus.Inconsistencies }">
-      <app-inconsistencies-dashboard></app-inconsistencies-dashboard>
+      <app-inconsistencies-dashboard [filters]="filters" (notifyParent)="changeMode($event)"></app-inconsistencies-dashboard>
     </div>
   </div>
 

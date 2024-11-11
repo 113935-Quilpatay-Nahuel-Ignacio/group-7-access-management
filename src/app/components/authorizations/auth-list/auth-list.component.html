@@ -20,17 +20,17 @@
       (filterValueChange)="onFilterValueChange($event)"
       [dictionaries]="dictionaries"
       objectName="AUTORIZACION"></app-cadastre-plot-filter-buttons>
-  
-    <div class="d-flex justify-content-between align-items-center mb-3">
+
+<!--    <div class="d-flex justify-content-between align-items-center mb-3">
       <div class="btn-group me-5" role="group">
         <div class="d-flex align-items-center">
 
-          <!-- filtros viejos
+          &lt;!&ndash; filtros viejos
           <div class="btn-group me-2">
             <button type="button" class="btn btn-outline-danger" (click)="changeFilterMode(filterTypes.NOTHING)">
               <i class="bi bi-trash-fill"></i> Limpiar filtros
             </button>
-  
+
             <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown"
                     aria-expanded="false">
               <i class="bi bi-funnel-fill"></i> Filtros
@@ -39,8 +39,8 @@
               <li><a class="dropdown-item" (click)="changeFilterMode(filterTypes.VISITOR_TYPE)">Tipo de visitante</a></li>
               <li><a class="dropdown-item" (click)="changeFilterMode(filterTypes.PLOT_ID)">Nro de lote</a></li>
             </ul>
-          </div> -->
-  
+          </div> &ndash;&gt;
+
           @if (applyFilterWithNumber === true || applyFilterWithCombo === true) {
             <div class="d-flex">
               @if (applyFilterWithNumber === true) {
@@ -61,8 +61,8 @@
           }
         </div>
       </div>
-    </div>
-  
+    </div>-->
+
     <div class="table-container">
       <table class="table table-striped fixed-table"
              style="border: 1px solid rgba(0, 0, 0, 0.150); border-collapse: collapse;" #table>
@@ -82,7 +82,7 @@
         </thead>
         <tbody>
           @for (item of (filteredList.length ? filteredList : list); track item) {
-  
+
             <tr>
               <td>
                 {{ item.plotId ? item.plotId : "No aplica" }}
@@ -100,7 +100,7 @@
               <td>
                 <div *ngFor="let authRange of item.authRanges">
                     @if (authRange.isActive){
-  
+
                   <div class="d-flex align-items-center mb-2">
                     <!-- Barra de días -->
                     <div class="d-flex days-bar">
@@ -116,7 +116,7 @@
                       </div>
                     </div>
                   </div>
-  
+
                   <!-- Rango de horario -->
                   <div class="text-muted">
                     {{ formatHour(authRange.hourFrom) }} - {{ formatHour(authRange.hourTo) }}
@@ -153,12 +153,12 @@
                 </td>
               }
             </tr>
-  
+
           }
         </tbody>
       </table>
     </div>
-  
+
     <div class="d-flex justify-content-between align-items-center mt-3">
       <div class="form-group mb-3 me-2">
         <select
@@ -172,12 +172,12 @@
           }
         </select>
       </div>
-  
+
       <div class="ms-auto">
       </div>
-  
+
       <div class="d-flex">
-  
+
         <ngb-pagination
           [(page)]="currentPage"
           [pageSize]="pageSize"
@@ -186,13 +186,13 @@
           [maxSize]="5"
           [boundaryLinks]="false"
         ></ngb-pagination>
-  
+
       </div>
-  
-  
+
+
     </div>
   </div>
-  
+
   <ng-template #infoModal let-modal>
     <div class="modal-header fs-6 py-1">
       <h4 class="modal-title">Información de la Lista de Autorizaciones</h4>
@@ -207,7 +207,7 @@
             registrados en distintos lotes. Puedes acceder rápidamente a los detalles de cada autorización, aplicar
             filtros, y realizar acciones específicas sobre cada registro.</p>
         </div>
-  
+
         <!-- Campos Principales -->
         <div class="card mb-2">
           <div class="card-header py-1">
@@ -233,7 +233,7 @@
             </ul>
           </div>
         </div>
-  
+
         <!-- Acciones -->
         <div class="card mb-2">
           <div class="card-header py-1">
@@ -252,7 +252,7 @@
             </ul>
           </div>
         </div>
-  
+
         <!-- Nota (OPCIONAL) -->
         <div class="alert alert-warning py-2 mb-0">
           <h5 class="alert-heading">Nota:</h5>
@@ -265,6 +265,6 @@
       <button type="button" class="btn btn-primary" (click)="modal.close()">Entendido</button>
     </div>
   </ng-template>
-  
+
 
 </app-main-container>
