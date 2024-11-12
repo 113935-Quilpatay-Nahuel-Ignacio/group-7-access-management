@@ -567,5 +567,14 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
     })
   }
 
+  transformUpperCamelCase(value: string): string {
+    if (!value) return value;
+    return value
+      .replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, (match, index) =>
+        index === 0 ? match.toUpperCase() : match.toLowerCase()
+      )
+      .replace(/\s+/g, ''); // Elimina espacios
+  }
+  
   protected readonly VisitorTypeIconDictionary = VisitorTypeIconDictionary;
 }

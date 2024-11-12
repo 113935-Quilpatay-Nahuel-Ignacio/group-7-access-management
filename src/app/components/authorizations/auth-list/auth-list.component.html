@@ -90,7 +90,7 @@
                 [class]="'bi ' + VisitorTypeIconDictionary[item.visitorType]"
                 [title]="translateTable(item.visitorType, typeDictionary)">
               </i>
-                {{ item.visitor.name + ' ' + (item.visitor.lastName ? item.visitor.lastName : '') }}
+                {{ transformUpperCamelCase(item.visitor.name) +' '+ transformUpperCamelCase(item.visitor.lastName ? item.visitor.lastName : '') }}
               </td>
               <td>
                   {{ getDocumentAbbreviation(item.visitor.docType) + ' ' + item.visitor.docNumber }}
