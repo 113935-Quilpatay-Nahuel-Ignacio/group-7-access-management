@@ -216,17 +216,16 @@ function createPreviousFilter(filters: DashBoardFilters): DashBoardFilters {
 
   const diffInDays = (dateTo.getTime() - dateFrom.getTime()) / (1000 * 60 * 60 * 24);
 
-  const newDateTo = dateFrom;
+  // Crear nuevas fechas desde la diferencia calculada
+  const newDateTo = new Date(dateFrom);
   const newDateFrom = new Date(dateFrom);
   newDateFrom.setDate(newDateFrom.getDate() - diffInDays);
 
   return {
+    ...filters,
     dateFrom: newDateFrom.toISOString(),
     dateTo: newDateTo.toISOString(),
-    action: filters.action,
-    group: filters.group,
-    type: filters.type,
-    dataType: "ALL"
+    dataType: "ALL",
   };
 }
 
