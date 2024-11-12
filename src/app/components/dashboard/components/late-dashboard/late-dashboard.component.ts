@@ -10,7 +10,7 @@ import {DashboardService, dashResponse} from "../../../../services/dashboard.ser
   standalone: true,
   imports: [
     KpiComponent,
-    PiechartComponent,
+   //PiechartComponent,
     BarchartComponent
   ],
   templateUrl: './late-dashboard.component.html',
