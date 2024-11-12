@@ -22,7 +22,21 @@ import {NgClass} from "@angular/common";
 @Component({
   selector: 'app-general-dashboards',
   standalone: true,
-  imports: [AccessHourlyDashboardComponent, AccessWeeklyDashboardComponent, AccessPieDashboardComponent, ReactiveFormsModule, FormsModule, MainContainerComponent, GoogleChartsModule, KpiComponent, MainDashboardComponent, EntriesDashboardComponent, LateDashboardComponent, TypesDashboardComponent, InconsistenciesDashboardComponent, NgClass, NgbPopover],
+  imports: [AccessHourlyDashboardComponent, 
+    AccessWeeklyDashboardComponent, 
+    AccessPieDashboardComponent, 
+    ReactiveFormsModule, 
+    FormsModule, 
+    MainContainerComponent, 
+    GoogleChartsModule, 
+    KpiComponent, 
+    MainDashboardComponent, 
+    EntriesDashboardComponent, 
+    LateDashboardComponent, 
+    TypesDashboardComponent, 
+    InconsistenciesDashboardComponent, 
+    NgClass, 
+    NgbPopover],
   templateUrl: './general-dashboards.component.html',
   styleUrl: './general-dashboards.component.css'
 })

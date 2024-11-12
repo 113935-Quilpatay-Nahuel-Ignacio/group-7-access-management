@@ -72,9 +72,7 @@ export class MainDashboardComponent implements AfterViewInit{
     this.graph4.title = "Inconsistencias en " + action
     this.graph4.subtitle = ""//action + " con Inconsistencias"
 
-    this.columnChartOptions.hAxis.showTextEvery = this.filters.group == "WEEK" ? 2 : 3
-    this.columnChartOptions.hAxis.showTextEvery = this.filters.group == "MONTH" || this.filters.group == "YEAR" ? 1 : 3
-
+    this.columnChartOptions.hAxis.showTextEvery = (this.filters.group == "WEEK" ? 2 : (this.filters.group == "MONTH" || this.filters.group == "YEAR" ? 1 : 3));
 
     this.graph4.options = {...this.columnChartOptions,
       colors: ['#ffc107']}
@@ -157,6 +155,7 @@ export class MainDashboardComponent implements AfterViewInit{
 
   }
 
+  
 
   columnChartOptions = {
     backgroundColor: 'transparent',
