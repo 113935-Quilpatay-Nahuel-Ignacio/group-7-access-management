@@ -1,5 +1,5 @@
-import { QrService } from './../../../services/qr.service';
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import {QrService} from './../../../services/qr.service';
+import {Component, inject, OnInit, ViewChild} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,22 +7,22 @@ import {
   FormControl,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { CommonModule, NgClass, NgIf } from '@angular/common';
-import { AccessService } from '../../../services/access.service';
-import { AuthService } from '../../../services/auth.service';
+import {CommonModule, NgClass, NgIf} from '@angular/common';
+import {AccessService} from '../../../services/access.service';
+import {AuthService} from '../../../services/auth.service';
 import Swal from 'sweetalert2';
-import { LoginService } from '../../../services/login.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { VisitorService } from '../../../services/visitor.service';
-import { QrComponent } from '../../qr/qr.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {LoginService} from '../../../services/login.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {VisitorService} from '../../../services/visitor.service';
+import {QrComponent} from '../../qr/qr.component';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {
   NgxScannerQrcodeComponent,
   NgxScannerQrcodeModule,
   ScannerQRCodeConfig,
   ScannerQRCodeResult,
 } from 'ngx-scanner-qrcode';
-import { ToastsContainer, ToastService } from "ngx-dabd-grupo01";
+import {ToastsContainer, ToastService} from "ngx-dabd-grupo01";
 
 @Component({
   selector: 'app-access-form',
@@ -64,10 +64,11 @@ export class AccessFormComponent implements OnInit {
     private loginService: LoginService,
     private router: Router,
     private visitorService: VisitorService
-  ) {}
+  ) {
+  }
 
   openScanner() {
-    this.modalService.open(this.scannerModal, { size: 'xl' });
+    this.modalService.open(this.scannerModal, {size: 'xl'});
   }
 
   ngOnInit(): void {
@@ -153,6 +154,9 @@ export class AccessFormComponent implements OnInit {
                 )
                 .subscribe((data) => {
                   this.toastService.sendSuccess("Registro exitoso!")
+                  if (data.is_Late) {
+                    this.toastService.sendSuccess("Se ha notificado la salida tardía")
+                  }
                   this.ngOnInit();
                 });
             }
@@ -180,7 +184,7 @@ export class AccessFormComponent implements OnInit {
         case null:
           this.accessForm.get('lastName')?.setValue('');
           this.accessForm.get('firstName')?.setValue('');
-          this.accessForm.get('docNumber')?.setErrors({ unauthorized: true });
+          this.accessForm.get('docNumber')?.setErrors({unauthorized: true});
           break;
         default:
           this.accessForm.get('lastName')?.setValue(data.body.lastName);
@@ -262,7 +266,7 @@ export class AccessFormComponent implements OnInit {
         case null:
           this.accessForm.get('lastName')?.setValue('');
           this.accessForm.get('firstName')?.setValue('');
-          this.accessForm.get('docNumber')?.setErrors({ unauthorized: true });
+          this.accessForm.get('docNumber')?.setErrors({unauthorized: true});
           break;
         default:
           this.accessForm.get('lastName')?.setValue(data.body.lastName);
@@ -288,3 +292,4 @@ export class AccessFormComponent implements OnInit {
     return match ? match[1] : null;
   }
 }
+
