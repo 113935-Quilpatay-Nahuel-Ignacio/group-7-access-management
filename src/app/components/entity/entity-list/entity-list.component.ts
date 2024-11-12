@@ -26,7 +26,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AccessService } from '../../../services/access.service';
 import { TransformResponseService } from '../../../services/transform-response.service';
 import { AuthorizerCompleterService } from '../../../services/authorizer-completer.service';
-import { VisitorTypeAccessDictionary } from '../../../models/authorize.model';
+import {VisitorTypeAccessDictionary, VisitorTypeIconDictionary} from '../../../models/authorize.model';
 import { Visitor } from '../../../models/visitor.model';
 import { VisitorFilter, VisitorService } from '../../../services/visitor.service';
 import { UserTypeService } from '../../../services/userType.service';
@@ -218,7 +218,7 @@ export class EntityListComponent implements OnInit, AfterViewInit {
     this.visitorService.getAllFiltered(filter)
       .subscribe({
         next: (data) => {
-  
+
           if(filter === '' || filter=== null){
             this.getAll();
           }
@@ -394,4 +394,5 @@ export class EntityListComponent implements OnInit, AfterViewInit {
     })
   }
 
+  protected readonly VisitorTypeIconDictionary = VisitorTypeIconDictionary;
 }

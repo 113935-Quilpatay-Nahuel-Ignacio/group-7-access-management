@@ -71,7 +71,6 @@
           <th scope="col">Nro de Lote</th>
           <th scope="col">Visitante</th>
           <th scope="col">Documento</th>
-          <th scope="col">Tipo</th>
           <th scope="col">Horarios</th>
           <th scope="col">Autorizador</th>
           @if (userType == "ADMIN" || userType == "OWNER") {
@@ -87,15 +86,14 @@
               <td>
                 {{ item.plotId ? item.plotId : "No aplica" }}
               </td>
-              <td>
-                <!--TODO icono-->
+              <td><i
+                [class]="'bi ' + VisitorTypeIconDictionary[item.visitorType]"
+                [title]="translateTable(item.visitorType, typeDictionary)">
+              </i>
                 {{ item.visitor.name + ' ' + (item.visitor.lastName ? item.visitor.lastName : '') }}
               </td>
               <td>
                   {{ getDocumentAbbreviation(item.visitor.docType) + ' ' + item.visitor.docNumber }}
-              </td>
-              <td>
-                {{ translateTable(item.visitorType, typeDictionary) }}
               </td>
               <td>
                 <div *ngFor="let authRange of item.authRanges">
