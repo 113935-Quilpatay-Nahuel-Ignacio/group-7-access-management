@@ -44,7 +44,7 @@ export class MainDashboardComponent implements AfterViewInit{
   constructor(private dashBoardService: DashboardService) {
     this.kpi1 = {title: "Ingresos: Actual/Anterior", desc: "Suma total en el periodo actual vs. anterior", value: "0", icon: "", color: "bg-success"}
     this.kpi2 = {title: "Tendencia de", desc: "", value: "0%", icon: "bi bi-graph-up", color: "bg-info"}
-    this.kpi3 = {title: "Tipo de Ingreso/Egreso Más Frecuente", desc: "Tipo más frecuente en el periodo", value: "0", icon: "bi bi-person-circle", color: "bg-warning"}
+    this.kpi3 = {title: "Ingreso/Egreso Más Frecuente", desc: "Tipo más frecuente en el periodo", value: "0", icon: "bi bi-person-circle", color: "bg-warning"}
     this.kpi4 = {title: "Total de Ingresos/Egresos Inconsistentes", desc: "Cantidad total de inconsistencias en el periodo", value: "0", icon: "bi-exclamation-circle", color: "bg-danger"}
 
     this.graph1 = {title: "Totales de Ingresos/Egresos por Periodo", subtitle: "", data: [], options: null}
@@ -65,7 +65,7 @@ export class MainDashboardComponent implements AfterViewInit{
     this.kpi4.title = "Total de " + action.toLowerCase() + " Inconsistentes"
     this.kpi4.desc = ""//"Cantidad total de inconsistencias en " + action.toLowerCase() + " durante el periodo"
     this.kpi3.desc = ""//"Tipo de " + action.toLowerCase() + " más frecuente en el periodo"
-    this.kpi3.title = "Tipo de " + action.toLowerCase() + " Más Frecuente"
+    this.kpi3.title = action.toLowerCase() + " Más Frecuente"
     this.graph1.title = "Totales de " + action + " por Periodo"
     this.graph3.title = "Distribución de Tipos de " + action
     this.graph3.subtitle = ""//"Porcentaje de cada tipo de " + action.toLowerCase()
