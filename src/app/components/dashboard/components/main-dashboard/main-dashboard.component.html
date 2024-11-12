@@ -23,28 +23,27 @@
 
 <div class="row mb-3">
   <!-- Gráfico de barras a la izquierda -->
-  <div class="col-4">
+  <div class="col-4 pe-1">
     <div class="hover-scale" style="height: 300px;"> 
       <app-barchart [graphModel]="graph1" (click)="sendNotification('ENTRIES')"></app-barchart>
     </div>
   </div>
 
-  <!-- Gráficos a la derecha -->
-  <div class="col-8">
-    <div class="row">
-      <div class="col-6">
-        <div class="hover-scale" style="height: 300px;"> 
-          <app-piechart [graphModel]="graph3" (click)="sendNotification('TYPES')"></app-piechart>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="hover-scale" style="height: 300px;"> 
-          <app-barchart [graphModel]="graph2" (click)="sendNotification('LATE')"></app-barchart>
-        </div>
-      </div>
+  <!-- Gráfico circular en el centro -->
+  <div class="col-4 px-1">
+    <div class="hover-scale" style="height: 300px;"> 
+      <app-piechart [graphModel]="graph3" (click)="sendNotification('TYPES')"></app-piechart>
+    </div>
+  </div>
+
+  <!-- Gráfico de barras a la derecha -->
+  <div class="col-4 ps-1">
+    <div class="hover-scale" style="height: 300px;"> 
+      <app-barchart [graphModel]="graph2" (click)="sendNotification('LATE')"></app-barchart>
     </div>
   </div>
 </div>
+
 
 <!-- Gráfico inferior -->
 <div class="row">
