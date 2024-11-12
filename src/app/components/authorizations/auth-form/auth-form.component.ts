@@ -105,7 +105,7 @@ export class AuthFormComponent implements OnInit {
             docType: data.visitor.docType,
             docNumber: data.visitor.docNumber,
 
-            birthDate: this.formatDate(data.visitor.birthDate), // Asegúrate de formatear la fecha si es necesario
+            birthDate: data.visitor.birthDate ? this.formatDate(data.visitor.birthDate) : null 
           }
         });
 
@@ -205,6 +205,9 @@ export class AuthFormComponent implements OnInit {
         formData.authRangeRequest = [authRange];
       } else{
         for (let range of formData.authRangeRequest) {
+
+          // Elimina el campo 'authRangeId' si existe
+          delete range.authRangeId;
           range.dateFrom = formatDate(new Date(range.dateFrom));
           range.dateTo = formatDate(new Date(range.dateTo));
 
@@ -218,16 +221,34 @@ export class AuthFormComponent implements OnInit {
       }
 
       if (!this.isUpdate) {
+        console.log(formData)
         if(formData.visitorRequest.birthDate){
           formData.visitorRequest.birthDate = formatFormDate(formData.visitorRequest.birthDate);
         }
-        this.authService.createAuth(formData, this.loginService.getLogin().id.toString()).subscribe(data => {
+
+        const request = {
+          visitorType: formData.visitorType,
+          plotId : formData.plotId,
+          visitorRequest : formData.visitorRequest,
+          authRangeRequest : formData.authRangeRequest
+       }
+
+        this.authService.createAuth(request, this.loginService.getLogin().id.toString()).subscribe(data => {
           this.toastService.sendSuccess("Registro exitoso.");
 
         });
       }
       else {
-        this.authService.updateAuth(formData, this.loginService.getLogin().id.toString()).subscribe(data => {
+
+        const request = {
+          visitorType: formData.visitorType,
+          plotId : formData.plotId,
+          visitorRequest : formData.visitorRequest,
+          authRangeRequest : formData.authRangeRequest,
+          isActive : formData.isActive
+       }
+
+        this.authService.updateAuth(request,this.loginService.getLogin().id.toString(), formData.authId).subscribe(data => {
           this.toastService.sendSuccess("Autorización exitosa.");
 
         });

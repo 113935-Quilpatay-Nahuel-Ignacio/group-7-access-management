@@ -95,22 +95,16 @@ export class AuthService {
       .pipe(map((response) => this.caseTransformer.toCamelCase(response)));
   }
 
-  updateAuth(
-    ownerData: any,
-    userId: string
-  ): Observable<VisitorAuthorizationRequest> {
+  updateAuth( ownerData: any,    userId: string,    authId : number): Observable<VisitorAuthorizationRequest> {
     const headers = new HttpHeaders({
       'x-user-id': userId,
     });
 
+    console.log(authId+'id auht' );
+
     const snakeCaseData = this.caseTransformer.toSnakeCase(ownerData);
 
-    return this.http
-      .put<VisitorAuthorizationRequest>(
-        this.apiUrl + '/authorization',
-        snakeCaseData,
-        { headers }
-      )
+    return this.http.put<VisitorAuthorizationRequest>(this.apiUrl + `/authorization?authId=${authId}`, snakeCaseData,{ headers })
       .pipe(map((response) => this.caseTransformer.toCamelCase(response)));
   }
 
