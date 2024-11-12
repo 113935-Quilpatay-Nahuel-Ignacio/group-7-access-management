@@ -49,7 +49,7 @@ export class MainDashboardComponent implements AfterViewInit{
 
     this.graph1 = {title: "Totales de Ingresos/Egresos por Periodo", subtitle: "", data: [], options: null}
     this.graph2 = {title: "Empleados con Egreso Tardío", subtitle: "", data: [], options: null}
-    this.graph3 = {title: "Distribución de Tipos de Ingresos/Egresos", subtitle: "", data: [], options: null}
+    this.graph3 = {title: "Tipos de Ingresos/Egresos", subtitle: "", data: [], options: null}
     this.graph4 = {title: "Inconsistencias en Ingresos/Egresos", subtitle: "", data: [], options: null}
   }
 
@@ -67,7 +67,7 @@ export class MainDashboardComponent implements AfterViewInit{
     this.kpi3.desc = ""//"Tipo de " + action.toLowerCase() + " más frecuente en el periodo"
     this.kpi3.title = action.charAt(0).toUpperCase() + action.slice(1).toLowerCase() + " Más Frecuente"
     this.graph1.title = "Totales de " + action + " por Periodo"
-    this.graph3.title = "Distribución de Tipos de " + action
+    this.graph3.title = "Tipos de " + action
     this.graph3.subtitle = ""//"Porcentaje de cada tipo de " + action.toLowerCase()
     this.graph4.title = "Inconsistencias en " + action
     this.graph4.subtitle = ""//action + " con Inconsistencias"
@@ -187,7 +187,7 @@ export class MainDashboardComponent implements AfterViewInit{
     backgroundColor: 'transparent',
     legend: {
       position: 'right-center',
-      textStyle: { color: '#6c757d', fontSize: 17 }
+      textStyle: { color: '#6c757d', fontSize: 14 }
     },
     chartArea: { width: '100%', height: '100%' },
     pieHole: 0,
@@ -200,7 +200,7 @@ export class MainDashboardComponent implements AfterViewInit{
     },
     pieSliceTextStyle: {
       color: 'black',
-      fontSize: 18
+      fontSize: 14
     }
   };
 
