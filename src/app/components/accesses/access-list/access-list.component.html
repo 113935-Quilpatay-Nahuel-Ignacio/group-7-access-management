@@ -32,22 +32,17 @@
         <th scope="col">Vehículo</th>
         <th scope="col">Documento</th>
         <th scope="col">Visitante</th>
-        <!--<th scope="col">Comentario</th>   -->
         <th scope="col">Autorizador</th>
       </tr>
       </thead>
       <tbody>
         @for (item of (filteredList.length ? filteredList : list); track item) {
-
           <tr>
-            <td><i
-              [class]="'bi ' + VisitorTypeIconDictionary[item.visitorType]"
-              [title]="translateTable(item.visitorType, typeDictionary)">
-            </i>
-              {{ item.firstName + ' ' + item.lastName }}
+            <td>
+              {{ transformDateTable(item.actionDate) }}
             </td>
             <td>
-              {{ getDocumentAbbreviation(item.docType) + ' ' + item.docNumber }}
+              {{ transformHourTable(item.actionDate) }}
             </td>
             <td>
               @if (item.action === "ENTRY") {
@@ -59,22 +54,20 @@
               }
             </td>
             <td>
-              {{ transformHourTable(item.actionDate) }}
-            </td>
-            <td>
-              {{ transformDateTable(item.actionDate) }}
-            </td>
-            <td>
               {{ (item.vehicleReg === "NULL" || item.vehicleReg == undefined || item.vehicleReg == "") ? "N/A" : item.vehicleReg }}
             </td>
             <td>
-              {{ (item.comments === "" || item.comments == undefined) ? "N/A" : item.comments }}
+              {{ getDocumentAbbreviation(item.docType) + ' ' + item.docNumber }}
             </td>
             <td>
+              <!--TODO icono-->
+              {{ item.firstName + ' ' + item.lastName }}
+            </td>
+            <td>
+              <!--TODO icono-->
               {{ item.authorizer?.authFirstName + ' ' + item.authorizer?.authLastName }}
             </td>
           </tr>
-
         }
       </tbody>
     </table>

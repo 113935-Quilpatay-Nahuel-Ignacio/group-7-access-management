@@ -57,8 +57,8 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   totalItems: number = 0;
   //#endregion
 
-  heads: string[] =["Visitante", "Documento", "Tipo", "Accion", "Hora", "Vehículo", "Comentario", "Autorizador"]
-  props: string[] =["Visitante", "Documento", "Tipo", "Accion", "Hora", "Vehículo", "Comentario", "Autorizador" ]
+  heads: string[] = ["Día", "Hora", "Accion", "Vehículo", "Documento", "Visitante", "Autorizador"]
+  props: string[] = ["Día", "Hora", "Accion", "Vehículo", "Documento", "Visitante", "Autorizador"]
 
   //#region ATT de ACTIVE
   retrieveByActive: boolean | undefined = true;
@@ -511,14 +511,13 @@ transformDateTable(dateString: string): string{
   protected readonly oninput = oninput;
 
   transformListToTableData(list :any) {
-    return list.map((item: { firstName: any; lastName: any; docType: any; docNumber: any; visitorType: any; action: any; actionDate: any; vehicleReg: any; comments: any; authorizer: { name: any; lastName: any; }; }) => ({
-      Visitante: `${item.firstName} ${item.lastName}`,
-      Documento: `${(item.docType === "PASSPORT" ? "PASAPORTE" : item.docType)} ${item.docNumber}`,
-      Tipo: this.translateTable(item.visitorType, this.typeDictionary),
+    return list.map((item: { firstName: any; lastName: any; docType: any; docNumber: any; visitorType: any; action: any; actionDate: any; vehicleReg: any; authorizer: { name: any; lastName: any; }; }) => ({
+      Día: this.transformDateTable(item.actionDate),
+      Hora: this.transformHourTable(item.actionDate),
       Accion: this.translateTable(item.action, this.actionDictionary),
-      Hora: this.transformDate(item.actionDate),
-      Vehículo: item.vehicleReg || 'N/A',  // 'N/A' si no hay registro de vehículo
-      Comentario: item.comments || 'N/A',
+      Vehículo: item.vehicleReg || 'N/A',
+      Documento: `${(item.docType === "PASSPORT" ? "PASAPORTE" : item.docType)} ${item.docNumber}`,
+      Visitante: `${item.firstName} ${item.lastName}`,
       Autorizador: `${item.authorizer?.name || ''} ${item.authorizer?.lastName || ''}`
     }));
   }
