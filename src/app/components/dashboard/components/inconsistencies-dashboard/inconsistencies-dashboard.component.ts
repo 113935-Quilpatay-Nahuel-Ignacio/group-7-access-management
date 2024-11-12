@@ -54,6 +54,10 @@ export class InconsistenciesDashboardComponent implements AfterViewInit{
 
     this.graph1.title = action + " totales"
 
+
+    this.columnChartOptions.hAxis.showTextEvery = this.filters.group == "WEEK" ? 2 : 3
+    this.columnChartOptions.hAxis.showTextEvery = this.filters.group == "MONTH" || this.filters.group == "YEAR" ? 1 : 3
+
     //obtener filtro
     let inconsistenciesFilter = {...this.filters}
     inconsistenciesFilter.dataType= "INCONSISTENCIES"

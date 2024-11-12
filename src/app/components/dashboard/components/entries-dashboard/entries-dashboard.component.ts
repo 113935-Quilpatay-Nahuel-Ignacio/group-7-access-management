@@ -46,6 +46,9 @@ export class EntriesDashboardComponent implements AfterViewInit {
     this.kpi1.icon = this.filters.action == "ENTRY" ? "bi bi-arrow-up-circle" : "bi bi-arrow-down-circle"
     this.kpi1.color = this.filters.action == "ENTRY" ? "bg-success" : "bg-danger"
 
+    this.columnChartOptions.hAxis.showTextEvery = this.filters.group == "WEEK" ? 2 : 3
+    this.columnChartOptions.hAxis.showTextEvery = this.filters.group == "MONTH" || this.filters.group == "YEAR" ? 1 : 3
+
     //obtener filtro
     this.dashBoardService.getPeriod(this.filters).subscribe(data => {
       this.graph1.data = mapColumnData(data)
