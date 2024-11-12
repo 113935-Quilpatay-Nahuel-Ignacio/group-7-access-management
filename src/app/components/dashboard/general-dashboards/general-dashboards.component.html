@@ -34,7 +34,7 @@
             <span class="text-secondary">Tipo de Visitante:</span>
           </div>
           <div class="col-8">
-            <select id="visitor-type" class="form-select" [(ngModel)]="filters.type" (change)="filterData()">
+            <select id="visitor-type" class="form-select" [(ngModel)]="filters.type" (change)="filterData()" [disabled]="status == DashboardStatus.Late">
               <option value="">Todos</option>
               <option value="OWNER">Dueño</option>
               <option value="WORKER">Trabajador</option>
@@ -58,13 +58,13 @@
         <div class="filter-group">
           <div class="btn-group w-100" role="group">
             <input type="radio" class="btn-check" name="paymentStatus" id="approved"
-                   [(ngModel)]="filters.action" value="ENTRY" (ngModelChange)="filterData()">
+                   [(ngModel)]="filters.action" value="ENTRY" (ngModelChange)="filterData()" [disabled]="status == DashboardStatus.Late">
             <label class="btn btn-outline-primary" for="approved">
               <i class="bi bi-arrow-down-circle me-1"></i>Ingresos
             </label>
 
             <input type="radio" class="btn-check" name="paymentStatus" id="rejected"
-                   [(ngModel)]="filters.action" value="EXIT" (ngModelChange)="filterData()">
+                   [(ngModel)]="filters.action" value="EXIT" (ngModelChange)="filterData()" [disabled]="status == DashboardStatus.Late">
             <label class="btn btn-outline-primary" for="rejected">
               <i class="bi bi-arrow-up-circle me-1"></i>Egresos
             </label>

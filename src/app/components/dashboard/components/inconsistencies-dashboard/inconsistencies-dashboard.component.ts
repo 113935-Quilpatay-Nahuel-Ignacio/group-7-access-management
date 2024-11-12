@@ -49,6 +49,8 @@ export class InconsistenciesDashboardComponent implements AfterViewInit{
     this.kpi2.desc ="Total de " + action.toLowerCase() + " en el periodo vs el periodo anterior"
 
     this.kpi3.title ="Periodo con mayor cantidad"
+    this.kpi3.color = "bg-info"
+    this.kpi3.icon = "bi bi-calendar-event"
 
     this.graph1.title = action + " totales"
 
