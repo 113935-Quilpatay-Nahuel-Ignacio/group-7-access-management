@@ -84,7 +84,7 @@ export class MainDashboardComponent implements AfterViewInit{
     this.graph2.options = {...this.columnChartOptions,
       colors: ['#ffc107']}
     this.graph2.options.width = null;
-    this.graph2.options.height = 225;
+    this.graph2.options.height = 200;
 
     //obtener filtro
     this.dashBoardService.getPeriod(this.filters).subscribe(data => {

@@ -38,19 +38,23 @@ export class InconsistenciesDashboardComponent implements AfterViewInit{
   getData() {
     let action = this.filters.action == "ENTRY" ? "Ingresos" : "Egresos"
     this.title = " inconsistencias de " + action.toLowerCase()
-    this.kpi1.icon = this.filters.action == "ENTRY" ? "bi bi-arrow-up-circle" : "bi bi-arrow-down-circle"
-    this.kpi1.color = this.filters.action == "ENTRY" ? "bg-success" : "bg-danger"
-    this.kpi1.title = action + " en el periodo vs el periodo anterior"
-    this.kpi2.title = "Tendencias de " + action.toLowerCase()
-    this.kpi1.desc ="Total de " + action.toLowerCase() + " en el periodo vs el periodo anterior"
-    this.kpi3.desc ="Tipo de " + action.toLowerCase() + " más frecuente en el periodo"
-    this.kpi3.title = "Tipo de " + action.toLowerCase() + " más recurrente"
+
+    this.kpi1.title = "Inconsistencias en el periodo vs el anterior"
+    this.kpi1.icon = "bi-exclamation-circle"
+    this.kpi1.color = "bg-danger"
+    this.kpi1.desc ="Total de inconsistencias en el periodo vs el periodo anterior"
+
+    this.kpi2.title = "Tendencias de inconsistencias"
+    this.kpi2.color = this.filters.action == "ENTRY" ? "bg-success" : "bg-danger"
+    this.kpi2.desc ="Total de " + action.toLowerCase() + " en el periodo vs el periodo anterior"
+
+    this.kpi3.title ="Periodo con mayor cantidad"
+
     this.graph1.title = action + " totales"
 
     //obtener filtro
     let inconsistenciesFilter = {...this.filters}
     inconsistenciesFilter.dataType= "INCONSISTENCIES"
-    console.log(inconsistenciesFilter)
     this.dashBoardService.getPeriod(inconsistenciesFilter).subscribe(data => {
       this.graph1.data = mapColumnData(data)
       this.graph1.options = {...this.columnChartOptions,
@@ -59,7 +63,28 @@ export class InconsistenciesDashboardComponent implements AfterViewInit{
       data.forEach(item => {
         totalValue1 += Number(item.value);
       });
+      let previousFilter = createPreviousFilter(inconsistenciesFilter)
+      this.dashBoardService.getPeriod(previousFilter).subscribe(data => {
+        let totalValue = 0;
+        data.forEach(item => {
+          totalValue += Number(item.value);
+        });
+        this.kpi1.value = totalValue1.toString() + " vs " + totalValue.toString();
+        let kpi2value = ((totalValue - totalValue1 )/ totalValue1) * 100
+        this.kpi2.value = kpi2value.toFixed(2) + "%";
+        this.kpi2.icon = kpi2value > 0 ? "bi bi-graph-up" : "bi bi-graph-down"
+      })
+
+      let maxValueResponse = data[0];
+      for (let i = 1; i < data.length; i++) {
+        if (parseFloat(data[i].value) > parseFloat(maxValueResponse.value)) {
+          maxValueResponse = data[i];
+        }
+      }
+      this.kpi3.value = maxValueResponse.key
     })
+
+
 
   }
 
@@ -78,6 +103,7 @@ export class InconsistenciesDashboardComponent implements AfterViewInit{
     colors: ['#ffc107'],
     hAxis: {
       textStyle: {color: '#6c757d'},
+      showTextEvery: 2
     },
     animation: {
       duration: 1000,
@@ -102,4 +128,38 @@ function mapColumnData(array:dashResponse[]) : any{
     data.key,
     data.value || 0
   ]);
+}
+
+function createPreviousFilter(filters: DashBoardFilters): DashBoardFilters {
+  const dateFrom = new Date(filters.dateFrom);
+  const dateTo = new Date(filters.dateTo);
+
+  const diffInDays = (dateTo.getTime() - dateFrom.getTime()) / (1000 * 60 * 60 * 24);
+
+  const newDateTo = dateFrom;
+  const newDateFrom = new Date(dateFrom);
+  newDateFrom.setDate(newDateFrom.getDate() - diffInDays);
+
+  return {
+    dateFrom: newDateFrom.toISOString(),
+    dateTo: newDateTo.toISOString(),
+    action: filters.action,
+    group: filters.group,
+    type: filters.type,
+    dataType: "ALL"
+  };
+}
+function formatFormDate(inputDate: string): string {
+  // Verificar que la entrada sea una fecha válida en el formato yyyy-MM-dd
+  const dateParts = inputDate.split('-');
+  if (dateParts.length !== 3) {
+    throw new Error('Fecha no válida. Debe estar en formato yyyy-MM-dd');
+  }
+
+  const year = dateParts[0];
+  const month = dateParts[1];
+  const day = dateParts[2];
+
+  // Devolver la fecha en el formato dd-MM-yyyy
+  return `${day}-${month}-${year}`;
 }

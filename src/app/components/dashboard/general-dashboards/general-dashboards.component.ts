@@ -5,7 +5,7 @@ import {AccessPieDashboardComponent} from '../../accesses/access-pie-dashboard/a
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MainContainerComponent} from "ngx-dabd-grupo01";
 import {AccessService} from "../../../services/access.service";
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {GoogleChartsModule} from "angular-google-charts";
 import {KpiComponent} from "../commons/kpi/kpi.component";
 import {DashBoardFilters, DashboardStatus} from "../../../models/dashboard.model";
@@ -22,7 +22,7 @@ import {NgClass} from "@angular/common";
 @Component({
   selector: 'app-general-dashboards',
   standalone: true,
-  imports: [AccessHourlyDashboardComponent, AccessWeeklyDashboardComponent, AccessPieDashboardComponent, ReactiveFormsModule, FormsModule, MainContainerComponent, GoogleChartsModule, KpiComponent, MainDashboardComponent, EntriesDashboardComponent, LateDashboardComponent, TypesDashboardComponent, InconsistenciesDashboardComponent, NgClass],
+  imports: [AccessHourlyDashboardComponent, AccessWeeklyDashboardComponent, AccessPieDashboardComponent, ReactiveFormsModule, FormsModule, MainContainerComponent, GoogleChartsModule, KpiComponent, MainDashboardComponent, EntriesDashboardComponent, LateDashboardComponent, TypesDashboardComponent, InconsistenciesDashboardComponent, NgClass, NgbPopover],
   templateUrl: './general-dashboards.component.html',
   styleUrl: './general-dashboards.component.css'
 })
