@@ -79,7 +79,7 @@ export class MainDashboardComponent implements AfterViewInit{
     this.graph4.options = {...this.columnChartOptions,
       colors: ['#ffc107']}
     this.graph4.options.chartArea.width='95%';
-    this.graph4.options.width = 650;
+    this.graph4.options.width = 1000;
     this.graph4.options.height = 175;
 
     this.graph3.options = this.pieChartOptions
@@ -94,7 +94,7 @@ export class MainDashboardComponent implements AfterViewInit{
       this.graph1.data = mapColumnData(data)
       this.graph1.options = {...this.columnChartOptions,
         colors: [this.filters.action == 'ENTRY' ? '#40916c' : '#9d0208']}
-      this.graph1.options.height = 500
+      this.graph1.options.height = 200
       let totalValue1 = 0;
       data.forEach(item => {
         totalValue1 += Number(item.value);
