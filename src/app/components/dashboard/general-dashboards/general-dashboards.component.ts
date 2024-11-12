@@ -71,6 +71,7 @@ export class GeneralDashboardsComponent implements OnInit, AfterViewInit{
   @ViewChild(BarchartComponent) barchartComponent!: BarchartComponent;
   @ViewChild('infoModal') infoModal!: TemplateRef<any>
 
+
   /**
    * @constructor
    * @param accessService Servicio para manejo de datos de acceso
@@ -81,6 +82,7 @@ export class GeneralDashboardsComponent implements OnInit, AfterViewInit{
    * Inicializa las fechas por defecto para los filtros
    * @returns void
    */
+
   initializeDefaultDates() {
     this.filters.group = "DAY";
     this.filters.type = "";
@@ -127,6 +129,7 @@ export class GeneralDashboardsComponent implements OnInit, AfterViewInit{
     this.types?.getData();
     this.inconsistencies?.getData();
     this.late?.getData();
+
   }
 
   /**
