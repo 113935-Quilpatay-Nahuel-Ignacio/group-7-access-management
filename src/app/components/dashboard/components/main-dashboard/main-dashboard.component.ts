@@ -224,7 +224,10 @@ function createPreviousFilter(filters: DashBoardFilters): DashBoardFilters {
     ...filters,
     dateFrom: newDateFrom.toISOString(),
     dateTo: newDateTo.toISOString(),
-    dataType: "ALL",
+    action: filters.action,
+    group: filters.group,
+    type: filters.type,
+    dataType: "ALL"
   };
 }
 
