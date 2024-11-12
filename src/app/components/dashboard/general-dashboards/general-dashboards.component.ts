@@ -68,10 +68,11 @@ export class GeneralDashboardsComponent implements OnInit, AfterViewInit{
     private accessService: AccessService) {
   }
 
-  initializeDefaultDates(){
-    this.filters.group = "DAY"
-    this.filters.type = ""
-    this.filters.action = "ENTRY"
+  initializeDefaultDates() {
+    this.filters.group = "DAY";
+    this.filters.type = "";
+    this.filters.action = "ENTRY";
+    
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
     this.filters.dateTo = now.toISOString().slice(0, 16);
@@ -93,12 +94,26 @@ export class GeneralDashboardsComponent implements OnInit, AfterViewInit{
     this.filterData()
   }
 
-  filterData(){
-    this.main.getData()
-    this.entries.getData()
-    this.types.getData()
-    this.inconsistencies.getData()
-    this.late.getData()
+  filterData() {
+    // Validar que dateTo no sea futuro
+    const now = new Date();
+    const selectedDateTo = new Date(this.filters.dateTo);
+    
+    if (selectedDateTo > now) {
+      this.filters.dateTo = now.toISOString().slice(0, 16);
+    }
+
+    this.main.getData();
+    this.entries.getData();
+    this.types.getData();
+    this.inconsistencies.getData();
+    this.late.getData();
+  }
+
+  getMaxDate(): string {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    return now.toISOString().slice(0, 16);
   }
 
   ngOnInit(): void {
