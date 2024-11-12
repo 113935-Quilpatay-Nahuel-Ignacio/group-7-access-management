@@ -107,7 +107,7 @@ export class MainDashboardComponent implements AfterViewInit{
           totalValue += Number(item.value);
         });
 
-        this.kpi1.value = totalValue1.toString() + " vs " + totalValue.toString();
+        this.kpi1.value = totalValue1.toString() + " / " + totalValue.toString();
         let kpi2value = ((totalValue - totalValue1 )/ totalValue1) * 100 == Infinity || Number.isNaN((((totalValue - totalValue1) / totalValue1) * 100)) ? 0 : ((totalValue - totalValue1 )/ totalValue1) * 100;
         this.kpi2.value = kpi2value.toFixed(2) + "%";
         this.kpi2.icon = kpi2value > 0 ? "bi bi-graph-up" : "bi bi-graph-down"
