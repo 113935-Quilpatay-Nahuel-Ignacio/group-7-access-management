@@ -61,6 +61,7 @@
             </td>
             <td>
               <!--TODO icono-->
+              <i [class]="'bi ' + VisitorTypeIconDictionary[item.visitorType]"></i>
               {{ transformUpperCamelCase(item.firstName) + ' ' + transformUpperCamelCase(item.lastName) }}
             </td>
             <td>
