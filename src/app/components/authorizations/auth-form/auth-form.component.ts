@@ -236,7 +236,6 @@ export class AuthFormComponent implements OnInit {
         this.toastService.remove(this.toastService.toasts[0]);  // Cierra el modal
         this.isUpdate = false;
       }, 1500);
-
     } else {
       this.markAllAsTouched();
     }
@@ -249,8 +248,12 @@ export class AuthFormComponent implements OnInit {
 
   openModal() {
     const modalRef = this.modalService.open(RangeModalComponent, {size: 'xl'});
-    console.log(this.authForm.get('authRangeRequest')?.value)
+    console.log('range request ' + this.authForm.get('authRangeRequest')?.value)
+    console.log('value ' + this.authForm.controls['visitorType'].value)
+    
     modalRef.componentInstance.ranges = this.authForm.get('authRangeRequest')?.value
+    modalRef.componentInstance.visitorType = this.authForm.controls['visitorType'].value
+
     modalRef.result.then((result) => {
       if (result != undefined){
 
