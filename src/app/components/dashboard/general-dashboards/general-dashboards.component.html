@@ -58,14 +58,14 @@
         <div class="filter-group">
           <div class="btn-group w-100" role="group">
             <input type="radio" class="btn-check" name="paymentStatus" id="approved"
-                   [(ngModel)]="filters.action" value="ENTRY" (ngModelChange)="filterData()" [disabled]="status == DashboardStatus.Late">
-            <label class="btn btn-outline-primary" for="approved">
+                   [(ngModel)]="filters.action" value="ENTRY" (ngModelChange)="filterData()" [disabled]="status == DashboardStatus.Late" >
+            <label class="btn" [ngClass]="{'btn-outline-secondary':status == DashboardStatus.Late, 'btn-outline-primary':status != DashboardStatus.Late}" for="approved">
               <i class="bi bi-arrow-down-circle me-1"></i>Ingresos
             </label>
 
             <input type="radio" class="btn-check" name="paymentStatus" id="rejected"
                    [(ngModel)]="filters.action" value="EXIT" (ngModelChange)="filterData()" [disabled]="status == DashboardStatus.Late">
-            <label class="btn btn-outline-primary" for="rejected">
+            <label class="btn" [ngClass]="{'btn-outline-secondary':status == DashboardStatus.Late, 'btn-outline-primary':status != DashboardStatus.Late}" for="rejected">
               <i class="bi bi-arrow-up-circle me-1"></i>Egresos
             </label>
           </div>

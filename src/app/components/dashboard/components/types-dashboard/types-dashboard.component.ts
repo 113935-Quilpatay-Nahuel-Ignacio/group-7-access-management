@@ -47,6 +47,7 @@ export class TypesDashboardComponent implements AfterViewInit {
   getData() {
     let action = this.filters.action == "ENTRY" ? "ingresos" : "egresos"
     this.title = action
+    this.graph1.title = "Tipos de " + action
     this.graph1.options=this.pieChartOptions
     this.kpi3.title = "Total de " + action
     this.kpi3.icon = this.filters.action == "ENTRY" ? "bi bi-arrow-up-circle" : "bi bi-arrow-down-circle"

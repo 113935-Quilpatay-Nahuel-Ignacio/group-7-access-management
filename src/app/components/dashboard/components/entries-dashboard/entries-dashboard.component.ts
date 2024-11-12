@@ -98,7 +98,7 @@ export class EntriesDashboardComponent implements AfterViewInit {
       startup: true
     },
     height: 400,
-    width: 900,
+    width: 650,
     bar: {groupWidth: '70%'}
   };
 

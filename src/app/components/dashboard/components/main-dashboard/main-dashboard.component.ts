@@ -79,14 +79,14 @@ export class MainDashboardComponent implements AfterViewInit{
     this.graph4.options = {...this.columnChartOptions,
       colors: ['#ffc107']}
     this.graph4.options.chartArea.width='95%';
-    this.graph4.options.width = 900;
+    this.graph4.options.width = 650;
     this.graph4.options.height = 175;
 
     this.graph3.options = this.pieChartOptions
 
     this.graph2.options = {...this.columnChartOptions,
       colors: ['#ffc107']}
-    this.graph2.options.width = null;
+    this.graph2.options.width = 300;
     this.graph2.options.height = 200;
 
     //obtener filtro
@@ -108,7 +108,7 @@ export class MainDashboardComponent implements AfterViewInit{
         });
 
         this.kpi1.value = totalValue1.toString() + " vs " + totalValue.toString();
-        let kpi2value = ((totalValue - totalValue1 )/ totalValue1) * 100
+        let kpi2value = ((totalValue - totalValue1 )/ totalValue1) * 100 == Infinity || Number.isNaN((((totalValue - totalValue1) / totalValue1) * 100)) ? 0 : ((totalValue - totalValue1 )/ totalValue1) * 100;
         this.kpi2.value = kpi2value.toFixed(2) + "%";
         this.kpi2.icon = kpi2value > 0 ? "bi bi-graph-up" : "bi bi-graph-down"
       })
@@ -180,7 +180,7 @@ export class MainDashboardComponent implements AfterViewInit{
       startup: true
     },
     height: 400,
-    width: '100%',
+    width: 300,
     bar: {groupWidth: '70%'}
   };
 
@@ -193,6 +193,7 @@ export class MainDashboardComponent implements AfterViewInit{
     chartArea: { width: '100%', height: '100%' },
     pieHole: 0,
     height: '80%',
+    width: 300,
     slices: {
       0: { color: '#00BFFF' },  // MP siempre azul
       1: { color: '#8A2BE2' },  // STRIPE siempre violeta

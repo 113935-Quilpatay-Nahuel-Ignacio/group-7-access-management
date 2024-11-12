@@ -36,16 +36,16 @@ export class LateDashboardComponent implements AfterViewInit {
   constructor(private dashBoardService: DashboardService) {}
 
   getData() {
-    let action = this.filters.action == "ENTRY" ? "Ingresos" : "Egresos"
+    let action = this.filters.action == "ENTRY" ? "Egresos" : "Egresos"
     this.title = " egresos tardíos de empleados"
-    this.title = " inconsistencias de " + action.toLowerCase()
+    this.title = " egresos tardios de " + action.toLowerCase()
 
-    this.kpi1.title = "Inconsistencias en el periodo vs el anterior"
+    this.kpi1.title = "Egresos tardios en el periodo vs el anterior"
     this.kpi1.icon = "bi-exclamation-circle"
     this.kpi1.color = "bg-danger"
-    this.kpi1.desc ="Total de inconsistencias en el periodo vs el periodo anterior"
+    this.kpi1.desc ="Total de egresos tardios en el periodo vs el periodo anterior"
 
-    this.kpi2.title = "Tendencias de inconsistencias"
+    this.kpi2.title = "Tendencias de egresos tardios"
     this.kpi2.color = this.filters.action == "ENTRY" ? "bg-success" : "bg-danger"
     this.kpi2.desc ="Total de " + action.toLowerCase() + " en el periodo vs el periodo anterior"
 
@@ -78,7 +78,7 @@ export class LateDashboardComponent implements AfterViewInit {
           totalValue += Number(item.value);
         });
         this.kpi1.value = totalValue1.toString() + " vs " + totalValue.toString();
-        let kpi2value = ((totalValue - totalValue1 )/ totalValue1) * 100
+        let kpi2value = ((totalValue - totalValue1 )/ totalValue1) * 100 == Infinity || Number.isNaN((((totalValue - totalValue1) / totalValue1) * 100)) ? 0 : ((totalValue - totalValue1 )/ totalValue1) * 100;
         this.kpi2.value = kpi2value.toFixed(2) + "%";
         this.kpi2.icon = kpi2value > 0 ? "bi bi-graph-up" : "bi bi-graph-down"
       })
@@ -117,7 +117,7 @@ export class LateDashboardComponent implements AfterViewInit {
       startup: true
     },
     height: 500,
-    width: '925',
+    width: '650',
     bar: {groupWidth: '70%'}
   };
 
