@@ -28,7 +28,6 @@
       <tr>
         <th scope="col">Visitante</th>
         <th scope="col">Documento</th>
-        <th scope="col">Tipo</th>
         <th scope="col">Accion</th>
         <th scope="col">Hora</th>
         <th scope="col">Día</th>
@@ -41,15 +40,14 @@
         @for (item of (filteredList.length ? filteredList : list); track item) {
 
           <tr>
-            <td>
-              <!--TODO icono-->
+            <td><i
+              [class]="'bi ' + VisitorTypeIconDictionary[item.visitorType]"
+              [title]="translateTable(item.visitorType, typeDictionary)">
+            </i>
               {{ item.firstName + ' ' + item.lastName }}
             </td>
             <td>
               {{ getDocumentAbbreviation(item.docType) + ' ' + item.docNumber }}
-            </td>
-            <td>
-              {{ translateTable(item.visitorType, typeDictionary) }}
             </td>
             <td>
               @if (item.action === "ENTRY") {
@@ -73,7 +71,6 @@
               {{ (item.comments === "" || item.comments == undefined) ? "N/A" : item.comments }}
             </td>
             <td>
-              <!--TODO icono-->
               {{ item.authorizer?.authFirstName + ' ' + item.authorizer?.authLastName }}
             </td>
           </tr>

@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {NgIf} from "@angular/common";
 import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {Auth, VisitorTypeAccessDictionary} from "../../../models/authorize.model";
+import {Auth, VisitorTypeAccessDictionary, VisitorTypeIconDictionary} from "../../../models/authorize.model";
 import { CommonModule } from '@angular/common';
 import {ActivatedRoute, Router} from "@angular/router";
 import {AccessActionDictionary, AccessFilters, AccessModel} from "../../../models/access.model";
@@ -183,9 +183,10 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   getAll() {
     this.accessService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
         data.items.forEach(date => {
-          if (date.authorizerId != undefined){
-
-          date.authorizer = this.authorizerCompleterService.completeAuthorizer(date.authorizerId)
+          if (date.authorizerId != undefined && date.authorizerId< 10){
+            date.authorizer = this.authorizerCompleterService.completeAuthorizer(date.authorizerId)
+          } else {
+            date.authorizer = this.authorizerCompleterService.completeAuthorizer(3)
           }
         })
       this.completeList = this.transformListToTableData(data.items);
@@ -209,7 +210,11 @@ export class AccessListComponent implements OnInit, AfterViewInit {
       || x.lastName?.toLowerCase().includes(filter) || x.docNumber?.toString().includes(filter) || x.vehicleReg?.toLowerCase().includes(filter)))
         let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
         response.content.forEach(data => {
-          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
+          if (data.authorizerId != undefined && data.authorizerId< 10){
+            data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
+          } else {
+            data.authorizer = this.authorizerCompleterService.completeAuthorizer(3)
+          }
         })
 
         this.list = response.content;
@@ -230,7 +235,11 @@ export class AccessListComponent implements OnInit, AfterViewInit {
     this.accessService.getByType(this.currentPage, this.pageSize, type, this.retrieveByActive).subscribe(data => {
         let response = this.transformResponseService.transformType(data.items,this.currentPage, this.pageSize, type, this.retrieveByActive)
         response.content.forEach(data => {
-          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
+          if (data.authorizerId != undefined && data.authorizerId < 10){
+            data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
+          } else {
+            data.authorizer = this.authorizerCompleterService.completeAuthorizer(3)
+          }
         })
 
         this.list = response.content;
@@ -517,4 +526,6 @@ transformDateTable(dateString: string): string{
   onInfoButtonClick() {
     this.modalService.open(this.infoModal, { size: 'lg' });
     }
+
+  protected readonly VisitorTypeIconDictionary = VisitorTypeIconDictionary;
 }
