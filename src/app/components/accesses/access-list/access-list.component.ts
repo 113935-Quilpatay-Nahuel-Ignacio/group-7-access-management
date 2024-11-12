@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {NgIf} from "@angular/common";
 import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {Auth, VisitorTypeAccessDictionary} from "../../../models/authorize.model";
+import {Auth, VisitorTypeAccessDictionary, VisitorTypeIconDictionary} from "../../../models/authorize.model";
 import { CommonModule } from '@angular/common';
 import {ActivatedRoute, Router} from "@angular/router";
 import {AccessActionDictionary, AccessFilters, AccessModel} from "../../../models/access.model";
@@ -57,8 +57,8 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   totalItems: number = 0;
   //#endregion
 
-  heads: string[] =["Visitante", "Documento", "Tipo", "Accion", "Hora", "Vehículo", "Comentario", "Autorizador"]
-  props: string[] =["Visitante", "Documento", "Tipo", "Accion", "Hora", "Vehículo", "Comentario", "Autorizador" ]
+  heads: string[] = ["Día", "Hora", "Accion", "Vehículo", "Documento", "Visitante", "Autorizador"]
+  props: string[] = ["Día", "Hora", "Accion", "Vehículo", "Documento", "Visitante", "Autorizador"]
 
   //#region ATT de ACTIVE
   retrieveByActive: boolean | undefined = true;
@@ -83,6 +83,7 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   //#endregion
 
   //#region FILTRADO
+  
 
   searchParams: { [key: string]: any } = {};
 
@@ -183,9 +184,10 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   getAll() {
     this.accessService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
         data.items.forEach(date => {
-          if (date.authorizerId != undefined){
-
-          date.authorizer = this.authorizerCompleterService.completeAuthorizer(date.authorizerId)
+          if (date.authorizerId != undefined && date.authorizerId< 10){
+            date.authorizer = this.authorizerCompleterService.completeAuthorizer(date.authorizerId)
+          } else {
+            date.authorizer = this.authorizerCompleterService.completeAuthorizer(3)
           }
         })
       this.completeList = this.transformListToTableData(data.items);
@@ -209,7 +211,11 @@ export class AccessListComponent implements OnInit, AfterViewInit {
       || x.lastName?.toLowerCase().includes(filter) || x.docNumber?.toString().includes(filter) || x.vehicleReg?.toLowerCase().includes(filter)))
         let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
         response.content.forEach(data => {
-          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
+          if (data.authorizerId != undefined && data.authorizerId< 10){
+            data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
+          } else {
+            data.authorizer = this.authorizerCompleterService.completeAuthorizer(3)
+          }
         })
 
         this.list = response.content;
@@ -230,7 +236,11 @@ export class AccessListComponent implements OnInit, AfterViewInit {
     this.accessService.getByType(this.currentPage, this.pageSize, type, this.retrieveByActive).subscribe(data => {
         let response = this.transformResponseService.transformType(data.items,this.currentPage, this.pageSize, type, this.retrieveByActive)
         response.content.forEach(data => {
-          data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
+          if (data.authorizerId != undefined && data.authorizerId < 10){
+            data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
+          } else {
+            data.authorizer = this.authorizerCompleterService.completeAuthorizer(3)
+          }
         })
 
         this.list = response.content;
@@ -456,7 +466,7 @@ transformDateTable(dateString: string): string{
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const year = date.getFullYear();
 
-  return `${day}-${month}-${year}`;
+  return `${day}/${month}/${year}`;
 }
 
   transformHourTable(dateString: string): string{
@@ -501,20 +511,30 @@ transformDateTable(dateString: string): string{
 
   protected readonly oninput = oninput;
 
-  transformListToTableData(list :any) {
-    return list.map((item: { firstName: any; lastName: any; docType: any; docNumber: any; visitorType: any; action: any; actionDate: any; vehicleReg: any; comments: any; authorizer: { name: any; lastName: any; }; }) => ({
-      Visitante: `${item.firstName} ${item.lastName}`,
-      Documento: `${(item.docType === "PASSPORT" ? "PASAPORTE" : item.docType)} ${item.docNumber}`,
-      Tipo: this.translateTable(item.visitorType, this.typeDictionary),
-      Accion: this.translateTable(item.action, this.actionDictionary),
-      Hora: this.transformDate(item.actionDate),
-      Vehículo: item.vehicleReg || 'N/A',  // 'N/A' si no hay registro de vehículo
-      Comentario: item.comments || 'N/A',
-      Autorizador: `${item.authorizer?.name || ''} ${item.authorizer?.lastName || ''}`
-    }));
-  }
+transformListToTableData(list :any) {
+  return list.map((item: { firstName: any; lastName: any; docType: any; docNumber: any; visitorType: any; action: any; actionDate: any; vehicleReg: any; authorizer: { name: any; lastName: any; }; }) => ({
+    Día: this.transformDateTable(item.actionDate),
+    Hora: this.transformHourTable(item.actionDate),
+    Accion: this.translateTable(item.action, this.actionDictionary),
+    Vehículo: item.vehicleReg || 'N/A',
+    Documento: `${(item.docType === "PASSPORT" ? "PASAPORTE" : item.docType)} ${item.docNumber}`,
+    Visitante: `${item.firstName} ${item.lastName}`,
+    Autorizador: `${item.authorizer?.name || ''} ${item.authorizer?.lastName || ''}`
+  }));
+}
+
+transformUpperCamelCase(value: string): string {
+  if (!value) return value;
+  return value
+    .replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, (match, index) =>
+      index === 0 ? match.toUpperCase() : match.toLowerCase()
+    )
+    .replace(/\s+/g, ''); // Elimina espacios
+}
 
   onInfoButtonClick() {
     this.modalService.open(this.infoModal, { size: 'lg' });
     }
+
+  protected readonly VisitorTypeIconDictionary = VisitorTypeIconDictionary;
 }

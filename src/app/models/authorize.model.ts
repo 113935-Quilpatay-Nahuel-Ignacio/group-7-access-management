@@ -54,6 +54,17 @@ export const VisitorTypeAccessDictionary: { [key: string]: string } = {
   "Entidad": "PROVIDER_ORGANIZATION",
 };
 
+export const VisitorTypeIconDictionary: { [key: string]: string } = {
+  "VISITOR": "bi-person",
+  "PROVIDER": "bi-truck",
+  "OWNER": "bi-house-door",
+  "WORKER": "bi-wrench",
+  "EMPLOYEE": "bi-briefcase",
+  "COHABITANT": "bi-people-fill",
+  "EMERGENCY": "bi-exclamation-triangle-fill",
+  "PROVIDER_ORGANIZATION": "bi-building"
+};
+
 export enum AuthFilters {
   NOTHING = 'NOTHING',
   PLOT_ID = 'Nro de lote',

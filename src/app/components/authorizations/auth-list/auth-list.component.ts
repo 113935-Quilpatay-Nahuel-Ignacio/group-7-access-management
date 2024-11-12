@@ -1,5 +1,11 @@
 import {AfterViewInit, Component, ElementRef, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {Auth, AuthFilters, AuthRange, VisitorTypeAccessDictionary} from "../../../models/authorize.model";
+import {
+  Auth,
+  AuthFilters,
+  AuthRange,
+  VisitorTypeAccessDictionary,
+  VisitorTypeIconDictionary
+} from "../../../models/authorize.model";
 import {Router} from "@angular/router";
 import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {AuthService} from "../../../services/auth.service";
@@ -39,8 +45,8 @@ import {DaysOfWeek} from "../../../models/authorizeRequest.model";
   styleUrl: './auth-list.component.css'
 })
 export class AuthListComponent  implements OnInit, AfterViewInit {
-  
-  
+
+
   //#region FILTRADO
 
    searchParams: { [key: string]: any } = {};
@@ -50,17 +56,17 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
    startDate: string = '';
    endDate: string = '';
    type: string = '';
- 
+
    setFilterType(type: string): void {
      this.filterType = type;
    }
- 
+
    applyFilters(): void {
      if (this.filterType === 'Tipo Visitante') {
        this.searchParams = { visitorTypes: [this.type] }
       }
   }
- 
+
    clearFilters(): void {
   // Restablece todos los filtros a su valor inicial.
    this.filterType = '';
@@ -68,7 +74,7 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
    this.endDate = '';
    this.type = '';
    this.searchParams = {};
- 
+
    // Reinicia la página actual a la primera
    this.currentPage = 0;
    }
@@ -215,7 +221,7 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
 
   getAllFiltered(filter: string) {
     this.authService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
-        data = data.filter(x => (x.visitor.name.toLowerCase().includes(filter) || x.visitor.lastName?.toLowerCase().includes(filter) 
+        data = data.filter(x => (x.visitor.name.toLowerCase().includes(filter) || x.visitor.lastName?.toLowerCase().includes(filter)
         || x.visitor.docNumber.toString().includes(filter)))
         let response = this.transformResponseService.transformResponse(data,this.currentPage, this.pageSize, this.retrieveByActive)
         response.content.forEach(data => {
@@ -560,4 +566,15 @@ export class AuthListComponent  implements OnInit, AfterViewInit {
       this.confirmFilter();
     })
   }
+
+  transformUpperCamelCase(value: string): string {
+    if (!value) return value;
+    return value
+      .replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, (match, index) =>
+        index === 0 ? match.toUpperCase() : match.toLowerCase()
+      )
+      .replace(/\s+/g, ''); // Elimina espacios
+  }
+  
+  protected readonly VisitorTypeIconDictionary = VisitorTypeIconDictionary;
 }

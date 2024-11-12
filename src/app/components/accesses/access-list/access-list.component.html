@@ -19,71 +19,6 @@
       (filterValueChange)="onFilterValueChange($event)"
       [dictionaries]="dictionaries"
       objectName="ACCESOS"></app-cadastre-plot-filter-buttons>
-
-    <!--filtros viejos
-      <div class="d-flex justify-content-between align-items-center mb-3">
-      <div class="btn-group me-5" role="group">
-        <div class="d-flex align-items-center">
-
-
-          <div class="btn-group me-2">
-            <button type="button" class="btn btn-outline-danger" (click)="changeFilterMode(filterTypes.NOTHING)">
-              <i class="bi bi-trash-fill"></i> Limpiar filtros
-            </button>
-
-            <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-              <i class="bi bi-funnel-fill"></i> Filtros
-            </button>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" (click)="changeFilterMode(filterTypes.VISITOR_TYPE)">Tipo de visitante</a></li>
-              <li><a class="dropdown-item" (click)="changeFilterMode(filterTypes.ACTION)">Acción</a></li>
-              <li><a class="dropdown-item" (click)="changeFilterMode(filterTypes.DATE)">Fecha</a></li>
-            </ul>
-          </div>
-
-          @if (applyFilterWithNumber === true || applyFilterWithCombo === true || applyFilterWithDate === true) {
-            <div class="d-flex">
-              @if (applyFilterWithNumber === true) {
-                <input type="number" class="form-control me-2" id="filter-number" [(ngModel)]="filterInput" name="ngModel"
-                       placeholder="Número">
-              } @else if (applyFilterWithCombo === true) {
-                <select id="content-filter" class="form-select me-2" [(ngModel)]="filterInput" name="ngModel">
-                  <option disabled selected>Selecciona un filtro</option>
-                  @for (content of contentForFilterCombo; track content) {
-                    <option value="{{content}}">{{ content }}</option>
-                  }
-                </select>
-              } @else if (applyFilterWithDate === true) {
-                <label for="dateFrom" class="form-label m-0">Fecha desde</label> <input type="date" id="dateFrom" class="form-control ms-2" [(ngModel)]="dateFrom"/>
-                <label for="dateTo" class="form-label m-0">Fecha hasta</label> <input type="date" id="dateTo" class="form-control ms-2" [(ngModel)]="dateTo"/>
-              }
-              <div class="ms-auto">
-                <button class="btn btn-dark" type="button" (click)="confirmFilter()">Buscar</button>
-              </div>
-            </div>
-          }
-        </div>
-
-      </div>-->
-
-
-    <!--      <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-            <input type="radio" class="btn-check"
-                   name="btnradio" id="btnradio1"
-                   autocomplete="off" (change)="changeActiveFilter(true)" checked>
-            <label class="btn btn-outline-primary" for="btnradio1">Lotes Activos</label>
-
-            <input type="radio" class="btn-check"
-                   name="btnradio" id="btnradio2"
-                   autocomplete="off" (change)="changeActiveFilter(false)">
-            <label class="btn btn-outline-primary" for="btnradio2">Lotes Inactivos</label>
-
-            <input type="radio" class="btn-check"
-                   name="btnradio" id="btnradio3"
-                   autocomplete="off" (change)="changeActiveFilter()">
-            <label class="btn btn-outline-primary" for="btnradio3">Todos</label>
-          </div>-->
   </div>
 
   <div class="table-container">
@@ -91,30 +26,23 @@
            style="border: 1px solid rgba(0, 0, 0, 0.150); border-collapse: collapse;" #table>
       <thead>
       <tr>
-        <th scope="col">Visitante</th>
-        <th scope="col">Documento</th>
-        <th scope="col">Tipo</th>
-        <th scope="col">Accion</th>
-        <th scope="col">Hora</th>
         <th scope="col">Día</th>
+        <th scope="col">Hora</th>
+        <th scope="col">Acción</th>
         <th scope="col">Vehículo</th>
-        <th scope="col">Comentario</th>
+        <th scope="col">Documento</th>
+        <th scope="col">Visitante</th>
         <th scope="col">Autorizador</th>
       </tr>
       </thead>
       <tbody>
         @for (item of (filteredList.length ? filteredList : list); track item) {
-
           <tr>
             <td>
-              <!--TODO icono-->
-              {{ item.firstName + ' ' + item.lastName }}
+              {{ transformDateTable(item.actionDate) }}
             </td>
             <td>
-              {{ getDocumentAbbreviation(item.docType) + ' ' + item.docNumber }}
-            </td>
-            <td>
-              {{ translateTable(item.visitorType, typeDictionary) }}
+              {{ transformHourTable(item.actionDate) }}
             </td>
             <td>
               @if (item.action === "ENTRY") {
@@ -126,23 +54,22 @@
               }
             </td>
             <td>
-              {{ transformHourTable(item.actionDate) }}
+              {{ (item.vehicleReg === "NULL" || item.vehicleReg == undefined || item.vehicleReg == "") ? "N/A" : item.vehicleReg }}
             </td>
             <td>
-              {{ transformDateTable(item.actionDate) }}
-            </td>
-            <td>
-              {{ item.vehicleReg }}
-            </td>
-            <td>
-              {{ (item.comments === "" || item.comments == undefined) ? "N/A" : item.comments }}
+              {{ getDocumentAbbreviation(item.docType) + ' ' + item.docNumber }}
             </td>
             <td>
               <!--TODO icono-->
+              <i [class]="'bi ' + VisitorTypeIconDictionary[item.visitorType]"></i>
+              {{ transformUpperCamelCase(item.firstName) + ' ' + transformUpperCamelCase(item.lastName) }}
+            </td>
+            <td>
+              <!--TODO icono-->
+              <i class="bi bi-shield"></i>
               {{ item.authorizer?.authFirstName + ' ' + item.authorizer?.authLastName }}
             </td>
           </tr>
-
         }
       </tbody>
     </table>

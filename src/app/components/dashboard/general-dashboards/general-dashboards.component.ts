@@ -5,7 +5,7 @@ import {AccessPieDashboardComponent} from '../../accesses/access-pie-dashboard/a
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MainContainerComponent} from "ngx-dabd-grupo01";
 import {AccessService} from "../../../services/access.service";
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {GoogleChartsModule} from "angular-google-charts";
 import {KpiComponent} from "../commons/kpi/kpi.component";
 import {DashBoardFilters, DashboardStatus} from "../../../models/dashboard.model";
@@ -22,7 +22,21 @@ import {NgClass} from "@angular/common";
 @Component({
   selector: 'app-general-dashboards',
   standalone: true,
-  imports: [AccessHourlyDashboardComponent, AccessWeeklyDashboardComponent, AccessPieDashboardComponent, ReactiveFormsModule, FormsModule, MainContainerComponent, GoogleChartsModule, KpiComponent, MainDashboardComponent, EntriesDashboardComponent, LateDashboardComponent, TypesDashboardComponent, InconsistenciesDashboardComponent, NgClass],
+  imports: [AccessHourlyDashboardComponent, 
+    AccessWeeklyDashboardComponent, 
+    AccessPieDashboardComponent, 
+    ReactiveFormsModule, 
+    FormsModule, 
+    MainContainerComponent, 
+    GoogleChartsModule, 
+    KpiComponent, 
+    MainDashboardComponent, 
+    EntriesDashboardComponent, 
+    LateDashboardComponent, 
+    TypesDashboardComponent, 
+    InconsistenciesDashboardComponent, 
+    NgClass, 
+    NgbPopover],
   templateUrl: './general-dashboards.component.html',
   styleUrl: './general-dashboards.component.css'
 })
@@ -62,7 +76,7 @@ export class GeneralDashboardsComponent implements OnInit, AfterViewInit{
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
     this.filters.dateTo = now.toISOString().slice(0, 16);
 
-    now.setDate(now.getDate() - 30);
+    now.setDate(now.getDate() - 14);
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
     this.filters.dateFrom = now.toISOString().slice(0, 16);
   }
@@ -83,6 +97,8 @@ export class GeneralDashboardsComponent implements OnInit, AfterViewInit{
     this.main.getData()
     this.entries.getData()
     this.types.getData()
+    this.inconsistencies.getData()
+    this.late.getData()
   }
 
   ngOnInit(): void {
@@ -107,5 +123,11 @@ export class GeneralDashboardsComponent implements OnInit, AfterViewInit{
   ngAfterViewInit(): void {
     this.initializeDefaultDates();
     this.filterData()
+  }
+
+  getCurrentDateTime(): string {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    return now.toISOString().slice(0, 16);
   }
 }

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, Output} from '@angular/core';
+import {AfterRenderRef, AfterViewInit, Component, EventEmitter, Input, Output} from '@angular/core';
 import {DashBoardFilters, graphModel, kpiModel} from "../../../../models/dashboard.model";
 import {BarchartComponent} from "../../commons/barchart/barchart.component";
 import {KpiComponent} from "../../commons/kpi/kpi.component";
@@ -46,6 +46,9 @@ export class EntriesDashboardComponent implements AfterViewInit {
     this.kpi1.icon = this.filters.action == "ENTRY" ? "bi bi-arrow-up-circle" : "bi bi-arrow-down-circle"
     this.kpi1.color = this.filters.action == "ENTRY" ? "bg-success" : "bg-danger"
 
+    this.columnChartOptions.hAxis.showTextEvery = this.filters.group == "WEEK" ? 2 : 3
+    this.columnChartOptions.hAxis.showTextEvery = this.filters.group == "MONTH" || this.filters.group == "YEAR" ? 1 : 3
+
     //obtener filtro
     this.dashBoardService.getPeriod(this.filters).subscribe(data => {
       this.graph1.data = mapColumnData(data)
@@ -87,6 +90,7 @@ export class EntriesDashboardComponent implements AfterViewInit {
     },
     hAxis: {
       textStyle: {color: '#6c757d'},
+      showTextEvery: 2
     },
     animation: {
       duration: 1000,
@@ -94,7 +98,7 @@ export class EntriesDashboardComponent implements AfterViewInit {
       startup: true
     },
     height: 400,
-    width: 900,
+    width: 650,
     bar: {groupWidth: '70%'}
   };
 

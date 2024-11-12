@@ -105,7 +105,7 @@ export class AuthFormComponent implements OnInit {
             docType: data.visitor.docType,
             docNumber: data.visitor.docNumber,
 
-            birthDate: this.formatDate(data.visitor.birthDate), // Asegúrate de formatear la fecha si es necesario
+            birthDate: data.visitor.birthDate ? this.formatDate(data.visitor.birthDate) : null, // Asegúrate de formatear la fecha si es necesario
           }
         });
 
@@ -171,10 +171,6 @@ export class AuthFormComponent implements OnInit {
       }
       const formData = this.authForm.value;
 
-      if(formData.birthDate){
-        formData.visitorRequest.birthDate = formatFormDate(formData.visitorRequest.birthDate);
-      }
-
       const now = new Date();
 
       const formatDate = (date: Date) => {
@@ -222,22 +218,24 @@ export class AuthFormComponent implements OnInit {
       }
 
       if (!this.isUpdate) {
+        if(formData.visitorRequest.birthDate){
+          formData.visitorRequest.birthDate = formatFormDate(formData.visitorRequest.birthDate);
+        }
         this.authService.createAuth(formData, this.loginService.getLogin().id.toString()).subscribe(data => {
           this.toastService.sendSuccess("Registro exitoso.");
-          
+
         });
       }
       else {
         this.authService.updateAuth(formData, this.loginService.getLogin().id.toString()).subscribe(data => {
           this.toastService.sendSuccess("Autorización exitosa.");
-          
+
         });
       }
       setTimeout(() => {
         this.toastService.remove(this.toastService.toasts[0]);  // Cierra el modal
-        this.isUpdate = false; 
-      }, 1000); 
-
+        this.isUpdate = false;
+      }, 1500);
     } else {
       this.markAllAsTouched();
     }

@@ -28,7 +28,6 @@
         <tr>
           <th scope="col">Nombre</th>
           <th scope="col">Documento</th>
-          <th scope="col">Tipo</th>
           @if (userType == "ADMIN"|| userType == "OWNER"){
             <th scope="col">Activo</th>
             <th scope="col">Acciones</th>
@@ -40,16 +39,16 @@
 
             <tr>
               <td>
-                <!--TODO icono-->
+                @for (type of item.visitorTypes; track $index){
+                  <i
+                    [class]="'bi ' + VisitorTypeIconDictionary[type]"
+                    [title]="translateTable(type, typeDictionary)">
+                  </i>
+                }
                 {{ item.name + ' ' + (item.lastName == null ? '' : item.lastName) }}
               </td>
               <td>
                 {{ getDocumentAbbreviation(item.docType) + ' ' + item.docNumber }}
-              </td>
-              <td>
-                @for (type of item.visitorTypes; track $index){
-                  {{ translateTable(type, typeDictionary) }}
-                }
               </td>
               @if (userType == "ADMIN" || userType == "OWNER"){
                 <td>
