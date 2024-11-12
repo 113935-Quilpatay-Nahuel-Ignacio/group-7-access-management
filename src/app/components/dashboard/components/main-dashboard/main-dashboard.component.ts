@@ -42,15 +42,15 @@ export class MainDashboardComponent implements AfterViewInit{
   }
   //init
   constructor(private dashBoardService: DashboardService) {
-    this.kpi1 = {title: "Totales de en el Periodo Actual vs. Anterior", desc: "Suma total en el periodo actual vs. anterior", value: "0", icon: "", color: "bg-success"}
-    this.kpi2 = {title: "Tendencia de", desc: "Diferencias porcentuales respecto al periodo anterior", value: "0%", icon: "bi bi-graph-up", color: "bg-info"}
+    this.kpi1 = {title: "Ingresos: Actual/Anterior", desc: "Suma total en el periodo actual vs. anterior", value: "0", icon: "", color: "bg-success"}
+    this.kpi2 = {title: "Tendencia de", desc: "", value: "0%", icon: "bi bi-graph-up", color: "bg-info"}
     this.kpi3 = {title: "Tipo de Ingreso/Egreso Más Frecuente", desc: "Tipo más frecuente en el periodo", value: "0", icon: "bi bi-person-circle", color: "bg-warning"}
     this.kpi4 = {title: "Total de Ingresos/Egresos Inconsistentes", desc: "Cantidad total de inconsistencias en el periodo", value: "0", icon: "bi-exclamation-circle", color: "bg-danger"}
 
-    this.graph1 = {title: "Totales de Ingresos/Egresos por Periodo", subtitle: "Comparativa total por el periodo seleccionado", data: [], options: null}
-    this.graph2 = {title: "Empleados con Egreso Tardío", subtitle: "Cantidad de trabajadores con egresos tardíos", data: [], options: null}
-    this.graph3 = {title: "Distribución de Tipos de Ingresos/Egresos", subtitle: "Porcentaje de cada tipo en el periodo", data: [], options: null}
-    this.graph4 = {title: "Inconsistencias en Ingresos/Egresos", subtitle: "Ingresos/egresos con inconsistencias en el periodo", data: [], options: null}
+    this.graph1 = {title: "Totales de Ingresos/Egresos por Periodo", subtitle: "", data: [], options: null}
+    this.graph2 = {title: "Empleados con Egreso Tardío", subtitle: "", data: [], options: null}
+    this.graph3 = {title: "Distribución de Tipos de Ingresos/Egresos", subtitle: "", data: [], options: null}
+    this.graph4 = {title: "Inconsistencias en Ingresos/Egresos", subtitle: "", data: [], options: null}
   }
 
   //getData
@@ -59,18 +59,18 @@ export class MainDashboardComponent implements AfterViewInit{
     let action = this.filters.action == "ENTRY" ? "Ingresos" : "Egresos"
     this.kpi1.icon = this.filters.action == "ENTRY" ? "bi bi-arrow-up-circle" : "bi bi-arrow-down-circle"
     this.kpi1.color = this.filters.action == "ENTRY" ? "bg-success" : "bg-danger"
-    this.kpi1.title = "Totales de " + action + " en el Periodo Actual vs. Anterior"
+    this.kpi1.title = action + ": Actual/Anterior"
     this.kpi2.title = "Tendencias de " + action.toLowerCase()
-    this.kpi1.desc = "Suma total de " + action.toLowerCase() + " en el periodo actual vs. anterior"
+    this.kpi1.desc = ""//"Suma total de " + action.toLowerCase() + " en el periodo actual vs. anterior"
     this.kpi4.title = "Total de " + action.toLowerCase() + " Inconsistentes"
-    this.kpi4.desc = "Cantidad total de inconsistencias en " + action.toLowerCase() + " durante el periodo"
-    this.kpi3.desc = "Tipo de " + action.toLowerCase() + " más frecuente en el periodo"
+    this.kpi4.desc = ""//"Cantidad total de inconsistencias en " + action.toLowerCase() + " durante el periodo"
+    this.kpi3.desc = ""//"Tipo de " + action.toLowerCase() + " más frecuente en el periodo"
     this.kpi3.title = "Tipo de " + action.toLowerCase() + " Más Frecuente"
     this.graph1.title = "Totales de " + action + " por Periodo"
     this.graph3.title = "Distribución de Tipos de " + action
-    this.graph3.subtitle = "Porcentaje de cada tipo de " + action.toLowerCase()
+    this.graph3.subtitle = ""//"Porcentaje de cada tipo de " + action.toLowerCase()
     this.graph4.title = "Inconsistencias en " + action
-    this.graph4.subtitle = action + " con Inconsistencias"
+    this.graph4.subtitle = ""//action + " con Inconsistencias"
 
     this.columnChartOptions.hAxis.showTextEvery = this.filters.group == "WEEK" ? 2 : 3
     this.columnChartOptions.hAxis.showTextEvery = this.filters.group == "MONTH" || this.filters.group == "YEAR" ? 1 : 3

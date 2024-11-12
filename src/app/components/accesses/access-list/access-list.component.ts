@@ -510,17 +510,17 @@ transformDateTable(dateString: string): string{
 
   protected readonly oninput = oninput;
 
-  transformListToTableData(list :any) {
-    return list.map((item: { firstName: any; lastName: any; docType: any; docNumber: any; visitorType: any; action: any; actionDate: any; vehicleReg: any; authorizer: { name: any; lastName: any; }; }) => ({
-      Día: this.transformDateTable(item.actionDate),
-      Hora: this.transformHourTable(item.actionDate),
-      Accion: this.translateTable(item.action, this.actionDictionary),
-      Vehículo: item.vehicleReg || 'N/A',
-      Documento: `${(item.docType === "PASSPORT" ? "PASAPORTE" : item.docType)} ${item.docNumber}`,
-      Visitante: `${item.firstName} ${item.lastName}`,
-      Autorizador: `${item.authorizer?.name || ''} ${item.authorizer?.lastName || ''}`
-    }));
-  }
+transformListToTableData(list :any) {
+  return list.map((item: { firstName: any; lastName: any; docType: any; docNumber: any; visitorType: any; action: any; actionDate: any; vehicleReg: any; authorizer: { name: any; lastName: any; }; }) => ({
+    Día: this.transformDateTable(item.actionDate),
+    Hora: this.transformHourTable(item.actionDate),
+    Accion: this.translateTable(item.action, this.actionDictionary),
+    Vehículo: item.vehicleReg || 'N/A',
+    Documento: `${(item.docType === "PASSPORT" ? "PASAPORTE" : item.docType)} ${item.docNumber}`,
+    Visitante: `${item.firstName} ${item.lastName}`,
+    Autorizador: `${item.authorizer?.name || ''} ${item.authorizer?.lastName || ''}`
+  }));
+}
 
   onInfoButtonClick() {
     this.modalService.open(this.infoModal, { size: 'lg' });
