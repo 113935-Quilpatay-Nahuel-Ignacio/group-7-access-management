@@ -105,7 +105,7 @@ export class AuthFormComponent implements OnInit {
             docType: data.visitor.docType,
             docNumber: data.visitor.docNumber,
 
-            birthDate: this.formatDate(data.visitor.birthDate), // Asegúrate de formatear la fecha si es necesario
+            birthDate: data.visitor.birthDate ? this.formatDate(data.visitor.birthDate) : null, // Asegúrate de formatear la fecha si es necesario
           }
         });
 
