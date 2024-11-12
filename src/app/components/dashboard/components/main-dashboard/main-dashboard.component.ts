@@ -65,7 +65,7 @@ export class MainDashboardComponent implements AfterViewInit{
     this.kpi4.title = "Total de " + action.toLowerCase() + " Inconsistentes"
     this.kpi4.desc = ""//"Cantidad total de inconsistencias en " + action.toLowerCase() + " durante el periodo"
     this.kpi3.desc = ""//"Tipo de " + action.toLowerCase() + " más frecuente en el periodo"
-    this.kpi3.title = action.toLowerCase() + " Más Frecuente"
+    this.kpi3.title = action.charAt(0).toUpperCase() + action.slice(1).toLowerCase() + " Más Frecuente"
     this.graph1.title = "Totales de " + action + " por Periodo"
     this.graph3.title = "Distribución de Tipos de " + action
     this.graph3.subtitle = ""//"Porcentaje de cada tipo de " + action.toLowerCase()
