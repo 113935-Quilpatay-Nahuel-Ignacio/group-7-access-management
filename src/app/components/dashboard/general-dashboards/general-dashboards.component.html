@@ -8,7 +8,10 @@
       </div>
       <div class="d-flex align-items-center gap-2">
         <span class="text-secondary">Hasta:</span>
-        <input type="datetime-local" [(ngModel)]="filters.dateTo" class="form-control form-control-sm"
+        <input type="datetime-local" 
+               [(ngModel)]="filters.dateTo" 
+               [max]="getMaxDate()"
+               class="form-control form-control-sm"
                (change)="filterData()">
       </div>
       <button type="button" class="btn btn-outline-info" [ngbPopover]="popContent"
