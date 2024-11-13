@@ -54,7 +54,7 @@ export class EntriesDashboardComponent implements AfterViewInit {
       this.graph1.data = mapColumnData(data)
       this.graph1.options = {
         ...this.columnChartOptions,
-        colors: [this.filters.action == 'ENTRY' ? '#40916c' : '#9d0208']
+        colors: [this.filters.action == 'ENTRY' ? '#8DDFDF' : '#FFA8B4']
       }
       let totalValue1 = 0;
       data.forEach(item => {
