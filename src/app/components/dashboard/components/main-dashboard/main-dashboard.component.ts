@@ -18,6 +18,7 @@ import {ChartType} from "angular-google-charts";
   templateUrl: './main-dashboard.component.html',
   styleUrl: './main-dashboard.component.css'
 })
+
 export class MainDashboardComponent implements AfterViewInit{
   //inputs
   @Input() filters: DashBoardFilters = {} as DashBoardFilters;
