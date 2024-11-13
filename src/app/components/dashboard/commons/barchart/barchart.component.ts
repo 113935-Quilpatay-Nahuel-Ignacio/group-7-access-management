@@ -16,7 +16,15 @@ export class BarchartComponent {
 
   columnChartOptions = {
     backgroundColor: 'transparent',
-    colors: ['#40916c'],
+    colors: [
+      '#FFF3D6',  // Amarillo más claro (ingresos)
+      '#FFE4E9',  // Rosa más claro (egresos)
+      '#D6E5FF',  // Azul más claro
+      '#E4F5F5',  // Verde menta más claro
+      '#EBE3FF',  // Morado más claro
+      '#FFE9D6',  // Naranja más claro
+      '#E3F2FB'   // Azul celeste más claro
+    ],
     legend: {position: 'none'},
     chartArea: {width: '80%', height: '100%'},
     vAxis: {
@@ -37,9 +45,11 @@ export class BarchartComponent {
     },
     height: 400,
     width: '100%',
-    bar: {groupWidth: '70%'}
+    bar: {
+      groupWidth: '70%',
+      stroke: this.graphModel.options?.colors?.[0] === '#40916c' ? '#ffc107' : '#ff6384',  // Color del borde según sea ingreso o egreso
+      strokeWidth: 2      // Ancho del borde
+    }
   };
   columnChartType = ChartType.ColumnChart;
-
-
 }

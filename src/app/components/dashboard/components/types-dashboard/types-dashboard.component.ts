@@ -84,21 +84,49 @@ export class TypesDashboardComponent implements AfterViewInit {
     backgroundColor: 'transparent',
     legend: {
       position: 'right-center',
-      textStyle: { color: '#6c757d', fontSize: 17 }
+      textStyle: { color: '#6c757d', fontSize: 25 }
     },
     chartArea: { width: '100%', height: '100%' },
     pieHole: 0,
-    height: 400,
-    slices: {
-      0: { color: '#00BFFF' },  // MP siempre azul
-      1: { color: '#8A2BE2' },  // STRIPE siempre violeta
-      2: { color: '#ACE1AF' }   // EFECTIVO siempre verde
-    },
+    height: '80%',
+    width: 300,
+    colors: [
+      '#FFECB3',  // Amarillo claro
+      '#B3C8FE',  // Azul claro
+      '#FFCDD7',  // Rosa claro
+      '#C8EBEB',  // Verde menta claro
+      '#D9C5FF',  // Morado claro
+      '#FFDFBF',  // Naranja claro
+      '#BCDFF7'   // Azul celeste claro
+    ],
     pieSliceTextStyle: {
       color: 'black',
-      fontSize: 18
+      fontSize: 20
     }
-  };
+};
+
+// Array de colores para los bordes
+borderColors = [
+  '#ffc107',  // Borde Amarillo
+  '#0d6efd',  // Borde Azul
+  '#ff6384',  // Borde Rosa
+  '#4bc0c0',  // Borde Verde menta
+  '#9966ff',  // Borde Morado
+  '#ff9f40',  // Borde Naranja
+  '#36a2eb'   // Borde Azul celeste
+];
+
+onChartReady(event: any) {
+  const chart = event.chart;
+  const slices = chart.getVisual().data.length;
+  
+  for(let i = 0; i < slices; i++) {
+    chart.setOption('slices.' + i + '.stroke', this.borderColors[i]);
+    chart.setOption('slices.' + i + '.strokeWidth', 2);
+  }
+  
+  chart.draw();
+}
 
   back() {
     this.notifyParent.emit("ALL");

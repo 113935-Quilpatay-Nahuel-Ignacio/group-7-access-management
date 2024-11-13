@@ -76,7 +76,7 @@ export class MainDashboardComponent implements AfterViewInit{
     this.columnChartOptions.hAxis.showTextEvery = (this.filters.group == "WEEK" ? 2 : (this.filters.group == "MONTH" || this.filters.group == "YEAR" ? 1 : 3));
 
     this.graph4.options = {...this.columnChartOptions,
-      colors: ['#ffc107']}
+      colors: ['#FFE08A']}
     this.graph4.options.chartArea.width='95%';
     this.graph4.options.width = 1000;
     this.graph4.options.height = 175;
@@ -84,7 +84,7 @@ export class MainDashboardComponent implements AfterViewInit{
     this.graph3.options = this.pieChartOptions
 
     this.graph2.options = {...this.columnChartOptions,
-      colors: ['#ffc107']}
+      colors: ['#FFE08A']}
     this.graph2.options.width = 300;
     this.graph2.options.height = 200;
 
@@ -92,7 +92,7 @@ export class MainDashboardComponent implements AfterViewInit{
     this.dashBoardService.getPeriod(this.filters).subscribe(data => {
       this.graph1.data = mapColumnData(data)
       this.graph1.options = {...this.columnChartOptions,
-        colors: [this.filters.action == 'ENTRY' ? '#40916c' : '#9d0208']}
+        colors: [this.filters.action == 'ENTRY' ? '#8DDFDF' : '#FFA8B4']}
       this.graph1.options.height = 200
       let totalValue1 = 0;
       data.forEach(item => {
@@ -196,8 +196,8 @@ export class MainDashboardComponent implements AfterViewInit{
     width: 300,
     slices: {
       0: { color: '#00BFFF' },  // MP siempre azul
-      1: { color: '#8A2BE2' },  // STRIPE siempre violeta
-      2: { color: '#ACE1AF' }   // EFECTIVO siempre verde
+      1: { color: '#00BFFF' },  // STRIPE siempre violeta
+      2: { color: '#00BFFF' }   // EFECTIVO siempre verde
     },
     pieSliceTextStyle: {
       color: 'black',
