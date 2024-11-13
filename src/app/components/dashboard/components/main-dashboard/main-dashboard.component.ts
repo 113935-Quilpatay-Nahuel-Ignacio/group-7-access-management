@@ -194,16 +194,20 @@ export class MainDashboardComponent implements AfterViewInit{
     pieHole: 0,
     height: '80%',
     width: 300,
-    slices: {
-      0: { color: '#00BFFF' },  // MP siempre azul
-      1: { color: '#00BFFF' },  // STRIPE siempre violeta
-      2: { color: '#00BFFF' }   // EFECTIVO siempre verde
-    },
+    colors: [
+      'rgb(255, 236, 179)',  // Amarillo claro (simulando transparencia)
+      'rgb(179, 200, 254)',  // Azul claro
+      'rgb(255, 205, 215)',  // Rosa claro
+      'rgb(153, 191, 191)',  // Verde menta claro
+      'rgb(217, 197, 255)',  // Morado claro
+      'rgb(255, 223, 191)',  // Naranja claro
+      'rgb(189, 215, 252)'   // Azul celeste claro
+    ],
     pieSliceTextStyle: {
       color: 'black',
       fontSize: 14
     }
-  };
+};
 
   ngAfterViewInit(): void {
     this.getData()

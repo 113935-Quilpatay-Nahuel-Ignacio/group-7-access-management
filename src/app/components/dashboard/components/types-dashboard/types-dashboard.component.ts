@@ -84,49 +84,47 @@ export class TypesDashboardComponent implements AfterViewInit {
     backgroundColor: 'transparent',
     legend: {
       position: 'right-center',
-      textStyle: { color: '#6c757d', fontSize: 25 }
+      textStyle: { color: '#6c757d', fontSize: 17 }
     },
     chartArea: { width: '100%', height: '100%' },
     pieHole: 0,
-    height: '80%',
-    width: 300,
+    height: 400,
+    slices: {
+      0: { color: '#fff2cc' },
+      1: { color: '#cadefc' },  
+      2: { color: '#ffccd7' } ,  
+      3: { color: '#99bfbf' },   
+      4: { color: '#ddccff' }   
+    },
+    pieSliceTextStyle: {
+      color: 'black',
+      fontSize: 18
+    }
+  };
+  /*pieChartOptions = {
+    backgroundColor: 'transparent',
+    legend: {
+      position: 'right-center',
+      textStyle: { color: '#6c757d', fontSize: 17 }
+    },
+    chartArea: { width: '100%', height: '100%' },
+    pieHole: 0,
+    height: 400,
+    width: 600,
     colors: [
-      '#FFECB3',  // Amarillo claro
-      '#B3C8FE',  // Azul claro
-      '#FFCDD7',  // Rosa claro
-      '#C8EBEB',  // Verde menta claro
-      '#D9C5FF',  // Morado claro
-      '#FFDFBF',  // Naranja claro
-      '#BCDFF7'   // Azul celeste claro
+      'rgb(255, 236, 179)',  // Amarillo claro (simulando transparencia)
+      'rgb(179, 200, 254)',  // Azul claro
+      'rgb(255, 205, 215)',  // Rosa claro
+      'rgb(200, 235, 235)',  // Verde menta claro
+      'rgb(217, 197, 255)',  // Morado claro
+      'rgb(255, 223, 191)',  // Naranja claro
+      'rgb(188, 223, 247)'   // Azul celeste claro
     ],
     pieSliceTextStyle: {
       color: 'black',
-      fontSize: 20
+      fontSize: 17
     }
-};
-
-// Array de colores para los bordes
-borderColors = [
-  '#ffc107',  // Borde Amarillo
-  '#0d6efd',  // Borde Azul
-  '#ff6384',  // Borde Rosa
-  '#4bc0c0',  // Borde Verde menta
-  '#9966ff',  // Borde Morado
-  '#ff9f40',  // Borde Naranja
-  '#36a2eb'   // Borde Azul celeste
-];
-
-onChartReady(event: any) {
-  const chart = event.chart;
-  const slices = chart.getVisual().data.length;
-  
-  for(let i = 0; i < slices; i++) {
-    chart.setOption('slices.' + i + '.stroke', this.borderColors[i]);
-    chart.setOption('slices.' + i + '.strokeWidth', 2);
-  }
-  
-  chart.draw();
-}
+};*/
 
   back() {
     this.notifyParent.emit("ALL");

@@ -35,7 +35,7 @@ export class EntriesDashboardComponent implements AfterViewInit {
     this.kpi2 = {title: "Promedio diario", desc: "", value: "0", icon: "bi bi-calculator", color: "bg-warning"}
     this.kpi3 = {title: "Periodo más concurrido", desc: "", value: "0", icon: "bi bi-calendar-event", color: "bg-info"}
 
-    this.graph1 = {title: "Ingresos/egresos", subtitle: "Totales por perdiodo seleccionado", data: [], options: null}
+    this.graph1 = {title: "Ingresos/egresos", subtitle: "Totales por periodo seleccionado", data: [], options: null}
   }
 
   getData() {
@@ -64,12 +64,18 @@ export class EntriesDashboardComponent implements AfterViewInit {
       this.kpi1.value = totalValue1.toString();
 
       let maxValueResponse = data[0];
-      for (let i = 1; i < data.length; i++) {
-        if (parseFloat(data[i].value) > parseFloat(maxValueResponse.value)) {
-          maxValueResponse = data[i];
-        }
-      }
-      this.kpi3.value = maxValueResponse.key
+for (let i = 1; i < data.length; i++) {
+  if (parseFloat(data[i].value) > parseFloat(maxValueResponse.value)) {
+    maxValueResponse = data[i];
+  }
+}
+
+// Convertir maxValueResponse.key a formato dd/MM/yyyy
+const date = new Date(maxValueResponse.key);
+const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+
+this.kpi3.value = formattedDate;
+
 
 
     })
