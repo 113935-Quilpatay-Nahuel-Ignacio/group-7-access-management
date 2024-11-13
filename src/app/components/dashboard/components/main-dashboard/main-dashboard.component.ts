@@ -196,8 +196,8 @@ export class MainDashboardComponent implements AfterViewInit{
     width: 300,
     slices: {
       0: { color: '#00BFFF' },  // MP siempre azul
-      1: { color: '#8A2BE2' },  // STRIPE siempre violeta
-      2: { color: '#ACE1AF' }   // EFECTIVO siempre verde
+      1: { color: '#00BFFF' },  // STRIPE siempre violeta
+      2: { color: '#00BFFF' }   // EFECTIVO siempre verde
     },
     pieSliceTextStyle: {
       color: 'black',
