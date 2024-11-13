@@ -10,7 +10,7 @@
         <span class="text-secondary">Hasta:</span>
         <input type="datetime-local" 
                [(ngModel)]="filters.dateTo" 
-               [max]="getMaxDate()"
+               [max]="getCurrentDateTime()"
                class="form-control form-control-sm"
                (change)="filterData()">
       </div>
@@ -77,27 +77,72 @@
     </div>
   </div>
 
+  <!-- Grilla del dashboard con lazy loading -->
+  <!-- Sección de dashboard con implementación de lazy loading -->
+  <!-- Cada @defer carga el componente solo cuando se cumple la condición en 'when' -->
 
-  <!-- Grilla del dashboard -->
   <div class="row position-relative min-vh-75">
-    <div [ngClass]="{ 'd-none': status !== DashboardStatus.All }">
-      <app-main-dashboard [filters]="filters" (notifyParent)="changeMode($event)"></app-main-dashboard>
-    </div>
-    <div [ngClass]="{ 'd-none': status !== DashboardStatus.Entries }">
-      <app-entries-dashboard [filters]="filters" (notifyParent)="changeMode($event)"></app-entries-dashboard>
-    </div>
-    <div [ngClass]="{ 'd-none': status !== DashboardStatus.Late }">
-      <app-late-dashboard [filters]="filters" (notifyParent)="changeMode($event)"></app-late-dashboard>
-    </div>
-    <div [ngClass]="{ 'd-none': status !== DashboardStatus.Types }">
-      <app-types-dashboard [filters]="filters" (notifyParent)="changeMode($event)"></app-types-dashboard>
-    </div>
-    <div [ngClass]="{ 'd-none': status !== DashboardStatus.Inconsistencies }">
-      <app-inconsistencies-dashboard [filters]="filters" (notifyParent)="changeMode($event)"></app-inconsistencies-dashboard>
-    </div>
-  </div>
 
+    <!-- Dashboard Principal: Se carga solo cuando el status es ALL -->
+    @defer (when status === DashboardStatus.All) {
+
+      <!-- El ngClass mantiene la lógica de visibilidad del componente -->
+      <div [ngClass]="{ 'd-none': status !== DashboardStatus.All }">
+
+        <!-- Componente que será cargado de manera perezosa -->
+        <app-main-dashboard 
+          [filters]="filters"  
+          (notifyParent)="changeMode($event)"> <!-- Evento para comunicación con el padre -->
+        </app-main-dashboard>
+      </div>
+    }
+
+    <!-- Dashboard de Entradas: Se carga solo cuando el status es ENTRIES -->
+
+    @defer (when status === DashboardStatus.Entries) {
+      <div [ngClass]="{ 'd-none': status !== DashboardStatus.Entries }">
+        <app-entries-dashboard 
+          [filters]="filters" 
+          (notifyParent)="changeMode($event)">
+        </app-entries-dashboard>
+      </div>
+    }
+
+    <!-- Dashboard de Tardanzas: Se carga solo cuando el status es LATE -->
+
+    @defer (when status === DashboardStatus.Late) {
+      <div [ngClass]="{ 'd-none': status !== DashboardStatus.Late }">
+        <app-late-dashboard 
+          [filters]="filters" 
+          (notifyParent)="changeMode($event)">
+        </app-late-dashboard>
+      </div>
+    }
+
+    <!-- Dashboard de Tipos: Se carga solo cuando el status es TYPES -->
+
+    @defer (when status === DashboardStatus.Types) {
+      <div [ngClass]="{ 'd-none': status !== DashboardStatus.Types }">
+        <app-types-dashboard 
+          [filters]="filters" 
+          (notifyParent)="changeMode($event)">
+        </app-types-dashboard>
+      </div>
+    }
+
+    <!-- Dashboard de Inconsistencias: Se carga solo cuando el status es INCONSISTENCIES -->
+     
+    @defer (when status === DashboardStatus.Inconsistencies) {
+      <div [ngClass]="{ 'd-none': status !== DashboardStatus.Inconsistencies }">
+        <app-inconsistencies-dashboard 
+          [filters]="filters" 
+          (notifyParent)="changeMode($event)">
+        </app-inconsistencies-dashboard>
+      </div>
+    }
+  </div>
 </app-main-container>
+
 
 
 <ng-template #infoModal let-modal>
