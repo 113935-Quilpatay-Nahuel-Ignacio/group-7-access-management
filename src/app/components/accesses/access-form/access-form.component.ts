@@ -12,7 +12,7 @@ import {AccessService} from '../../../services/access.service';
 import {AuthService} from '../../../services/auth.service';
 import Swal from 'sweetalert2';
 import {LoginService} from '../../../services/login.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import {VisitorService} from '../../../services/visitor.service';
 import {QrComponent} from '../../qr/qr.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -23,6 +23,7 @@ import {
   ScannerQRCodeResult,
 } from 'ngx-scanner-qrcode';
 import {ToastsContainer, ToastService} from "ngx-dabd-grupo01";
+import { duration } from 'moment';
 
 @Component({
   selector: 'app-access-form',
@@ -65,8 +66,15 @@ export class AccessFormComponent implements OnInit {
     private router: Router,
     private visitorService: VisitorService
   ) {
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+          this.toastService.clear(); // Limpia los toast cuando se cambia de pantalla
+      }
+  });
   }
 
+  
   openScanner() {
     this.modalService.open(this.scannerModal, {size: 'xl'});
   }
@@ -120,7 +128,9 @@ export class AccessFormComponent implements OnInit {
               Swal.fire({
                 title: text + ' inconsistente',
                 text:
-                  'Con esa patente lo ultimo que se registró fue una ' +
+                 // 'Con esa patente lo ultimo que se registró fue una ' +
+                 'El ultimo movimiento registrado por '+ this.accessForm.get('firstName')?.value +' '+ this.accessForm.get('lastName')?.value 
+                 +'  fue una ' +
                   text.toLowerCase() +
                   ' está seguro de querer registrar otra ' +
                   text.toLowerCase() +
@@ -142,7 +152,7 @@ export class AccessFormComponent implements OnInit {
                     )
                     .subscribe((data) => {
                       this.toastService.sendSuccess("Registro exitoso!")
-                      this.ngOnInit();
+                    this.accessForm.reset();
                     });
                 }
               });
@@ -153,11 +163,12 @@ export class AccessFormComponent implements OnInit {
                   this.loginService.getLogin().id.toString()
                 )
                 .subscribe((data) => {
-                  this.toastService.sendSuccess("Registro exitoso!")
+                  this.toastService.sendSuccess("Registro exitoso");
+
                   if (data.is_Late) {
                     this.toastService.sendSuccess("Se ha notificado la salida tardía")
                   }
-                  this.ngOnInit();
+                  
                 });
             }
           });

@@ -40,14 +40,14 @@ export class LateDashboardComponent implements AfterViewInit {
     this.title = " egresos tardíos de empleados"
     this.title = " egresos tardios de " + action.toLowerCase()
 
-    this.kpi1.title = "Egresos tardios en el periodo vs el anterior"
+    this.kpi1.title = "Egresos tardios en el periodo"
     this.kpi1.icon = "bi-exclamation-circle"
     this.kpi1.color = "bg-danger"
-    this.kpi1.desc ="Total de egresos tardios en el periodo vs el periodo anterior"
+    this.kpi1.desc ="Egresos tardios del Periodo Actual en Comparación con el Anterior"
 
     this.kpi2.title = "Tendencias de egresos tardios"
     this.kpi2.color = this.filters.action == "ENTRY" ? "bg-success" : "bg-danger"
-    this.kpi2.desc ="Total de " + action.toLowerCase() + " en el periodo vs el periodo anterior"
+    this.kpi2.desc ="Porcentaje respecto al anterior periodo"
 
     this.kpi3.title ="Periodo con mayor cantidad"
     this.kpi3.color = "bg-info"
@@ -78,9 +78,11 @@ export class LateDashboardComponent implements AfterViewInit {
           totalValue += Number(item.value);
         });
         this.kpi1.value = totalValue1.toString() + " / " + totalValue.toString();
-        let kpi2value = ((totalValue - totalValue1 )/ totalValue1) * 100 == Infinity || Number.isNaN((((totalValue - totalValue1) / totalValue1) * 100)) ? 0 : ((totalValue - totalValue1 )/ totalValue1) * 100;
-        this.kpi2.value = kpi2value.toFixed(2) + "%";
-        this.kpi2.icon = kpi2value > 0 ? "bi bi-graph-up" : "bi bi-graph-down"
+       // let kpi2value = ((totalValue - totalValue1 )/ totalValue1) * 100 == Infinity || Number.isNaN((((totalValue - totalValue1) / totalValue1) * 100)) ? 0 : ((totalValue - totalValue1 )/ totalValue1) * 100;
+       let kpi2value = ((totalValue1 - totalValue )/ totalValue) * 100;
+       this.kpi2.value = kpi2value.toFixed(2) + "%";
+       this.kpi2.icon = kpi2value <= 0 ? "bi bi-graph-down" : "bi bi-graph-up";
+       this.kpi2.color = kpi2value <= 0 ? "bg-danger" : "bg-success";
       })
 
       let maxValueResponse = data[0];

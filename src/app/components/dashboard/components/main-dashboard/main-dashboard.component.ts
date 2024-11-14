@@ -76,7 +76,7 @@ export class MainDashboardComponent implements AfterViewInit{
     this.columnChartOptions.hAxis.showTextEvery = (this.filters.group == "WEEK" ? 2 : (this.filters.group == "MONTH" || this.filters.group == "YEAR" ? 1 : 3));
 
     this.graph4.options = {...this.columnChartOptions,
-      colors: ['#ffe082']}
+      colors: ['#e0f59d']}
     this.graph4.options.chartArea.width='95%';
     this.graph4.options.width = 1000;
     this.graph4.options.height = 175;
@@ -84,15 +84,15 @@ export class MainDashboardComponent implements AfterViewInit{
     this.graph3.options = this.pieChartOptions
 
     this.graph2.options = {...this.columnChartOptions,
-      colors: ['#ffe082']}
+      colors: ['#e0f59d']}
     this.graph2.options.width = 300;
     this.graph2.options.height = 200;
- 
+
     //obtener filtro
     this.dashBoardService.getPeriod(this.filters).subscribe(data => {
       this.graph1.data = mapColumnData(data)
       this.graph1.options = {...this.columnChartOptions,
-        colors: [this.filters.action == 'ENTRY' ? '#62b68f' : '#ff919e']}
+        colors: [this.filters.action == 'ENTRY' ? '#a2d9a5' : '#ff919e']}
       this.graph1.options.height = 200
       let totalValue1 = 0;
       data.forEach(item => {
@@ -107,9 +107,11 @@ export class MainDashboardComponent implements AfterViewInit{
         });
 
         this.kpi1.value = totalValue1.toString() + " / " + totalValue.toString();
-        let kpi2value = ((totalValue - totalValue1 )/ totalValue1) * 100 == Infinity || Number.isNaN((((totalValue - totalValue1) / totalValue1) * 100)) ? 0 : ((totalValue - totalValue1 )/ totalValue1) * 100;
+        //let kpi2value = ((totalValue - totalValue1 )/ totalValue1) * 100 == Infinity || Number.isNaN((((totalValue - totalValue1) / totalValue1) * 100)) ? 0 : ((totalValue - totalValue1 )/ totalValue1) * 100;
+        let kpi2value = ((totalValue1 - totalValue )/ totalValue) * 100;
         this.kpi2.value = kpi2value.toFixed(2) + "%";
         this.kpi2.icon = kpi2value > 0 ? "bi bi-graph-up" : "bi bi-graph-down"
+        this.kpi2.color = kpi2value > 0 ? "bg-success" : "bg-danger"
       })
     })
     //obtener tipos
@@ -195,11 +197,11 @@ export class MainDashboardComponent implements AfterViewInit{
     height: '80%',
     width: 300,
     colors: [
-      '#62b68f' ,
-      '#82b2ff' ,  
-      '#ff919e' ,  
-      '#ffe082' ,   
-      '#ffccd7'   
+      '#e0f59d',  // Amarillo claro (simulando transparencia)
+      '#95a0d9',  // Azul claro
+      '#ff919e',  // Rosa claro
+      '#a2d9a5',  // Verde menta claro
+      '#ffccd7'  // Morado claro
     ],
     pieSliceTextStyle: {
       color: 'black',

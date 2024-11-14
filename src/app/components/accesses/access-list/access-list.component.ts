@@ -266,8 +266,13 @@ export class AccessListComponent implements OnInit, AfterViewInit {
           && new Date(new Date(x.actionDate).setHours(0,0,0,0))
           <= new Date(new Date(dateTo+"T00:00:00").setHours(0,0,0,0))))
         let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
+        
         response.content.forEach(data => {
           data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
+
+          if(data.authorizer == undefined || data.authorizer == null){
+            data.authorizer = this.authorizerCompleterService.completeAuthorizer(1)
+          }
         })
 
         this.list = response.content;
@@ -286,7 +291,11 @@ export class AccessListComponent implements OnInit, AfterViewInit {
       let response = this.transformResponseService.transformAction(data.items,this.currentPage, this.pageSize, action, this.retrieveByActive)
         response.content.forEach(data => {
           data.authorizer = this.authorizerCompleterService.completeAuthorizer(data.authorizerId)
-        })
+
+          if(data.authorizer == undefined || data.authorizer == null){
+            data.authorizer = this.authorizerCompleterService.completeAuthorizer(3)
+          }
+      })
 
         this.list = response.content;
         this.filteredList = [...this.list]

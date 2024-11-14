@@ -6,7 +6,7 @@ import {AuthService} from "../../../services/auth.service";
 import {LoginService} from "../../../services/login.service";
 import Swal from 'sweetalert2';
 import {NgIf} from "@angular/common";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, NavigationStart, Router} from "@angular/router";
 import {UserTypeService} from "../../../services/userType.service";
 import {RangeModalComponent} from "../range-modal/range-modal.component";
 import {NgSelectComponent} from "@ng-select/ng-select";
@@ -36,7 +36,16 @@ export class AuthFormComponent implements OnInit {
   private toastService = inject(ToastService);
   userType: string = "ADMIN"
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private loginService: LoginService, private router: Router, private userTypeService: UserTypeService, private route: ActivatedRoute) {
+  constructor(private fb: FormBuilder, private authService: AuthService,
+     private loginService: LoginService, private router: Router, 
+     private userTypeService: UserTypeService, private route: ActivatedRoute) {
+  
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+          this.toastService.clear(); // Limpiar los toasts al cambiar de pantalla
+      }
+  });
+  
   }
 
   ngOnInit(): void {
@@ -163,10 +172,10 @@ export class AuthFormComponent implements OnInit {
 
   onSubmit() {
     if (this.authForm.valid) {
-      if(this.authForm.value.visitorType == undefined){
+      if(!this.authForm.value.visitorType){
         this.authForm.value.visitorType = "VISITOR"
       }
-      if(this.authForm.value.plotId == undefined){
+      if(!this.authForm.value.plotId){
         this.authForm.value.plotId = 2
       }
       const formData = this.authForm.value;
@@ -218,6 +227,7 @@ export class AuthFormComponent implements OnInit {
       }
 
       if (!this.isUpdate) {
+        debugger
         if(formData.visitorRequest.birthDate){
           formData.visitorRequest.birthDate = formatFormDate(formData.visitorRequest.birthDate);
         }
@@ -229,13 +239,13 @@ export class AuthFormComponent implements OnInit {
       else {
         this.authService.updateAuth(formData, this.loginService.getLogin().id.toString()).subscribe(data => {
           this.toastService.sendSuccess("Autorización exitosa.");
-
+          
         });
       }
       setTimeout(() => {
         this.toastService.remove(this.toastService.toasts[0]);  // Cierra el modal
         this.isUpdate = false;
-      }, 1500);
+      }, 1000);
     } else {
       this.markAllAsTouched();
     }
