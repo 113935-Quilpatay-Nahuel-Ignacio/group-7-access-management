@@ -76,7 +76,7 @@ export class MainDashboardComponent implements AfterViewInit{
     this.columnChartOptions.hAxis.showTextEvery = (this.filters.group == "WEEK" ? 2 : (this.filters.group == "MONTH" || this.filters.group == "YEAR" ? 1 : 3));
 
     this.graph4.options = {...this.columnChartOptions,
-      colors: ['#FFE08A']}
+      colors: ['#e0f59d']}
     this.graph4.options.chartArea.width='95%';
     this.graph4.options.width = 1000;
     this.graph4.options.height = 175;
@@ -84,7 +84,7 @@ export class MainDashboardComponent implements AfterViewInit{
     this.graph3.options = this.pieChartOptions
 
     this.graph2.options = {...this.columnChartOptions,
-      colors: ['#FFE08A']}
+      colors: ['#e0f59d']}
     this.graph2.options.width = 300;
     this.graph2.options.height = 200;
 
@@ -92,7 +92,7 @@ export class MainDashboardComponent implements AfterViewInit{
     this.dashBoardService.getPeriod(this.filters).subscribe(data => {
       this.graph1.data = mapColumnData(data)
       this.graph1.options = {...this.columnChartOptions,
-        colors: [this.filters.action == 'ENTRY' ? '#8DDFDF' : '#FFA8B4']}
+        colors: [this.filters.action == 'ENTRY' ? '#a2d9a5' : '#ff919e']}
       this.graph1.options.height = 200
       let totalValue1 = 0;
       data.forEach(item => {
@@ -165,7 +165,7 @@ export class MainDashboardComponent implements AfterViewInit{
     vAxis: {
       textStyle: {
         color: '#6c757d',
-        fontSize: 12  // Tamaño de fuente más pequeño
+        fontSize: 12  
       },
       // Formato personalizado para mostrar los valores en miles
       format: '#',
@@ -195,13 +195,11 @@ export class MainDashboardComponent implements AfterViewInit{
     height: '80%',
     width: 300,
     colors: [
-      'rgb(255, 236, 179)',  // Amarillo claro (simulando transparencia)
-      'rgb(179, 200, 254)',  // Azul claro
-      'rgb(255, 205, 215)',  // Rosa claro
-      'rgb(153, 191, 191)',  // Verde menta claro
-      'rgb(217, 197, 255)',  // Morado claro
-      'rgb(255, 223, 191)',  // Naranja claro
-      'rgb(189, 215, 252)'   // Azul celeste claro
+      '#e0f59d',  // Amarillo claro (simulando transparencia)
+      '#95a0d9',  // Azul claro
+      '#ff919e',  // Rosa claro
+      '#a2d9a5',  // Verde menta claro
+      '#ffccd7'  // Morado claro
     ],
     pieSliceTextStyle: {
       color: 'black',
