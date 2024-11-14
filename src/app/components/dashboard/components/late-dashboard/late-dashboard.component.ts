@@ -109,7 +109,7 @@ export class LateDashboardComponent implements AfterViewInit {
       },
       format: '#',
     },
-    colors: ['#e0f59d'],
+    colors: ['#ffe082'],
     hAxis: {
       textStyle: {color: '#6c757d'},
       showTextEvery: 2

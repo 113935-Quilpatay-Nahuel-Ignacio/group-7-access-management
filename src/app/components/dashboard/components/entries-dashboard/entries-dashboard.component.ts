@@ -49,12 +49,12 @@ export class EntriesDashboardComponent implements AfterViewInit {
     this.columnChartOptions.hAxis.showTextEvery = this.filters.group == "WEEK" ? 2 : 3
     this.columnChartOptions.hAxis.showTextEvery = this.filters.group == "MONTH" || this.filters.group == "YEAR" ? 1 : 3
 
-    //obtener filtro
+    //obtener filtro 
     this.dashBoardService.getPeriod(this.filters).subscribe(data => {
       this.graph1.data = mapColumnData(data)
       this.graph1.options = {
         ...this.columnChartOptions,
-        colors: [this.filters.action == 'ENTRY' ? '#a2d9a5' : '#ff919e']
+        colors: [this.filters.action == 'ENTRY' ? '#62b68f' : '#ff919e']
       }
       let totalValue1 = 0;
       data.forEach(item => {

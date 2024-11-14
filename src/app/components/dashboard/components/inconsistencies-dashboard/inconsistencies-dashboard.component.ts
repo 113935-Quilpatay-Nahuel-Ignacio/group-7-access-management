@@ -98,6 +98,7 @@ export class InconsistenciesDashboardComponent implements AfterViewInit {
 
 
   }
+  
 
 
   columnChartOptions = {
@@ -111,7 +112,7 @@ export class InconsistenciesDashboardComponent implements AfterViewInit {
       },
       format: '#',
     },
-    colors: ['#e0f59d'],
+    colors: ['#ffe082'],
     hAxis: {
       textStyle: { color: '#6c757d' },
       showTextEvery: 2
