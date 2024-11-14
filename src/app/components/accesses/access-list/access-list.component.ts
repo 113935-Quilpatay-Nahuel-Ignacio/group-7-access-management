@@ -206,7 +206,7 @@ export class AccessListComponent implements OnInit, AfterViewInit {
   }
   //#region GET_ALL
   getAllFiltered(filter: string) {
-    this.accessService.getAll(this.currentPage, this.pageSize, this.retrieveByActive).subscribe(data => {
+    this.accessService.getAll().subscribe(data => {
       data.items = data.items.filter(x => (x.firstName?.toLowerCase().includes(filter)
       || x.lastName?.toLowerCase().includes(filter) || x.docNumber?.toString().includes(filter) || x.vehicleReg?.toLowerCase().includes(filter)))
         let response = this.transformResponseService.transformResponse(data.items,this.currentPage, this.pageSize, this.retrieveByActive)
@@ -233,7 +233,7 @@ export class AccessListComponent implements OnInit, AfterViewInit {
 
   //#region FILTROS
   filterByVisitorType(type: string) {
-    this.accessService.getByType(this.currentPage, this.pageSize, type, this.retrieveByActive).subscribe(data => {
+    this.accessService.getByType(type).subscribe(data => {
         let response = this.transformResponseService.transformType(data.items,this.currentPage, this.pageSize, type, this.retrieveByActive)
         response.content.forEach(data => {
           if (data.authorizerId != undefined && data.authorizerId < 10){
@@ -246,7 +246,7 @@ export class AccessListComponent implements OnInit, AfterViewInit {
         this.list = response.content;
         this.filteredList = [...this.list]
         this.lastPage = response.last
-        this.totalItems = response.totalElements;
+        this.totalItems = data.totalElements;
       },
       error => {
         console.error('Error getting:', error);

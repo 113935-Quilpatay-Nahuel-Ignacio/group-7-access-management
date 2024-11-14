@@ -4,13 +4,13 @@ import { map, Observable } from 'rxjs';
 import { Auth } from '../models/authorize.model';
 import { AccessModel } from '../models/access.model';
 import { VisitorAuthorizationRequest } from '../models/authorizeRequest.model';
-import { PaginatedResponse } from '../models/api-response';
 import {
   DashboardHourlyDTO,
   DashboardWeeklyDTO,
   EntryReport,
 } from '../models/dashboard.model';
 import { CaseTransformerService } from './case-transformer.service';
+import { PaginatedResponse } from './visitor.service';
 
 @Injectable({
   providedIn: 'root',
@@ -24,8 +24,8 @@ export class AccessService {
   ) {}
 
   getAll(
-    page: number,
-    size: number,
+    page?: number,
+    size?: number,
     isActive?: boolean
   ): Observable<{ items: AccessModel[] }> {
     return this.http
@@ -73,20 +73,19 @@ export class AccessService {
       ));*/
   }
 
-  getByType(
-    page: number,
-    size: number,
-    type: string,
-    isActive?: boolean
-  ): Observable<{ items: AccessModel[] }> {
-    return this.http
-      .get<{ items: AccessModel[] }>(this.apiUrl)
+  getByType( visitorType?: string): Observable<PaginatedResponse<AccessModel>> {
+   
+    let params = new HttpParams();
+    if (visitorType) params = params.set('visitorType', visitorType);
+  
+
+    return this.http.get<{ items: AccessModel[], total_elements: number }>(this.apiUrl , { params })
       .pipe(
         map((response) => ({
-          items: response.items.map(item => this.caseTransformer.toCamelCase(item))
+          totalElements: response.total_elements,
+          items: response.items.map(item => this.caseTransformer.toCamelCase(item)),
         }))
       );
-      //.pipe(map((response) => this.caseTransformer.toCamelCase(response)));
   }
 
   getHourlyAccesses(
