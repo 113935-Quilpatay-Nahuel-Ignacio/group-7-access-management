@@ -101,35 +101,10 @@ export class TypesDashboardComponent implements AfterViewInit {
       fontSize: 18
     }
   };
-  /*pieChartOptions = {
-    backgroundColor: 'transparent',
-    legend: {
-      position: 'right-center',
-      textStyle: { color: '#6c757d', fontSize: 17 }
-    },
-    chartArea: { width: '100%', height: '100%' },
-    pieHole: 0,
-    height: 400,
-    width: 600,
-    colors: [
-      'rgb(255, 236, 179)',  // Amarillo claro (simulando transparencia)
-      'rgb(179, 200, 254)',  // Azul claro
-      'rgb(255, 205, 215)',  // Rosa claro
-      'rgb(200, 235, 235)',  // Verde menta claro
-      'rgb(217, 197, 255)',  // Morado claro
-      'rgb(255, 223, 191)',  // Naranja claro
-      'rgb(188, 223, 247)'   // Azul celeste claro
-    ],
-    pieSliceTextStyle: {
-      color: 'black',
-      fontSize: 17
-    }
-};*/
-
+ 
   back() {
     this.notifyParent.emit("ALL");
   }
-
 
 }
 
