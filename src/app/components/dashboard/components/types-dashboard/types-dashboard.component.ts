@@ -90,10 +90,10 @@ export class TypesDashboardComponent implements AfterViewInit {
     pieHole: 0,
     height: 400,
     slices: {
-      0: { color: '#e0f59d' },
-      1: { color: '#95a0d9' },  
+      0: { color: '#62b68f' },
+      1: { color: '#82b2ff' },  
       2: { color: '#ff919e' },  
-      3: { color: '#a2d9a5' },   
+      3: { color: '#ffe082' },   
       4: { color: '#ffccd7' }    
     },
     pieSliceTextStyle: {

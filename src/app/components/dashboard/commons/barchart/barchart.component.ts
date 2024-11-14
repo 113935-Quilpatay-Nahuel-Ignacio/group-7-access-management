@@ -17,11 +17,11 @@ export class BarchartComponent {
   columnChartOptions = {
     backgroundColor: 'transparent',
     colors: [
-      '#e0f59d',  // Amarillo claro (simulando transparencia)
-      '#95a0d9',  // Azul claro
-      '#ff919e',  // Rosa claro
-      '#a2d9a5',  // Verde menta claro
-      '#ffccd7'  // Morado claro
+      '#62b68f' ,
+      '#82b2ff' ,  
+      '#ff919e' ,  
+      '#ffe082' ,   
+      '#ffccd7'   
     ],
     legend: {position: 'none'},
     chartArea: {width: '80%', height: '100%'},
