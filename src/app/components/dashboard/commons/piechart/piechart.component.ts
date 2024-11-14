@@ -25,9 +25,11 @@ export class PiechartComponent {
     pieHole: 0,
     height: '80%',
     slices: {
-      0: { color: '#00BFFF' },  // MP siempre azul
-      1: { color: '#8A2BE2' },  // STRIPE siempre violeta
-      2: { color: '#ACE1AF' }   // EFECTIVO siempre verde
+      0: { color: '#e0f59d' },
+      1: { color: '#95a0d9' },  
+      2: { color: '#ff919e' } ,  
+      3: { color: '#a2d9a5' },   
+      4: { color: '#ffccd7' }   
     },
     pieSliceTextStyle: {
       color: 'black',
